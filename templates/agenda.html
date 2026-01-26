@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Agenda de Jogos</h2>
+
+<ul>
+{% for j in jogos %}
+    <li>
+        <a href="/jogo/{{ j.slug }}">
+            {{ j.horario }} - {{ j.mandante }} x {{ j.visitante }}
+            ({{ j.campeonato }})
+        </a>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
