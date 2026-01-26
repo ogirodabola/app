@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ jogo.mandante }} x {{ jogo.visitante }}</h1>
+
+<p><strong>Campeonato:</strong> {{ jogo.campeonato }}</p>
+<p><strong>Horário:</strong> {{ jogo.horario }}</p>
+<p><strong>Estádio:</strong> {{ jogo.estadio }}</p>
+
+<a href="/agenda">← Voltar</a>
+{% endblock %}
