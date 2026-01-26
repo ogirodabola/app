@@ -1,0 +1,3 @@
+from app.crawler_agenda import processar_agenda
+
+processar_agenda()
