@@ -20,15 +20,20 @@ def criar_tabela_noticias():
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
+            slug TEXT NOT NULL UNIQUE,
             url TEXT NOT NULL UNIQUE,
             fonte TEXT NOT NULL,
+
+            categoria TEXT NOT NULL,
+            subcategoria TEXT NOT NULL,
+            tags TEXT,
+
             criada_em DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
 
     conn.commit()
     conn.close()
-
 
 def salvar_noticia(titulo: str, url: str, fonte: str):
     """
