@@ -2,39 +2,32 @@
 
 {% block content %}
 
-<h1>Últimas Notícias</h1>
+<h1>🔥 Futebol em Tempo Real</h1>
 
 <nav class="categorias">
-    <a href="/" {% if not categoria_ativa %}class="ativa"{% endif %}>
-        Todas
-    </a>
+    <a href="/" class="ativa">Agora</a>
 
     {% for cat in categorias %}
-        <a href="/?categoria={{ cat }}"
-           {% if categoria_ativa == cat %}class="ativa"{% endif %}>
+        <a href="/categoria/{{ cat | lower | replace(' ', '-') }}">
             {{ cat }}
         </a>
     {% endfor %}
 </nav>
 
-<section class="lista-noticias">
-    {% for n in noticias %}
-        <article class="noticia">
-            <h2>
-                <a href="/noticia/{{ n.slug }}">
-                    {{ n.titulo }}
-                </a>
-            </h2>
+<section class="hot-news">
+  <h2>🔥 Agora no futebol</h2>
 
-            <div class="meta">
-                <span class="categoria">{{ n.subcategoria }}</span> ·
-                <span class="fonte">{{ n.fonte }}</span> ·
-                <span class="data">{{ n.criada_em }}</span>
-            </div>
-        </article>
-    {% else %}
-        <p>Nenhuma notícia encontrada.</p>
-    {% endfor %}
+  {% for n in hot_news %}
+    <article class="hot-item">
+      <a href="{{ n.url }}" target="_blank" rel="noopener">
+        <span class="categoria">{{ n.categoria }}</span>
+        <h3>{{ n.titulo }}</h3>
+        <small>{{ n.fonte }} • {{ n.criada_em }}</small>
+      </a>
+    </article>
+  {% else %}
+    <p>Nenhuma notícia quente agora.</p>
+  {% endfor %}
 </section>
 
 {% endblock %}
