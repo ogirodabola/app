@@ -27,7 +27,7 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 @app.get("/")
 def home(request: Request):
-    hot_news = listar_hot_news(horas=3, limit=10)
+    hot_news = listar_hot_news(horas=3, limit=24)
     noticias = listar_noticias(limit=30)
     categorias = listar_categorias()
 
@@ -38,7 +38,7 @@ def home(request: Request):
             "hot_news": hot_news,
             "noticias": noticias,
             "categorias": categorias,
-            "categoria_ativa": None
+            "categoria_ativa": categoria
         }
     )
 
