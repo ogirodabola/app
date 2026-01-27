@@ -1,10 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
+
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
 
-# 🔥 garante banco + tabelas
+# =========================================
+# GARANTE BANCO + TABELAS (CRON SAFE)
+# =========================================
 criar_tabelas()
 
 HEADERS = {
@@ -36,6 +39,7 @@ def extrair_noticias_fonte(fonte):
         titulo = link.get_text(strip=True)
         url = link["href"]
 
+        # filtros mínimos
         if not titulo or len(titulo) < 15:
             continue
 
@@ -45,8 +49,12 @@ def extrair_noticias_fonte(fonte):
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
 
+        # ✅ RESUMO OBRIGATÓRIO (regra final)
+        resumo = titulo[:180]
+
         noticias.append({
             "titulo": titulo,
+            "resumo": resumo,
             "url": url,
             "fonte": fonte["nome"],
             "categoria": categoria,
@@ -66,6 +74,7 @@ def rodar_crawler():
             for n in noticias:
                 salvar_noticia(
                     titulo=n["titulo"],
+                    resumo=n["resumo"],
                     url=n["url"],
                     fonte=n["fonte"],
                     categoria=n["categoria"],
