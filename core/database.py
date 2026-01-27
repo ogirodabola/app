@@ -16,7 +16,6 @@ def criar_tabelas():
     conn = get_db()
     cursor = conn.cursor()
 
-    # Tabela de notícias
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,64 +23,51 @@ def criar_tabelas():
             url TEXT UNIQUE NOT NULL,
             fonte TEXT,
             categoria TEXT,
+            subcategoria TEXT,
             tags TEXT,
             criada_em TEXT
         )
     """)
 
-    # Verifica se a coluna criada_em existe (migração automática)
-    cursor.execute("PRAGMA table_info(noticias)")
-    colunas = [col["name"] for col in cursor.fetchall()]
-
-    if "criada_em" not in colunas:
-        print("[MIGRATION] Recriando tabela noticias")
-
-        cursor.execute("""
-            CREATE TABLE noticias_nova (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                titulo TEXT NOT NULL,
-                url TEXT UNIQUE NOT NULL,
-                fonte TEXT,
-                categoria TEXT,
-                tags TEXT,
-                criada_em TEXT
-            )
-        """)
-
-        cursor.execute("""
-            INSERT INTO noticias_nova (id, titulo, url, fonte, categoria, tags)
-            SELECT id, titulo, url, fonte, categoria, tags FROM noticias
-        """)
-
-        cursor.execute("DROP TABLE noticias")
-        cursor.execute("ALTER TABLE noticias_nova RENAME TO noticias")
-
     conn.commit()
     conn.close()
 
 
-def salvar_noticia(titulo, url, fonte, categoria=None, tags=None):
+def salvar_noticia(
+    titulo: str,
+    url: str,
+    fonte: str,
+    categoria: str = None,
+    subcategoria: str = None,
+    tags: list[str] | None = None
+):
     conn = get_db()
     cursor = conn.cursor()
 
+    tags_str = ",".join(tags) if tags else None
+
     try:
         cursor.execute("""
-            INSERT INTO noticias (titulo, url, fonte, categoria, tags, criada_em)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO noticias (titulo, url, fonte, categoria, subcategoria, tags, criada_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             titulo,
             url,
             fonte,
             categoria,
-            tags,
+            subcategoria,
+            tags_str,
             datetime.utcnow().isoformat()
         ))
+
         conn.commit()
         print(f"[OK] Notícia salva: {titulo}")
+
     except sqlite3.IntegrityError:
         print(f"[SKIP] Notícia já existe: {url}")
 
-    conn.close()
+    finally:
+        conn.close()
 
 
 def listar_noticias(limit=30, categoria=None):
