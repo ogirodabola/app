@@ -35,31 +35,31 @@ def criar_tabela_noticias():
     conn.commit()
     conn.close()
 
-def salvar_noticia(titulo: str, url: str, fonte: str):
-    """
-    Salva uma notícia no banco.
-    Se a URL já existir, ignora (deduplicação básica).
-    """
-
+def salvar_noticia(titulo, url, fonte, categoria, subcategoria, tags, slug):
     criar_tabela_noticias()
 
     conn = get_db()
     cursor = conn.cursor()
 
     try:
-        cursor.execute(
-            """
-            INSERT INTO noticias (titulo, url, fonte)
-            VALUES (?, ?, ?)
-            """,
-            (titulo, url, fonte)
-        )
+        cursor.execute("""
+            INSERT INTO noticias
+            (titulo, slug, url, fonte, categoria, subcategoria, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            titulo,
+            slug,
+            url,
+            fonte,
+            categoria,
+            subcategoria,
+            ",".join(tags)
+        ))
         conn.commit()
         print(f"[OK] Notícia salva: {titulo}")
 
     except sqlite3.IntegrityError:
-        # URL duplicada
-        print(f"[SKIP] Notícia já existe: {url}")
+        print(f"[SKIP] Já existe: {url}")
 
     finally:
         conn.close()
