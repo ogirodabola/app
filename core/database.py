@@ -61,5 +61,44 @@ def salvar_noticia(titulo, url, fonte, categoria, subcategoria, tags, slug):
     except sqlite3.IntegrityError:
         print(f"[SKIP] Já existe: {url}")
 
+    def listar_noticias(limit=20, categoria=None):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    if categoria:
+        cursor.execute("""
+            SELECT *
+            FROM noticias
+            WHERE categoria = ?
+            ORDER BY criada_em DESC
+            LIMIT ?
+        """, (categoria, limit))
+    else:
+        cursor.execute("""
+            SELECT *
+            FROM noticias
+            ORDER BY criada_em DESC
+            LIMIT ?
+        """, (limit,))
+
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
+def listar_categorias():
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DISTINCT categoria
+        FROM noticias
+        ORDER BY categoria
+    """)
+
+    categorias = [row["categoria"] for row in cursor.fetchall()]
+    conn.close()
+    return categorias
+
     finally:
         conn.close()
