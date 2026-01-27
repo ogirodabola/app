@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
-from core.editorial import gerar_conteudo_editorial  # 👈 IMPORT CORRETO
 
 HEADERS = {
     "User-Agent": "O Giro da Bola"
@@ -13,15 +12,13 @@ HEADERS = {
 
 MAX_POR_FONTE = 20
 
+criar_tabelas()
+
 PALAVRAS_PROIBIDAS = [
     "privacy", "policy", "cookies", "termos", "login",
     "cadastro", "assine", "newsletter", "sobre",
-    "contato", "institucional", "legislacao", "transito"
+    "contato", "institucional", "legislacao"
 ]
-
-# garante banco/tabelas
-criar_tabelas()
-
 
 def link_valido(url: str, dominio: str) -> bool:
     if not url:
@@ -29,15 +26,15 @@ def link_valido(url: str, dominio: str) -> bool:
 
     url = url.lower()
 
-    if not url.startswith("http"):
-        return False
-
     if dominio not in url:
         return False
 
     for p in PALAVRAS_PROIBIDAS:
         if p in url:
             return False
+
+    if len(url) < 30:
+        return False
 
     return True
 
@@ -54,17 +51,17 @@ def extrair_noticias_fonte(fonte):
 
     soup = BeautifulSoup(response.text, "lxml")
 
-    noticias = []
     dominio = urlparse(fonte["url"]).netloc
+    noticias = []
 
-    for a in soup.select("a:has(h2), a:has(h3)"):
+    for a in soup.select("a"):
         if len(noticias) >= MAX_POR_FONTE:
             break
 
         titulo = a.get_text(strip=True)
         url = a.get("href")
 
-        if not titulo or len(titulo) < 30:
+        if not titulo or len(titulo) < 40:
             continue
 
         if not link_valido(url, dominio):
@@ -72,13 +69,7 @@ def extrair_noticias_fonte(fonte):
 
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
-        resumo = titulo[:140]
-
-        conteudo_editorial = gerar_conteudo_editorial(
-            titulo=titulo,
-            resumo=resumo,
-            categoria=categoria
-        )
+        resumo = titulo[:160]
 
         noticias.append({
             "titulo": titulo,
@@ -86,8 +77,7 @@ def extrair_noticias_fonte(fonte):
             "fonte": fonte["nome"],
             "categoria": categoria,
             "slug": slug,
-            "resumo": resumo,
-            "conteudo_editorial": conteudo_editorial
+            "resumo": resumo
         })
 
     return noticias
@@ -107,8 +97,7 @@ def rodar_crawler():
                     url=n["url"],
                     fonte=n["fonte"],
                     categoria=n["categoria"],
-                    slug=n["slug"],
-                    conteudo_editorial=n["conteudo_editorial"]
+                    slug=n["slug"]
                 )
                 total += 1
 
