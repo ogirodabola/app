@@ -2,12 +2,19 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-from core.database import criar_tabelas
-from core.database import listar_hot_news, listar_categorias
+
+from core.database import (
+    criar_tabelas,
+    listar_noticias,
+    listar_hot_news,
+    listar_categorias
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
+
+# garante que o banco e as tabelas existam
 criar_tabelas()
 
 app.mount(
