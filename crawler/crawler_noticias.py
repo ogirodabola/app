@@ -27,10 +27,36 @@ def link_valido(url, dominio):
     )
 
 
+from urllib.parse import urlparse
+
+LIXO_KEYWORDS = [
+    "privacy",
+    "policy",
+    "cookies",
+    "ads",
+    "advert",
+    "nielsen",
+    "rights",
+    "terms",
+    "about",
+    "disney",
+    "measurement"
+]
+
+
+def eh_lixo(titulo: str) -> bool:
+    t = titulo.lower()
+    return any(p in t for p in LIXO_KEYWORDS)
+
+
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
 
-    response = requests.get(fonte["url"], headers=HEADERS, timeout=15)
+    response = requests.get(
+        fonte["url"],
+        headers=HEADERS,
+        timeout=15
+    )
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
@@ -38,21 +64,33 @@ def extrair_noticias_fonte(fonte):
     noticias = []
     dominio = urlparse(fonte["url"]).netloc
 
-    # 🔥 pega apenas links com <h2> ou <h3> (padrão jornalístico)
-    for a in soup.select("a:has(h2), a:has(h3)"):
+    # 🔥 padrão editorial: links que envolvem h2 ou h3
+    candidatos = soup.select("a:has(h2), a:has(h3)")
+
+    for a in candidatos:
         if len(noticias) >= MAX_POR_FONTE:
             break
 
         titulo = a.get_text(strip=True)
         url = a.get("href")
 
+        # validações duras (anti-lixo)
         if not titulo or len(titulo) < 30:
             continue
 
-        if not link_valido(url, dominio):
+        if eh_lixo(titulo):
+            continue
+
+        if not url or not url.startswith("http"):
+            continue
+
+        if dominio not in url:
             continue
 
         categoria = classificar_noticia(titulo)
+        if not categoria:
+            continue
+
         slug = gerar_slug(titulo)
 
         noticias.append({
@@ -65,7 +103,6 @@ def extrair_noticias_fonte(fonte):
         })
 
     return noticias
-
 
 def rodar_crawler():
     total = 0
