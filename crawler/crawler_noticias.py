@@ -3,13 +3,9 @@ from bs4 import BeautifulSoup
 
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
-from core.classificacao import (
-    classificar_noticia,
-    extrair_tags,
-    gerar_slug
-)
+from core.classificacao import classificar_noticia, gerar_slug
 
-# 🔥 GARANTE QUE O BANCO E AS TABELAS EXISTEM
+# 🔥 garante banco + tabelas
 criar_tabelas()
 
 HEADERS = {
@@ -27,13 +23,12 @@ def extrair_noticias_fonte(fonte):
         headers=HEADERS,
         timeout=15
     )
-
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
+    links = soup.find_all("a", href=True)
 
     noticias = []
-    links = soup.find_all("a", href=True)
 
     for link in links:
         if len(noticias) >= MAX_POR_FONTE:
@@ -48,7 +43,7 @@ def extrair_noticias_fonte(fonte):
         if not url.startswith("http"):
             continue
 
-        categoria = classificar_noticia(titulo, url)
+        categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
 
         noticias.append({
