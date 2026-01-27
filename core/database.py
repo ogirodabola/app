@@ -89,3 +89,19 @@ def listar_categorias():
     cur.close()
     conn.close()
     return rows
+
+def listar_hot_news(horas=3, limit=20):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM noticias
+        WHERE criada_em >= datetime('now', ?)
+        ORDER BY criada_em DESC
+        LIMIT ?
+    """, (f'-{horas} hours', limit))
+
+    noticias = cursor.fetchall()
+    conn.close()
+    return noticias
