@@ -5,4 +5,4 @@ requests
 python-slugify
 beautifulsoup4
 lxml
-unidecode
+Unidecode
