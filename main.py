@@ -2,7 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-
+from fastapi import HTTPException
+from core.database import buscar_noticia_por_slug
 from core.database import (
     criar_tabelas,
     listar_noticias,
@@ -56,5 +57,19 @@ def categoria(request: Request, categoria: str):
             "noticias": noticias,
             "categorias": categorias,
             "categoria_ativa": categoria
+        }
+    )
+@app.get("/noticia/{slug}")
+def noticia(slug: str, request: Request):
+    noticia = buscar_noticia_por_slug(slug)
+
+    if not noticia:
+        raise HTTPException(status_code=404, detail="Notícia não encontrada")
+
+    return templates.TemplateResponse(
+        "noticia.html",
+        {
+            "request": request,
+            "noticia": noticia
         }
     )
