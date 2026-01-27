@@ -93,19 +93,23 @@ def gerar_slug(texto: str) -> str:
     return texto.strip("-")
 
 
-def classificar_noticia(titulo: str):
-    titulo_norm = unidecode(titulo.lower())
+def classificar_noticia(texto: str) -> str:
+    texto = texto.lower()
 
-    for competicao, palavras in COMPETICOES.items():
-        for palavra in palavras:
-            if palavra in titulo_norm:
-                return (
-                    CATEGORIA_PAI.get(competicao, "Outros"),
-                    competicao
-                )
+    if "brasileirão" in texto:
+        return "Campeonato Brasileiro"
+    if "libertadores" in texto:
+        return "Libertadores"
+    if "sul-americana" in texto:
+        return "Sul-Americana"
+    if "champions" in texto:
+        return "Champions League"
+    if "copa do mundo" in texto:
+        return "Copa do Mundo"
+    if "copa américa" in texto:
+        return "Copa América"
 
-    return ("Outros", "Outros")
-
+    return "Futebol"
 
 def extrair_tags(titulo: str):
     tags = []
