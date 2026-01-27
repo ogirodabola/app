@@ -2,26 +2,19 @@
 
 {% block content %}
 
-<article class="pagina-noticia">
+<article class="noticia-detalhe">
 
-  <h1>{{ noticia.titulo }}</h1>
+  <h1>{{ titulo }}</h1>
 
   <div class="meta">
-    <span>{{ noticia.categoria }}</span> ·
-    <span>{{ noticia.fonte }}</span> ·
-    <span>{{ noticia.criada_em }}</span>
+    <span class="categoria">{{ categoria }}</span> ·
+    <span class="fonte">{{ fonte }}</span> ·
+    <span class="data">{{ data }}</span>
   </div>
 
-  <p class="resumo">
-    {{ noticia.resumo }}
-  </p>
-
-  <p class="fonte-original">
-    Fonte original:
-    <a href="{{ noticia.url }}" target="_blank" rel="noopener">
-      {{ noticia.fonte }}
-    </a>
-  </p>
+  <div class="conteudo">
+    {{ conteudo | safe }}
+  </div>
 
 </article>
 
