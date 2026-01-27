@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
+from core.editorial import gerar_conteudo_editorial  # 👈 IMPORT CORRETO
 
 HEADERS = {
     "User-Agent": "O Giro da Bola"
@@ -12,28 +13,15 @@ HEADERS = {
 
 MAX_POR_FONTE = 20
 
-# garante banco/tabelas
-criar_tabelas()
-
-
-def link_valido(url, dominio):
-    return (
-        url.startswith("http")
-        and dominio in url
-        and not any(p in url.lower() for p in [
-            "privacy", "ads", "cookies", "politica",
-            "terms", "login", "cadastro"
-        ])
-    )
-
-
-from urllib.parse import urlparse
-
 PALAVRAS_PROIBIDAS = [
     "privacy", "policy", "cookies", "termos", "login",
     "cadastro", "assine", "newsletter", "sobre",
     "contato", "institucional", "legislacao", "transito"
 ]
+
+# garante banco/tabelas
+criar_tabelas()
+
 
 def link_valido(url: str, dominio: str) -> bool:
     if not url:
@@ -41,22 +29,18 @@ def link_valido(url: str, dominio: str) -> bool:
 
     url = url.lower()
 
-    # domínio correto
+    if not url.startswith("http"):
+        return False
+
     if dominio not in url:
         return False
 
-    # palavras proibidas
     for p in PALAVRAS_PROIBIDAS:
         if p in url:
             return False
 
-    # padrão mínimo de URL jornalística
-    if not any(x in url for x in ["/noticia", "/news", "/202", "/futebol"]):
-        return False
-
     return True
 
-from urllib.parse import urlparse
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
@@ -90,7 +74,6 @@ def extrair_noticias_fonte(fonte):
         slug = gerar_slug(titulo)
         resumo = titulo[:140]
 
-        # 🔥 IA AQUI (DENTRO DO LOOP)
         conteudo_editorial = gerar_conteudo_editorial(
             titulo=titulo,
             resumo=resumo,
@@ -107,8 +90,8 @@ def extrair_noticias_fonte(fonte):
             "conteudo_editorial": conteudo_editorial
         })
 
-    # 🔥 RETURN TEM QUE ESTAR AQUI
     return noticias
+
 
 def rodar_crawler():
     total = 0
@@ -124,7 +107,8 @@ def rodar_crawler():
                     url=n["url"],
                     fonte=n["fonte"],
                     categoria=n["categoria"],
-                    slug=n["slug"]
+                    slug=n["slug"],
+                    conteudo_editorial=n["conteudo_editorial"]
                 )
                 total += 1
 
