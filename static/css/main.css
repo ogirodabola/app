@@ -1,21 +1,28 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+.categorias {
+    margin-bottom: 20px;
+}
+
+.categorias a {
+    margin-right: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #555;
+}
+
+.categorias a.ativa {
+    color: #000;
+    border-bottom: 2px solid #000;
+}
+
+.noticia {
+    margin-bottom: 20px;
+}
+
+.noticia h2 {
     margin: 0;
 }
 
-header, footer {
-    background: #111;
-    color: #fff;
-    padding: 16px;
-}
-
-nav a {
-    color: #fff;
-    margin-right: 12px;
-    text-decoration: none;
-}
-
-main {
-    padding: 24px;
+.meta {
+    font-size: 0.85rem;
+    color: #777;
 }
