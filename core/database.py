@@ -57,23 +57,30 @@ def listar_noticias(limit=30, categoria=None):
     cursor = conn.cursor()
 
     if categoria:
-        cursor.execute("""
-            SELECT * FROM noticias
+        cursor.execute(
+            """
+            SELECT *
+            FROM noticias
             WHERE categoria = ?
-            ORDER BY criada_em DESC
+            ORDER BY id DESC
             LIMIT ?
-        """, (categoria, limit))
+            """,
+            (categoria, limit)
+        )
     else:
-        cursor.execute("""
-            SELECT * FROM noticias
-            ORDER BY criada_em DESC
+        cursor.execute(
+            """
+            SELECT *
+            FROM noticias
+            ORDER BY id DESC
             LIMIT ?
-        """, (limit,))
+            """,
+            (limit,)
+        )
 
     rows = cursor.fetchall()
     conn.close()
     return rows
-
 
 def listar_categorias():
     conn = get_db()
