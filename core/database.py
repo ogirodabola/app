@@ -32,32 +32,25 @@ def criar_tabelas():
     conn.close()
 
 
-def salvar_noticia(
-    titulo: str,
-    url: str,
-    fonte: str,
-    categoria: str = None,
-    slug: str = None
-):
+def salvar_noticia(titulo, url, fonte, categoria, slug):
     conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT OR IGNORE INTO noticias
-        (titulo, slug, url, fonte, categoria, criada_em)
+        (titulo, url, fonte, categoria, slug, criada_em)
         VALUES (?, ?, ?, ?, ?, ?)
     """, (
         titulo,
-        slug,
         url,
         fonte,
         categoria,
-        datetime.utcnow().isoformat()
+        slug,
+        datetime.utcnow()
     ))
 
     conn.commit()
     conn.close()
-
 
 def listar_noticias(limit=30, categoria=None):
     conn = get_db()
