@@ -72,14 +72,16 @@ def pagina_noticia(request: Request, slug: str):
     categorias = listar_categorias()
 
     return templates.TemplateResponse(
-        "noticia.html",
-        {
-            "request": request,
-            "titulo": noticia["titulo"],
-            "conteudo": noticia["conteudo_editorial"],
-            "imagem": noticia["imagem"],
-            "data": noticia["criada_em"],
-            "categorias": categorias,
-            "categoria_ativa": noticia["categoria"]
-        }
-    )
+    "noticia.html",
+    {
+        "request": request,
+        "titulo": noticia["titulo"],
+        "conteudo": noticia["conteudo_editorial"],
+        "imagem": noticia["imagem"],
+        "data": noticia["criada_em"],
+        "categoria": noticia["categoria"],
+        "fonte": noticia["fonte"],
+        "categorias": categorias,
+        "categoria_ativa": noticia["categoria"]
+    }
+)
