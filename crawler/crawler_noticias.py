@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from fontes import FONTES
+from crawler.fontes import FONTES
 from core.database import salvar_noticia
 
 HEADERS = {
