@@ -1,8 +1,60 @@
 import sqlite3
+from pathlib import Path
 
-DB_PATH = "girodabola.db"
+# Caminho absoluto do banco (seguro no Render)
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_PATH = BASE_DIR / "girodabola.db"
+
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def criar_tabela_noticias():
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS noticias (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
+            url TEXT NOT NULL UNIQUE,
+            fonte TEXT NOT NULL,
+            criada_em DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+def salvar_noticia(titulo: str, url: str, fonte: str):
+    """
+    Salva uma notícia no banco.
+    Se a URL já existir, ignora (deduplicação básica).
+    """
+
+    criar_tabela_noticias()
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            INSERT INTO noticias (titulo, url, fonte)
+            VALUES (?, ?, ?)
+            """,
+            (titulo, url, fonte)
+        )
+        conn.commit()
+        print(f"[OK] Notícia salva: {titulo}")
+
+    except sqlite3.IntegrityError:
+        # URL duplicada
+        print(f"[SKIP] Notícia já existe: {url}")
+
+    finally:
+        conn.close()
