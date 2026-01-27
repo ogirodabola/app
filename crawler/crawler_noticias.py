@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 
 from crawler.fontes import FONTES
 from core.database import salvar_noticia
+from core.classificacao import (
+    classificar_noticia,
+    extrair_tags,
+    gerar_slug
+)
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (O Giro da Bola)"
@@ -13,10 +18,9 @@ MAX_POR_FONTE = 30
 
 def extrair_noticias_fonte(fonte):
     """
-    Extrai notícias de uma fonte específica.
-    Retorna lista de dicts com titulo, url e fonte.
+    Extrai links de notícias de uma fonte.
+    Retorna lista de dicts: titulo, url, fonte
     """
-
     response = requests.get(
         fonte["url"],
         headers=HEADERS,
@@ -38,7 +42,7 @@ def extrair_noticias_fonte(fonte):
         if not url.startswith("http"):
             continue
 
-        # Limpeza básica
+        # limpeza básica
         titulo = titulo.replace("\n", " ").strip()
 
         noticias.append({
@@ -63,17 +67,27 @@ def rodar_crawler():
             noticias = extrair_noticias_fonte(fonte)
 
             for n in noticias:
+                # classificação editorial
+                categoria, subcategoria = classificar_noticia(n["titulo"])
+                tags = extrair_tags(n["titulo"])
+                slug = gerar_slug(n["titulo"])
+
                 salvar_noticia(
                     titulo=n["titulo"],
                     url=n["url"],
-                    fonte=n["fonte"]
+                    fonte=n["fonte"],
+                    categoria=categoria,
+                    subcategoria=subcategoria,
+                    tags=tags,
+                    slug=slug
                 )
+
                 total_salvas += 1
 
         except Exception as e:
-            print(f"[ERRO] {fonte['nome']}: {e}")
+            print(f"[ERRO] Fonte {fonte['nome']}: {e}")
 
-    print(f"[OK] {total_salvas} notícias processadas")
+    print(f"[OK] Total de notícias processadas: {total_salvas}")
 
 
 if __name__ == "__main__":
