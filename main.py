@@ -76,11 +76,11 @@ def pagina_noticia(request: Request, slug: str):
     {
         "request": request,
         "titulo": noticia["titulo"],
-        "conteudo": noticia["conteudo_editorial"],
+        "conteudo": noticia.get("conteudo_editorial"),
         "imagem": noticia["imagem"],
         "data": noticia["criada_em"],
         "categoria": noticia["categoria"],
-        "fonte": noticia["fonte"],
+        "fonte": noticia.get["fonte"],
         "categorias": categorias,
         "categoria_ativa": noticia["categoria"]
     }
