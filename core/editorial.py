@@ -1,32 +1,25 @@
 import os
-from google import genai
+import google.generativeai as genai
 
-# usa a variável de ambiente do Render / local
-client = genai.Client(
+genai.configure(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
-MODEL = "models/gemini-2.0-flash"
+MODEL = "gemini-2.0-flash"
 
 
 def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
-    """
-    Reescreve a notícia em tom jornalístico popular,
-    com foco em SEO e análise.
-    """
-
     prompt = f"""
-Você é o Editorial do site O Giro da Bola.
+Você é o editorial do site O Giro da Bola.
 
-Reescreva a notícia abaixo seguindo estas regras:
-- Linguagem jornalística + popular
-- Texto médio para longo (SEO)
-- NÃO cite a fonte original
-- NÃO copie frases
+Reescreva a notícia abaixo:
+- Linguagem jornalística popular
+- SEO-friendly
+- Não cite a fonte original
+- Não copie frases
 - Crie uma análise final
-- Tema: futebol
 
-Título original:
+Título:
 {titulo}
 
 Resumo:
@@ -34,22 +27,13 @@ Resumo:
 
 Categoria:
 {categoria}
-
-Estruture assim:
-- Título
-- Parágrafos bem distribuídos
-- Subtítulos quando fizer sentido
-- Conclusão analítica
 """
 
     try:
-        response = client.models.generate_content(
-            model=MODEL,
-            contents=prompt
-        )
-
+        model = genai.GenerativeModel(MODEL)
+        response = model.generate_content(prompt)
         return response.text.strip()
 
     except Exception as e:
-        print(f"[ERRO IA] {e}")
+        print(f"[ERRO GEMINI] {e}")
         return resumo
