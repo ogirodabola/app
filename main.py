@@ -70,10 +70,10 @@ def pagina_noticia(request: Request, slug: str):
         "noticia.html",
         {
             "request": request,
-            "titulo": noticia[0],
-            "conteudo": noticia[1],
-            "fonte": noticia[2],
-            "categoria": noticia[3],
-            "data": noticia[4],
+            ""titulo": noticia["titulo"],
+            "conteudo": noticia["conteudo_editorial"],
+            "imagem": noticia["imagem"],
+            "data": noticia["data_publicacao"],
+
         }
     )
