@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-from fastapi import HTTPException
-from core.database import buscar_noticia_por_slug
+
 from core.database import (
     criar_tabelas,
     listar_noticias,
     listar_hot_news,
-    listar_categorias
+    listar_categorias,
+    buscar_noticia_por_slug
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -26,6 +26,7 @@ app.mount(
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
+
 @app.get("/")
 def home(request: Request):
     hot_news = listar_hot_news(horas=3, limit=24)
@@ -39,7 +40,7 @@ def home(request: Request):
             "hot_news": hot_news,
             "noticias": noticias,
             "categorias": categorias,
-            "categoria_ativa": categoria
+            "categoria_ativa": None
         }
     )
 
@@ -59,12 +60,16 @@ def categoria(request: Request, categoria: str):
             "categoria_ativa": categoria
         }
     )
+
+
 @app.get("/noticia/{slug}")
 def pagina_noticia(request: Request, slug: str):
     noticia = buscar_noticia_por_slug(slug)
 
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
+
+    categorias = listar_categorias()
 
     return templates.TemplateResponse(
         "noticia.html",
@@ -73,7 +78,8 @@ def pagina_noticia(request: Request, slug: str):
             "titulo": noticia["titulo"],
             "conteudo": noticia["conteudo_editorial"],
             "imagem": noticia["imagem"],
-            "data": noticia["data_publicacao"],
-
+            "data": noticia["criada_em"],
+            "categorias": categorias,
+            "categoria_ativa": noticia["categoria"]
         }
     )
