@@ -5,11 +5,6 @@ from app.database import get_db
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/admin/limpar-lixo")
-def limpar():
-    limpar_lixo()
-    return {"status": "ok"}
-
 @router.get("/")
 def home(request: Request):
     db = get_db()
