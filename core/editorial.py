@@ -1,32 +1,55 @@
-from google import genai
 import os
+from google import genai
 
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+# usa a variável de ambiente do Render / local
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
-MODEL = "models/gemini-2.5-flash"  # rápido e barato
+MODEL = "models/gemini-2.0-flash"
 
-def gerar_conteudo_editorial(titulo, resumo, categoria):
+
+def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
+    """
+    Reescreve a notícia em tom jornalístico popular,
+    com foco em SEO e análise.
+    """
+
     prompt = f"""
-Você é o Editorial Giro da Bola, um portal brasileiro de futebol.
+Você é o Editorial do site O Giro da Bola.
 
-Reescreva a notícia abaixo com:
-- linguagem jornalística + popular
-- texto 100% original (sem plágio)
-- mínimo de 5 parágrafos
-- subtítulos (H2) quando fizer sentido
-- análise do contexto esportivo
-- NÃO cite o site de origem
-- NÃO use emojis
-- NÃO inclua datas no título
+Reescreva a notícia abaixo seguindo estas regras:
+- Linguagem jornalística + popular
+- Texto médio para longo (SEO)
+- NÃO cite a fonte original
+- NÃO copie frases
+- Crie uma análise final
+- Tema: futebol
 
-Título base: {titulo}
-Resumo base: {resumo}
-Categoria: {categoria}
+Título original:
+{titulo}
+
+Resumo:
+{resumo}
+
+Categoria:
+{categoria}
+
+Estruture assim:
+- Título
+- Parágrafos bem distribuídos
+- Subtítulos quando fizer sentido
+- Conclusão analítica
 """
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
+        )
 
-    return response.text.strip()
+        return response.text.strip()
+
+    except Exception as e:
+        print(f"[ERRO IA] {e}")
+        return resumo
