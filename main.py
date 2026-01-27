@@ -15,7 +15,6 @@ BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 
-# garante que o banco e as tabelas existam
 criar_tabelas()
 
 app.mount(
@@ -29,35 +28,28 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 @app.get("/")
 def home(request: Request):
-    hot_news = listar_hot_news(horas=3, limit=24)
-    noticias = listar_noticias(limit=30)
-    categorias = listar_categorias()
-
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "hot_news": hot_news,
-            "noticias": noticias,
-            "categorias": categorias,
+            "hot_news": listar_hot_news(horas=3, limit=24),
+            "noticias": listar_noticias(limit=30),
+            "categorias": listar_categorias(),
             "categoria_ativa": None
         }
     )
 
 
-@app.get("/categoria/{categoria}")
-def categoria(request: Request, categoria: str):
-    noticias = listar_noticias(limit=50, categoria=categoria)
-    categorias = listar_categorias()
-
+@app.get("/categoria/{categoria_slug}")
+def pagina_categoria(request: Request, categoria_slug: str):
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
             "hot_news": [],
-            "noticias": noticias,
-            "categorias": categorias,
-            "categoria_ativa": categoria
+            "noticias": listar_noticias(limit=50, categoria=categoria_slug),
+            "categorias": listar_categorias(),
+            "categoria_ativa": categoria_slug
         }
     )
 
@@ -69,19 +61,15 @@ def pagina_noticia(request: Request, slug: str):
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
-    categorias = listar_categorias()
-
     return templates.TemplateResponse(
-    "noticia.html",
-    {
-        "request": request,
-        "titulo": noticia["titulo"],
-        "conteudo": noticia.get("conteudo_editorial"),
-        "imagem": noticia["imagem"],
-        "data": noticia["criada_em"],
-        "categoria": noticia["categoria"],
-        "fonte": noticia.get["fonte"],
-        "categorias": categorias,
-        "categoria_ativa": noticia["categoria"]
-    }
-)
+        "noticia.html",
+        {
+            "request": request,
+            "titulo": noticia["titulo"],
+            "conteudo": noticia["conteudo_editorial"],
+            "imagem": noticia["imagem"],
+            "fonte": noticia["fonte"],
+            "categoria": noticia["categoria"],
+            "data": noticia["criada_em"]
+        }
+    )
