@@ -119,14 +119,14 @@ def listar_hot_news(horas=3, limit=20):
 
 def buscar_noticia_por_slug(slug):
     conn = get_db()
-    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cursor.execute("""
         SELECT
             titulo,
-            resumo,
             conteudo_editorial,
             imagem,
+            fonte,
             categoria,
             criada_em
         FROM noticias
@@ -136,4 +136,5 @@ def buscar_noticia_por_slug(slug):
 
     noticia = cursor.fetchone()
     conn.close()
+
     return noticia
