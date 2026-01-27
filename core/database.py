@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
+from datetime import datetime
 
-# Caminho absoluto do banco (seguro no Render)
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "girodabola.db"
 
@@ -12,7 +12,7 @@ def get_db():
     return conn
 
 
-def criar_tabela_noticias():
+def criar_tabelas():
     conn = get_db()
     cursor = conn.cursor()
 
@@ -20,48 +20,52 @@ def criar_tabela_noticias():
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
-            slug TEXT NOT NULL UNIQUE,
-            url TEXT NOT NULL UNIQUE,
-            fonte TEXT NOT NULL,
-
-            categoria TEXT NOT NULL,
-            subcategoria TEXT NOT NULL,
-            tags TEXT,
-
-            criada_em DATETIME DEFAULT CURRENT_TIMESTAMP
+            slug TEXT UNIQUE NOT NULL,
+            url TEXT UNIQUE NOT NULL,
+            categoria TEXT,
+            subcategoria TEXT,
+            fonte TEXT,
+            criada_em TEXT
         )
     """)
 
     conn.commit()
     conn.close()
 
-def salvar_noticia(titulo, url, fonte, categoria, subcategoria, tags, slug):
-    criar_tabela_noticias()
 
+def salvar_noticia(titulo, slug, url, categoria, subcategoria, fonte):
     conn = get_db()
     cursor = conn.cursor()
 
     try:
         cursor.execute("""
-            INSERT INTO noticias
-            (titulo, slug, url, fonte, categoria, subcategoria, tags)
+            INSERT INTO noticias (
+                titulo, slug, url,
+                categoria, subcategoria,
+                fonte, criada_em
+            )
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             titulo,
             slug,
             url,
-            fonte,
             categoria,
             subcategoria,
-            ",".join(tags)
+            fonte,
+            datetime.utcnow().isoformat()
         ))
+
         conn.commit()
         print(f"[OK] Notícia salva: {titulo}")
 
     except sqlite3.IntegrityError:
-        print(f"[SKIP] Já existe: {url}")
+        print(f"[SKIP] Notícia já existe: {url}")
 
-    def listar_noticias(limit=20, categoria=None):
+    finally:
+        conn.close()
+
+
+def listar_noticias(limit=30, categoria=None):
     conn = get_db()
     cursor = conn.cursor()
 
@@ -93,12 +97,10 @@ def listar_categorias():
     cursor.execute("""
         SELECT DISTINCT categoria
         FROM noticias
+        WHERE categoria IS NOT NULL
         ORDER BY categoria
     """)
 
     categorias = [row["categoria"] for row in cursor.fetchall()]
     conn.close()
     return categorias
-
-    finally:
-        conn.close()
