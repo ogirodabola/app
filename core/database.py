@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from psycopg2.extras import DictCursor
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -116,16 +117,16 @@ def listar_hot_news(horas=3, limit=20):
     conn.close()
     return rows
 
-def buscar_noticia_por_slug(slug: str):
+def buscar_noticia_por_slug(slug):
     conn = get_db()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    noticia["titulo"]
+    cursor = conn.cursor(cursor_factory=DictCursor)
 
     cursor.execute("""
         SELECT
             titulo,
+            resumo,
             conteudo_editorial,
-            fonte,
+            imagem,
             categoria,
             criada_em
         FROM noticias
@@ -133,6 +134,6 @@ def buscar_noticia_por_slug(slug: str):
         LIMIT 1
     """, (slug,))
 
-    row = cursor.fetchone()
+    noticia = cursor.fetchone()
     conn.close()
-    return row
+    return noticia
