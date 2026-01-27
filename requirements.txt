@@ -7,3 +7,4 @@ beautifulsoup4
 lxml
 Unidecode
 psycopg2-binary
+google-generativeai
