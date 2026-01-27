@@ -17,15 +17,20 @@ def criar_tabelas():
     cursor = conn.cursor()
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS categorias (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT UNIQUE NOT NULL
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
-            slug TEXT UNIQUE NOT NULL,
             url TEXT UNIQUE NOT NULL,
-            categoria TEXT,
-            subcategoria TEXT,
             fonte TEXT,
-            criada_em TEXT
+            categoria TEXT,
+            criado_em DATETIME
         )
     """)
 
