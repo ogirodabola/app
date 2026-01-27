@@ -60,7 +60,7 @@ def categoria(request: Request, categoria: str):
         }
     )
 @app.get("/noticia/{slug}")
-def noticia(slug: str, request: Request):
+def pagina_noticia(request: Request, slug: str):
     noticia = buscar_noticia_por_slug(slug)
 
     if not noticia:
@@ -70,6 +70,10 @@ def noticia(slug: str, request: Request):
         "noticia.html",
         {
             "request": request,
-            "noticia": noticia
+            "titulo": noticia[0],
+            "conteudo": noticia[1],
+            "fonte": noticia[2],
+            "categoria": noticia[3],
+            "data": noticia[4],
         }
     )
