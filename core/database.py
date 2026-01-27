@@ -116,21 +116,22 @@ def listar_hot_news(horas=3, limit=20):
     conn.close()
     return rows
 
-def buscar_noticia_por_slug(slug):
+def buscar_noticia_por_slug(slug: str):
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
-        SELECT *
+    cursor.execute("""
+        SELECT
+            titulo,
+            conteudo_editorial,
+            fonte,
+            categoria,
+            criada_em
         FROM noticias
         WHERE slug = %s
         LIMIT 1
-        """,
-        (slug,)
-    )
+    """, (slug,))
 
     row = cursor.fetchone()
-    cursor.close()
     conn.close()
     return row
