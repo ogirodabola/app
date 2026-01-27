@@ -90,7 +90,7 @@ def listar_categorias():
     conn.close()
     return rows
 
-def listar_hot_news(horas=3, limit=24):
+def listar_hot_news(horas=3, limit=20):
     conn = get_db()
     cursor = conn.cursor()
 
@@ -104,5 +104,4 @@ def listar_hot_news(horas=3, limit=24):
 
     rows = cursor.fetchall()
     conn.close()
-
     return rows
