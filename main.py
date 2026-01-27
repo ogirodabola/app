@@ -2,12 +2,13 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-
+from core.database import criar_tabelas
 from core.database import listar_noticias, listar_categorias
 
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
+criar_tabelas()
 
 app.mount(
     "/static",
