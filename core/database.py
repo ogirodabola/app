@@ -20,6 +20,7 @@ def criar_tabelas():
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
+            slug TEXT,
             url TEXT UNIQUE NOT NULL,
             fonte TEXT,
             categoria TEXT,
@@ -39,7 +40,8 @@ def salvar_noticia(
     fonte: str,
     categoria: str = None,
     subcategoria: str = None,
-    tags: list[str] | None = None
+    tags: list[str] | None = None,
+    slug: str | None = None
 ):
     conn = get_db()
     cursor = conn.cursor()
@@ -48,10 +50,14 @@ def salvar_noticia(
 
     try:
         cursor.execute("""
-            INSERT INTO noticias (titulo, url, fonte, categoria, subcategoria, tags, criada_em)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO noticias (
+                titulo, slug, url, fonte,
+                categoria, subcategoria, tags, criada_em
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             titulo,
+            slug,
             url,
             fonte,
             categoria,
