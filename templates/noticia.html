@@ -7,24 +7,14 @@
   <h1>{{ titulo }}</h1>
 
   <div class="meta">
-    {% if categoria %}
-      <span class="categoria">{{ categoria }}</span> ·
-    {% endif %}
-
-    {% if fonte %}
-      <span class="fonte">{{ fonte }}</span> ·
-    {% endif %}
-
+    <span class="categoria">{{ categoria }}</span> ·
+    <span class="fonte">{{ fonte }}</span> ·
     <span class="data">{{ data }}</span>
   </div>
 
-  {% if conteudo %}
-    <div class="conteudo">
-      {{ conteudo | safe }}
-    </div>
-  {% else %}
-    <p><em>Conteúdo em processamento editorial.</em></p>
-  {% endif %}
+  <div class="conteudo">
+    {{ conteudo | safe }}
+  </div>
 
 </article>
 
