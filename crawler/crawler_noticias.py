@@ -29,34 +29,39 @@ def link_valido(url, dominio):
 
 from urllib.parse import urlparse
 
-LIXO_KEYWORDS = [
-    "privacy",
-    "policy",
-    "cookies",
-    "ads",
-    "advert",
-    "nielsen",
-    "rights",
-    "terms",
-    "about",
-    "disney",
-    "measurement"
+PALAVRAS_PROIBIDAS = [
+    "privacy", "policy", "cookies", "termos", "login",
+    "cadastro", "assine", "newsletter", "sobre",
+    "contato", "institucional", "legislacao", "transito"
 ]
 
+def link_valido(url: str, dominio: str) -> bool:
+    if not url:
+        return False
 
-def eh_lixo(titulo: str) -> bool:
-    t = titulo.lower()
-    return any(p in t for p in LIXO_KEYWORDS)
+    url = url.lower()
 
+    # domínio correto
+    if dominio not in url:
+        return False
+
+    # palavras proibidas
+    for p in PALAVRAS_PROIBIDAS:
+        if p in url:
+            return False
+
+    # padrão mínimo de URL jornalística
+    if not any(x in url for x in ["/noticia", "/news", "/202", "/futebol"]):
+        return False
+
+    return True
+
+from urllib.parse import urlparse
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
 
-    response = requests.get(
-        fonte["url"],
-        headers=HEADERS,
-        timeout=15
-    )
+    response = requests.get(fonte["url"], headers=HEADERS, timeout=15)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
@@ -64,33 +69,20 @@ def extrair_noticias_fonte(fonte):
     noticias = []
     dominio = urlparse(fonte["url"]).netloc
 
-    # 🔥 padrão editorial: links que envolvem h2 ou h3
-    candidatos = soup.select("a:has(h2), a:has(h3)")
-
-    for a in candidatos:
+    for a in soup.select("a:has(h2), a:has(h3)"):
         if len(noticias) >= MAX_POR_FONTE:
             break
 
         titulo = a.get_text(strip=True)
         url = a.get("href")
 
-        # validações duras (anti-lixo)
         if not titulo or len(titulo) < 30:
             continue
 
-        if eh_lixo(titulo):
-            continue
-
-        if not url or not url.startswith("http"):
-            continue
-
-        if dominio not in url:
+        if not link_valido(url, dominio):
             continue
 
         categoria = classificar_noticia(titulo)
-        if not categoria:
-            continue
-
         slug = gerar_slug(titulo)
 
         noticias.append({
