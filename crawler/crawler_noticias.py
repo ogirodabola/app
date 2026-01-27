@@ -61,7 +61,11 @@ from urllib.parse import urlparse
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
 
-    response = requests.get(fonte["url"], headers=HEADERS, timeout=15)
+    response = requests.get(
+        fonte["url"],
+        headers=HEADERS,
+        timeout=15
+    )
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
@@ -84,24 +88,26 @@ def extrair_noticias_fonte(fonte):
 
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
+        resumo = titulo[:140]
 
+        # 🔥 IA AQUI (DENTRO DO LOOP)
         conteudo_editorial = gerar_conteudo_editorial(
-        titulo=titulo,
-        resumo=resumo,
-        categoria=categoria
-)
+            titulo=titulo,
+            resumo=resumo,
+            categoria=categoria
+        )
 
-noticias.append({
-    "titulo": titulo,
-    "url": url,
-    "fonte": fonte["nome"],
-    "categoria": categoria,
-    "slug": slug,
-    "resumo": resumo,
-    "conteudo_editorial": conteudo_editorial
-})
+        noticias.append({
+            "titulo": titulo,
+            "url": url,
+            "fonte": fonte["nome"],
+            "categoria": categoria,
+            "slug": slug,
+            "resumo": resumo,
+            "conteudo_editorial": conteudo_editorial
+        })
 
-
+    # 🔥 RETURN TEM QUE ESTAR AQUI
     return noticias
 
 def rodar_crawler():
