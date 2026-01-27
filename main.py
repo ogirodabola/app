@@ -17,12 +17,6 @@ app = FastAPI()
 # garante que o banco e as tabelas existam
 criar_tabelas()
 
-from core.database import limpar_lixo
-
-criar_tabelas()
-limpar_lixo()
-
-
 app.mount(
     "/static",
     StaticFiles(directory=BASE_DIR / "static"),
