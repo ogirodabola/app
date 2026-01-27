@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<article class="pagina-noticia">
+
+  <h1>{{ noticia.titulo }}</h1>
+
+  <div class="meta">
+    <span>{{ noticia.categoria }}</span> ·
+    <span>{{ noticia.fonte }}</span> ·
+    <span>{{ noticia.criada_em }}</span>
+  </div>
+
+  <p class="resumo">
+    {{ noticia.resumo }}
+  </p>
+
+  <p class="fonte-original">
+    Fonte original:
+    <a href="{{ noticia.url }}" target="_blank" rel="noopener">
+      {{ noticia.fonte }}
+    </a>
+  </p>
+
+</article>
+
+{% endblock %}
