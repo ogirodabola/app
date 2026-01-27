@@ -1,98 +1,91 @@
-import sqlite3
-from pathlib import Path
-from datetime import datetime
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR / "girodabola.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return psycopg2.connect(
+        DATABASE_URL,
+        cursor_factory=RealDictCursor
+    )
 
 
 def criar_tabelas():
     conn = get_db()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS noticias (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT NOT NULL,
-            slug TEXT UNIQUE,
-            url TEXT UNIQUE,
-            fonte TEXT,
-            categoria TEXT,
-            criada_em TEXT
-        )
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS noticias (
+        id SERIAL PRIMARY KEY,
+        titulo TEXT NOT NULL,
+        resumo TEXT,
+        url TEXT UNIQUE NOT NULL,
+        fonte TEXT,
+        categoria TEXT,
+        slug TEXT,
+        imagem TEXT,
+        criada_em TIMESTAMP DEFAULT NOW()
+    );
     """)
 
     conn.commit()
+    cur.close()
     conn.close()
 
 
-def salvar_noticia(titulo, url, fonte, categoria, slug):
+def salvar_noticia(titulo, resumo, url, fonte, categoria=None, slug=None, imagem=None):
     conn = get_db()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-    cursor.execute("""
-        INSERT OR IGNORE INTO noticias
-        (titulo, url, fonte, categoria, slug, criada_em)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        titulo,
-        url,
-        fonte,
-        categoria,
-        slug,
-        datetime.utcnow()
-    ))
+    cur.execute("""
+    INSERT INTO noticias (titulo, resumo, url, fonte, categoria, slug, imagem)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ON CONFLICT (url) DO NOTHING
+    """, (titulo, resumo, url, fonte, categoria, slug, imagem))
 
     conn.commit()
+    cur.close()
     conn.close()
+
 
 def listar_noticias(limit=30, categoria=None):
     conn = get_db()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
     if categoria:
-        cursor.execute(
-            """
-            SELECT *
-            FROM noticias
-            WHERE categoria = ?
-            ORDER BY id DESC
-            LIMIT ?
-            """,
-            (categoria, limit)
-        )
+        cur.execute("""
+        SELECT * FROM noticias
+        WHERE categoria = %s
+        ORDER BY criada_em DESC
+        LIMIT %s
+        """, (categoria, limit))
     else:
-        cursor.execute(
-            """
-            SELECT *
-            FROM noticias
-            ORDER BY id DESC
-            LIMIT ?
-            """,
-            (limit,)
-        )
+        cur.execute("""
+        SELECT * FROM noticias
+        ORDER BY criada_em DESC
+        LIMIT %s
+        """, (limit,))
 
-    rows = cursor.fetchall()
+    rows = cur.fetchall()
+    cur.close()
     conn.close()
     return rows
 
+
 def listar_categorias():
     conn = get_db()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-    cursor.execute("""
-        SELECT DISTINCT categoria
-        FROM noticias
-        WHERE categoria IS NOT NULL
-        ORDER BY categoria
+    cur.execute("""
+    SELECT DISTINCT categoria
+    FROM noticias
+    WHERE categoria IS NOT NULL
+    ORDER BY categoria
     """)
 
-    rows = cursor.fetchall()
+    rows = [r["categoria"] for r in cur.fetchall()]
+    cur.close()
     conn.close()
-    return [r["categoria"] for r in rows]
+    return rows
