@@ -35,20 +35,13 @@ def criar_tabelas():
     conn.close()
 
 
-def salvar_noticia(titulo, resumo, url, fonte, categoria=None, slug=None, imagem=None):
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-    INSERT INTO noticias (titulo, resumo, url, fonte, categoria, slug, imagem)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
-    ON CONFLICT (url) DO NOTHING
-    """, (titulo, resumo, url, fonte, categoria, slug, imagem))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
+def salvar_noticia(titulo, resumo, url, fonte, categoria, slug):
+    cursor.execute("""
+        INSERT INTO noticias (
+            titulo, resumo, url, fonte, categoria, slug
+        ) VALUES (%s, %s, %s, %s, %s, %s)
+        ON CONFLICT (slug) DO NOTHING
+    """, (titulo, resumo, url, fonte, categoria, slug))
 
 def listar_noticias(limit=30, categoria=None):
     conn = get_db()
