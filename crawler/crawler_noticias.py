@@ -1,64 +1,67 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
 
-# =========================================
-# GARANTE BANCO + TABELAS (CRON SAFE)
-# =========================================
-criar_tabelas()
-
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (O Giro da Bola)"
+    "User-Agent": "O Giro da Bola"
 }
 
-MAX_POR_FONTE = 30
+MAX_POR_FONTE = 20
+
+# garante banco/tabelas
+criar_tabelas()
+
+
+def link_valido(url, dominio):
+    return (
+        url.startswith("http")
+        and dominio in url
+        and not any(p in url.lower() for p in [
+            "privacy", "ads", "cookies", "politica",
+            "terms", "login", "cadastro"
+        ])
+    )
 
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
 
-    response = requests.get(
-        fonte["url"],
-        headers=HEADERS,
-        timeout=15
-    )
+    response = requests.get(fonte["url"], headers=HEADERS, timeout=15)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
-    links = soup.find_all("a", href=True)
 
     noticias = []
+    dominio = urlparse(fonte["url"]).netloc
 
-    for link in links:
+    # 🔥 pega apenas links com <h2> ou <h3> (padrão jornalístico)
+    for a in soup.select("a:has(h2), a:has(h3)"):
         if len(noticias) >= MAX_POR_FONTE:
             break
 
-        titulo = link.get_text(strip=True)
-        url = link["href"]
+        titulo = a.get_text(strip=True)
+        url = a.get("href")
 
-        # filtros mínimos
-        if not titulo or len(titulo) < 15:
+        if not titulo or len(titulo) < 30:
             continue
 
-        if not url.startswith("http"):
+        if not link_valido(url, dominio):
             continue
 
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
 
-        # ✅ RESUMO OBRIGATÓRIO (regra final)
-        resumo = titulo[:180]
-
         noticias.append({
             "titulo": titulo,
-            "resumo": resumo,
             "url": url,
             "fonte": fonte["nome"],
             "categoria": categoria,
-            "slug": slug
+            "slug": slug,
+            "resumo": titulo[:140]
         })
 
     return noticias
