@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
