@@ -118,7 +118,8 @@ def listar_hot_news(horas=3, limit=20):
 
 def buscar_noticia_por_slug(slug: str):
     conn = get_db()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+noticia["titulo"]
 
     cursor.execute("""
         SELECT
