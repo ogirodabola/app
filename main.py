@@ -14,3 +14,10 @@ app.mount(
 )
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "jogo.html",  # ou index.html, conforme seu template
+        {"request": request}
+    )
