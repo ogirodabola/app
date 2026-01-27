@@ -5,12 +5,15 @@
 <h1>🔥 Futebol em Tempo Real</h1>
 
 <nav class="categorias">
-  <a href="/" class="{{ 'ativa' if not categoria_ativa else '' }}">Agora</a>
+  <a href="/"
+     class="{% if not categoria_ativa %}ativa{% endif %}">
+    Agora
+  </a>
 
   {% for cat in categorias %}
-    <a href="/categoria/{{ cat|lower|replace(' ', '-') }}"
-       class="{{ 'ativa' if categoria_ativa == cat else '' }}">
-      {{ cat }}
+    <a href="/categoria/{{ cat.slug }}"
+       class="{% if categoria_ativa == cat.slug %}ativa{% endif %}">
+      {{ cat.nome }}
     </a>
   {% endfor %}
 </nav>
@@ -20,7 +23,7 @@
 
   {% for n in hot_news %}
     <article class="hot-item">
-      <a href="{{ n.url }}" target="_blank" rel="noopener">
+      <a href="/noticia/{{ n.slug }}">
         <span class="categoria">{{ n.categoria }}</span>
         <h3>{{ n.titulo }}</h3>
         <small>{{ n.fonte }} • {{ n.criada_em }}</small>
