@@ -71,9 +71,9 @@ def rodar_crawler():
                 total_salvas += 1
 
         except Exception as e:
-            print(f"[ERRO] Fonte {fonte['nome']}: {e}")
+            print(f"[ERRO] {fonte['nome']}: {e}")
 
-    print(f"[OK] Total de notícias processadas: {total_salvas}")
+    print(f"[OK] {total_salvas} notícias processadas")
 
 
 if __name__ == "__main__":
