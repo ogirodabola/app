@@ -105,26 +105,3 @@ def listar_hot_news(horas=3, limit=20):
     rows = cursor.fetchall()
     conn.close()
     return rows
-
-def limpar_lixo():
-    conn = get_conn()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        DELETE FROM noticias
-        WHERE
-            titulo ILIKE '%privacy%'
-            OR titulo ILIKE '%policy%'
-            OR titulo ILIKE '%cookies%'
-            OR titulo ILIKE '%ads%'
-            OR titulo ILIKE '%advert%'
-            OR titulo ILIKE '%nielsen%'
-            OR titulo ILIKE '%disney%'
-            OR titulo ILIKE '%rights%'
-    """)
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    print("[DB] Lixo removido com sucesso")
