@@ -85,14 +85,22 @@ def extrair_noticias_fonte(fonte):
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
 
-        noticias.append({
-            "titulo": titulo,
-            "url": url,
-            "fonte": fonte["nome"],
-            "categoria": categoria,
-            "slug": slug,
-            "resumo": titulo[:140]
-        })
+        conteudo_editorial = gerar_conteudo_editorial(
+        titulo=titulo,
+        resumo=resumo,
+        categoria=categoria
+)
+
+noticias.append({
+    "titulo": titulo,
+    "url": url,
+    "fonte": fonte["nome"],
+    "categoria": categoria,
+    "slug": slug,
+    "resumo": resumo,
+    "conteudo_editorial": conteudo_editorial
+})
+
 
     return noticias
 
