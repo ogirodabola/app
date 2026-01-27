@@ -20,12 +20,10 @@ def criar_tabelas():
         CREATE TABLE IF NOT EXISTS noticias (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
-            slug TEXT,
-            url TEXT UNIQUE NOT NULL,
+            slug TEXT UNIQUE,
+            url TEXT UNIQUE,
             fonte TEXT,
             categoria TEXT,
-            subcategoria TEXT,
-            tags TEXT,
             criada_em TEXT
         )
     """)
@@ -39,41 +37,26 @@ def salvar_noticia(
     url: str,
     fonte: str,
     categoria: str = None,
-    subcategoria: str = None,
-    tags: list[str] | None = None,
-    slug: str | None = None
+    slug: str = None
 ):
     conn = get_db()
     cursor = conn.cursor()
 
-    tags_str = ",".join(tags) if tags else None
+    cursor.execute("""
+        INSERT OR IGNORE INTO noticias
+        (titulo, slug, url, fonte, categoria, criada_em)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        titulo,
+        slug,
+        url,
+        fonte,
+        categoria,
+        datetime.utcnow().isoformat()
+    ))
 
-    try:
-        cursor.execute("""
-            INSERT INTO noticias (
-                titulo, slug, url, fonte,
-                categoria, subcategoria, tags, criada_em
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            titulo,
-            slug,
-            url,
-            fonte,
-            categoria,
-            subcategoria,
-            tags_str,
-            datetime.utcnow().isoformat()
-        ))
-
-        conn.commit()
-        print(f"[OK] Notícia salva: {titulo}")
-
-    except sqlite3.IntegrityError:
-        print(f"[SKIP] Notícia já existe: {url}")
-
-    finally:
-        conn.close()
+    conn.commit()
+    conn.close()
 
 
 def listar_noticias(limit=30, categoria=None):
@@ -110,6 +93,6 @@ def listar_categorias():
         ORDER BY categoria
     """)
 
-    categorias = [row["categoria"] for row in cursor.fetchall()]
+    rows = cursor.fetchall()
     conn.close()
-    return categorias
+    return [r["categoria"] for r in rows]
