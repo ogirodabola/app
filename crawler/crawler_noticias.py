@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from fontes import FONTES
-from database import salvar_noticia
+from core.database import salvar_noticia
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (O Giro da Bola)"
