@@ -9,6 +9,9 @@ from core.classificacao import (
     gerar_slug
 )
 
+# 🔥 GARANTE QUE O BANCO E AS TABELAS EXISTEM
+criar_tabelas()
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (O Giro da Bola)"
 }
@@ -17,77 +20,69 @@ MAX_POR_FONTE = 30
 
 
 def extrair_noticias_fonte(fonte):
-    """
-    Extrai links de notícias de uma fonte.
-    Retorna lista de dicts: titulo, url, fonte
-    """
+    print(f"[INFO] Coletando: {fonte['nome']}")
+
     response = requests.get(
         fonte["url"],
         headers=HEADERS,
-        timeout=10
+        timeout=15
     )
+
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "lxml")
 
     noticias = []
+    links = soup.find_all("a", href=True)
 
-    for link in soup.select("a"):
+    for link in links:
+        if len(noticias) >= MAX_POR_FONTE:
+            break
+
         titulo = link.get_text(strip=True)
-        url = link.get("href")
+        url = link["href"]
 
-        if not titulo or not url:
+        if not titulo or len(titulo) < 15:
             continue
 
         if not url.startswith("http"):
             continue
 
-        # limpeza básica
-        titulo = titulo.replace("\n", " ").strip()
+        categoria = classificar_noticia(titulo, url)
+        slug = gerar_slug(titulo)
 
         noticias.append({
             "titulo": titulo,
             "url": url,
-            "fonte": fonte["nome"]
+            "fonte": fonte["nome"],
+            "categoria": categoria,
+            "slug": slug
         })
-
-        if len(noticias) >= MAX_POR_FONTE:
-            break
 
     return noticias
 
 
 def rodar_crawler():
-    total_salvas = 0
+    total = 0
 
     for fonte in FONTES:
-        print(f"[INFO] Coletando: {fonte['nome']}")
-
         try:
             noticias = extrair_noticias_fonte(fonte)
 
             for n in noticias:
-                # classificação editorial
-                categoria, subcategoria = classificar_noticia(n["titulo"])
-                tags = extrair_tags(n["titulo"])
-                slug = gerar_slug(n["titulo"])
-
                 salvar_noticia(
                     titulo=n["titulo"],
                     url=n["url"],
                     fonte=n["fonte"],
-                    categoria=categoria,
-                    subcategoria=subcategoria,
-                    tags=tags,
-                    slug=slug
+                    categoria=n["categoria"],
+                    slug=n["slug"]
                 )
-
-                total_salvas += 1
+                total += 1
 
         except Exception as e:
             print(f"[ERRO] Fonte {fonte['nome']}: {e}")
 
-    print(f"[OK] Total de notícias processadas: {total_salvas}")
+    print(f"[OK] Total de notícias processadas: {total}")
 
 
 if __name__ == "__main__":
