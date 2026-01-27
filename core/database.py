@@ -4,7 +4,6 @@ from psycopg2.extras import RealDictCursor
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-
 def get_db():
     return psycopg2.connect(
         DATABASE_URL,
@@ -94,14 +93,25 @@ def listar_hot_news(horas=3, limit=20):
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT *
         FROM noticias
-        WHERE criada_em >= NOW() - INTERVAL %s
+        WHERE
+            criada_em >= NOW() - (%s || ' hours')::INTERVAL
+            AND length(titulo) > 40
+            AND titulo NOT ILIKE '%%privacy%%'
+            AND titulo NOT ILIKE '%%policy%%'
+            AND titulo NOT ILIKE '%%legislação%%'
+            AND titulo NOT ILIKE '%%termos%%'
+            AND titulo NOT ILIKE '%%cookies%%'
         ORDER BY criada_em DESC
         LIMIT %s
-    """, (f'{horas} hours', limit))
+        """,
+        (horas, limit)
+    )
 
     rows = cursor.fetchall()
+    cursor.close()
     conn.close()
     return rows
