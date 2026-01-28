@@ -30,21 +30,39 @@ def classificar_editorial(titulo: str, resumo: str) -> Tuple[str, List[str]]:
         return "Última Hora", ["Futebol"]
 
     prompt = f"""
-Classifique a notícia abaixo.
+Você é o editor-chefe de um portal de notícias esportivas focado em futebol.
 
-CATEGORIAS (escolha uma):
+Sua tarefa é classificar a notícia abaixo.
+
+REGRAS OBRIGATÓRIAS:
+- Escolha EXATAMENTE UMA categoria da lista abaixo
+- NUNCA invente novas categorias
+- Se a notícia tratar de contratações, negociações, renovações ou transferências:
+  escolha "Mercado da Bola"
+- Se tratar de jogo, resultado, rodada ou tabela do campeonato brasileiro:
+  escolha "Brasileirão"
+- Se for análise tática, técnica ou opinião aprofundada:
+  escolha "Análises"
+- Se for bastidor, clima interno, polêmica ou comportamento:
+  escolha "Bastidores"
+- Se houver dúvida real:
+  escolha "Última Hora"
+
+CATEGORIAS PERMITIDAS:
 {", ".join(CATEGORIAS_VALIDAS)}
 
-Retorne APENAS JSON no formato:
+RETORNE APENAS JSON NO FORMATO:
 {{
-  "categoria": "Categoria",
+  "categoria": "Categoria escolhida",
   "tags": ["tag1", "tag2", "tag3"]
 }}
 
-Título: {titulo}
-Resumo: {resumo}
-"""
+TÍTULO:
+{titulo}
 
+RESUMO:
+{resumo}
+"""
     resp = _client.responses.create(
         model=MODEL_NAME,
         input=prompt,
