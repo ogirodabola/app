@@ -7,7 +7,8 @@ load_dotenv()
 from core.editorial import (
     gerar_conteudo_editorial,
     gerar_tags_editoriais,
-    classificar_editorial
+    classificar_editorial,
+    gerar_titulo_editorial
 )
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -69,7 +70,7 @@ def salvar_editorial(
         cur.execute("""
             UPDATE noticias
             SET
-              titulo = %s,
+              titulo_editorial = %s,
               conteudo_editorial = %s,
               categoria = %s,
               tags = %s,
@@ -83,7 +84,6 @@ def salvar_editorial(
             noticia_id
         ))
     conn.commit()
-
 
 # ======================================================
 # PROCESSAMENTO PRINCIPAL
@@ -116,6 +116,9 @@ def processar():
                 # Classificação + tags
                 categoria, tags = classificar_editorial(titulo, resumo)
 
+                # Título editorial (rápido)
+                titulo_editorial = gerar_titulo_editorial(titulo)
+
                 # Conteúdo editorial
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo,
@@ -124,12 +127,15 @@ def processar():
                 )
 
                 salvar_editorial(
-                    conn,
-                    noticia_id,
-                    titulo_editorial=titulo,
-                    conteudo_editorial=conteudo,
-                    categoria=categoria,
-                    tags=tags
+                    UPDATE noticias
+                    SET
+                    titulo_editorial = %s,
+                    conteudo_editorial = %s,
+                    categoria = %s,
+                    tags = %s,
+                    editorial_status = 'pronto'
+                    WHERE id = %s;
+
                 )
 
                 print("   ✅ Editorial pronto.\n")
