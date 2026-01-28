@@ -127,15 +127,12 @@ def processar():
                 )
 
                 salvar_editorial(
-                    UPDATE noticias
-                    SET
-                    titulo_editorial = %s,
-                    conteudo_editorial = %s,
-                    categoria = %s,
-                    tags = %s,
-                    editorial_status = 'pronto',
-                    WHERE id = %s;
-
+                    conn,
+                    noticia_id,
+                    titulo_editorial=titulo_editorial,
+                    conteudo_editorial=conteudo,
+                    categoria=categoria,
+                    tags=tags
                 )
 
                 print("   ✅ Editorial pronto.\n")
