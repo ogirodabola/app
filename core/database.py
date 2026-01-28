@@ -122,3 +122,20 @@ def listar_hot_news(limit: int = 6):
             return cur.fetchall()
     finally:
         conn.close()
+
+def listar_categorias():
+    """
+    Retorna lista de categorias disponíveis no site.
+    """
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT DISTINCT categoria
+                FROM noticias
+                WHERE categoria IS NOT NULL
+                ORDER BY categoria ASC
+            """)
+            return [row[0] for row in cur.fetchall()]
+    finally:
+        conn.close()
