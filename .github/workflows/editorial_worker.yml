@@ -32,3 +32,8 @@ jobs:
           EDITORIAL_SLEEP: 3
         run: |
           python scripts/processar_editorial.py
+
+          - name: Run contract tests
+          run: |
+          python -m pytest tests/test_database_contract.py
+      
