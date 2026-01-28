@@ -1,45 +1,108 @@
 {% extends "base.html" %}
 
+{% block title %}
+O Giro da Bola | Futebol em Tempo Real
+{% endblock %}
+
 {% block content %}
 
-<section class="bloco">
-  <h2>🔥 Última Hora</h2>
-  <ul class="lista">
-    {% for n in ultima_hora %}
-      <li>
-        <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
-        <span class="fonte">{{ n.fonte }}</span>
-      </li>
-    {% endfor %}
-  </ul>
+<section class="home">
+
+  <!-- 🔥 ÚLTIMA HORA -->
+  {% if ultima_hora %}
+  <section class="bloco">
+    <h2>🔥 Última Hora</h2>
+    <ul class="lista">
+      {% for n in ultima_hora %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+          <span class="fonte">({{ n.fonte }})</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- 🏆 BRASILEIRÃO -->
+  {% if brasileirao %}
+  <section class="bloco">
+    <h2>🏆 Brasileirão</h2>
+
+    <!-- Destaque -->
+    {% set destaque = brasileirao[0] %}
+    <div class="destaque">
+      <a href="/noticia/{{ destaque.slug }}">
+        {{ destaque.titulo }}
+      </a>
+    </div>
+
+    <!-- Lista -->
+    <ul class="lista">
+      {% for n in brasileirao[1:] %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- 🔁 MERCADO DA BOLA -->
+  {% if mercado %}
+  <section class="bloco">
+    <h2>🔁 Mercado da Bola</h2>
+    <ul class="lista">
+      {% for n in mercado %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- 🧠 ANÁLISES -->
+  {% if analises %}
+  <section class="bloco">
+    <h2>🧠 Análises</h2>
+    <ul class="lista">
+      {% for n in analises %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- 🏛 BASTIDORES -->
+  {% if bastidores %}
+  <section class="bloco">
+    <h2>🏛 Bastidores</h2>
+    <ul class="lista">
+      {% for n in bastidores %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <!-- 📅 AGENDA -->
+  {% if agenda %}
+  <section class="bloco">
+    <h2>📅 Agenda / Jogos</h2>
+    <ul class="lista">
+      {% for n in agenda %}
+        <li>
+          <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
 </section>
-
-<h2>🏆 Brasileirão</h2>
-<ul>
-  {% for n in brasileirao %}
-    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-  {% endfor %}
-</ul>
-
-<h2>🔁 Mercado da Bola</h2>
-<ul>
-  {% for n in mercado %}
-    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-  {% endfor %}
-</ul>
-
-<h2>🧠 Análises</h2>
-<ul>
-  {% for n in analises %}
-    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-  {% endfor %}
-</ul>
-
-<h2>🏛 Bastidores</h2>
-<ul>
-  {% for n in bastidores %}
-    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-  {% endfor %}
-</ul>
 
 {% endblock %}
