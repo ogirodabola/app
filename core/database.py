@@ -93,7 +93,10 @@ def salvar_noticia(
                 INSERT INTO noticias
                 (titulo, resumo, url, fonte, categoria, slug, imagem, imagem_credito)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-                ON CONFLICT (url) DO NOTHING;
+                ON CONFLICT (url) DO UPDATE
+                SET
+                    imagem = COALESCE(noticias.imagem, EXCLUDED.imagem),
+                    imagem_credito = COALESCE(noticias.imagem_credito, EXCLUDED.imagem_credito);
             """, (
                 titulo, resumo, url, fonte, categoria,
                 slug, imagem, imagem_credito
