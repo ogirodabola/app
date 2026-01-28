@@ -5,12 +5,18 @@ from psycopg2.extras import RealDictCursor
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
+# ======================================================
+# CONEXÃO
+# ======================================================
 def get_conn():
     if not DATABASE_URL:
         raise RuntimeError("DATABASE_URL não definida")
     return psycopg2.connect(DATABASE_URL)
 
 
+# ======================================================
+# TABELA (SEM QUEBRAR BANCO EXISTENTE)
+# ======================================================
 def criar_tabelas():
     conn = get_conn()
     try:
@@ -19,7 +25,6 @@ def criar_tabelas():
                 CREATE TABLE IF NOT EXISTS noticias (
                     id SERIAL PRIMARY KEY,
                     titulo TEXT NOT NULL,
-                    titulo_editorial TEXT,
                     resumo TEXT,
                     url TEXT UNIQUE,
                     fonte TEXT,
@@ -38,7 +43,7 @@ def criar_tabelas():
 
 
 # ======================================================
-# LISTAGEM PRINCIPAL (HOME)
+# HOME / LISTAGEM
 # ======================================================
 def listar_noticias(limit: int = 30, categoria: str | None = None):
     conn = get_conn()
@@ -79,37 +84,9 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
     finally:
         conn.close()
 
-# ======================================================
-# NOTÍCIA INDIVIDUAL
-# ======================================================
-def buscar_noticia_por_slug(slug: str):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  titulo AS titulo_original,
-                  resumo,
-                  conteudo_editorial,
-                  imagem,
-                  imagem_credito,
-                  fonte,
-                  categoria,
-                  tags,
-                  criada_em
-                FROM noticias
-                WHERE slug = %s
-                LIMIT 1;
-            """, (slug,))
-            return cur.fetchone()
-    finally:
-        conn.close()
-
 
 # ======================================================
-# HOT NEWS (prioriza editorial)
+# HOT NEWS
 # ======================================================
 def listar_hot_news(limit: int = 24):
     conn = get_conn()
@@ -132,6 +109,35 @@ def listar_hot_news(limit: int = 24):
     finally:
         conn.close()
 
+
+# ======================================================
+# NOTÍCIA INDIVIDUAL (EDITORIAL AQUI SIM)
+# ======================================================
+def buscar_noticia_por_slug(slug: str):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    id,
+                    titulo,
+                    resumo,
+                    conteudo_editorial,
+                    imagem,
+                    imagem_credito,
+                    fonte,
+                    categoria,
+                    tags,
+                    criada_em
+                FROM noticias
+                WHERE slug = %s
+                LIMIT 1;
+            """, (slug,))
+            return cur.fetchone()
+    finally:
+        conn.close()
+
+
 # ======================================================
 # CATEGORIAS
 # ======================================================
@@ -151,7 +157,7 @@ def listar_categorias():
 
 
 # ======================================================
-# SALVAR / ATUALIZAR NOTÍCIA
+# INSERT / UPDATE (CRAWLER)
 # ======================================================
 def salvar_noticia(
     titulo, resumo, url, fonte, categoria, slug,
@@ -169,8 +175,8 @@ def salvar_noticia(
                     imagem = COALESCE(noticias.imagem, EXCLUDED.imagem),
                     imagem_credito = COALESCE(noticias.imagem_credito, EXCLUDED.imagem_credito);
             """, (
-                titulo, resumo, url, fonte, categoria,
-                slug, imagem, imagem_credito
+                titulo, resumo, url, fonte,
+                categoria, slug, imagem, imagem_credito
             ))
         conn.commit()
     finally:
