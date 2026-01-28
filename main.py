@@ -2,7 +2,8 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-
+from fastapi.responses import HTMLResponse
+from fastapi.requests import Request
 from core.database import (
     criar_tabelas,
     listar_noticias,
@@ -54,8 +55,8 @@ def pagina_categoria(request: Request, categoria_slug: str):
     )
 
 
-@app.get("/noticia/{slug}")
-def pagina_noticia(request: Request, slug: str):
+@app.get("/noticia/{slug}", response_class=HTMLResponse)
+def noticia(slug: str, request: Request):
     noticia = buscar_noticia_por_slug(slug)
 
     if not noticia:
@@ -65,11 +66,6 @@ def pagina_noticia(request: Request, slug: str):
         "noticia.html",
         {
             "request": request,
-            "titulo": noticia["titulo"],
-            "conteudo": noticia["conteudo_editorial"],
-            "imagem": noticia["imagem"],
-            "fonte": noticia["fonte"],
-            "categoria": noticia["categoria"],
-            "data": noticia["criada_em"]
+            "noticia": noticia
         }
     )
