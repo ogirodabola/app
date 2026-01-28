@@ -32,4 +32,4 @@ jobs:
           EDITORIAL_BATCH_LIMIT: "5"
           EDITORIAL_SLEEP: "3"
         run: |
-          python -m scripts.processar_editorial
+          python scripts/processar_editorial.py
