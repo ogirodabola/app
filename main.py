@@ -33,7 +33,7 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
-            "hot_news": listar_hot_news(horas=3, limit=24),
+            "hot_news": listar_hot_news(limit=24),
             "noticias": listar_noticias(limit=30),
             "categorias": listar_categorias(),
             "categoria_ativa": None
