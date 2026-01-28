@@ -126,3 +126,32 @@ Categoria: {categoria}
 def gerar_tags_editoriais(titulo: str, resumo: str, categoria: str) -> List[str]:
     _, tags = classificar_editorial(titulo, resumo)
     return tags
+
+def gerar_titulo_editorial(titulo: str) -> str:
+    if USE_MOCK or not _client:
+        return titulo
+
+    prompt = f"""
+Reescreva o título abaixo para um portal esportivo brasileiro.
+
+Regras:
+- Curto
+- Claro
+- Jornalístico
+- Sem clickbait exagerado
+- Máx. 90 caracteres
+
+Retorne APENAS o texto do título.
+
+Título original:
+{titulo}
+"""
+
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=50,
+    )
+
+    texto = resp.output_text.strip().replace('"', "")
+    return texto or titulo
