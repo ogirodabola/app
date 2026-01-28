@@ -5,11 +5,12 @@ from pathlib import Path
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from core.database import (
-    criar_tabelas,
-    listar_noticias,
-    listar_hot_news,
-    listar_categorias,
-    buscar_noticia_por_slug
+    listar_ultima_hora,
+    listar_brasileirao,
+    listar_mercado_bola,
+    listar_analises,
+    listar_bastidores,
+    listar_categorias
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -27,19 +28,20 @@ app.mount(
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
-@app.get("/")
+@@app.get("/")
 def home(request: Request):
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "hot_news": listar_hot_news(limit=24),
-            "noticias": listar_noticias(limit=30),
-            "categorias": listar_categorias(),
-            "categoria_ativa": None
+            "ultima_hora": listar_ultima_hora(),
+            "brasileirao": listar_brasileirao(),
+            "mercado": listar_mercado_bola(),
+            "analises": listar_analises(),
+            "bastidores": listar_bastidores(),
+            "categorias": listar_categorias()
         }
     )
-
 
 @app.get("/categoria/{categoria_slug}")
 def pagina_categoria(request: Request, categoria_slug: str):
