@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from core.database import (
+    criar_tabelas,
     listar_ultima_hora,
     listar_brasileirao,
     listar_mercado_bola,
