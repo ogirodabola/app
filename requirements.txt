@@ -8,3 +8,5 @@ lxml
 Unidecode
 psycopg2-binary
 google-generativeai
+openai
+python-dotenv
