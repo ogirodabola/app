@@ -2,36 +2,42 @@
 
 {% block content %}
 
-<h1>🔥 Futebol em Tempo Real</h1>
-
-<nav class="categorias">
-  <a href="/"
-     class="{% if not categoria_ativa %}ativa{% endif %}">
-    Agora
-  </a>
-
-  {% for cat in categorias %}
-    <a href="/categoria/{{ cat.slug }}"
-       class="{% if categoria_ativa == cat.slug %}ativa{% endif %}">
-      {{ cat.nome }}
-    </a>
+<h2>🔥 Última Hora</h2>
+<ul>
+  {% for n in ultima_hora %}
+    <li>
+      <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+      <small>({{ n.fonte }})</small>
+    </li>
   {% endfor %}
-</nav>
+</ul>
 
-<section class="hot-news">
-  <h2>🔥 Agora no futebol</h2>
-
-  {% for n in hot_news %}
-    <article class="hot-item">
-      <a href="/noticia/{{ n.slug }}">
-        <span class="categoria">{{ n.categoria }}</span>
-        <h3>{{ n.titulo }}</h3>
-        <small>{{ n.fonte }} • {{ n.criada_em }}</small>
-      </a>
-    </article>
-  {% else %}
-    <p>Nenhuma notícia quente agora.</p>
+<h2>🏆 Brasileirão</h2>
+<ul>
+  {% for n in brasileirao %}
+    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
   {% endfor %}
-</section>
+</ul>
+
+<h2>🔁 Mercado da Bola</h2>
+<ul>
+  {% for n in mercado %}
+    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
+  {% endfor %}
+</ul>
+
+<h2>🧠 Análises</h2>
+<ul>
+  {% for n in analises %}
+    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
+  {% endfor %}
+</ul>
+
+<h2>🏛 Bastidores</h2>
+<ul>
+  {% for n in bastidores %}
+    <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
+  {% endfor %}
+</ul>
 
 {% endblock %}
