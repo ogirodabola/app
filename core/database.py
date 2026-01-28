@@ -102,11 +102,13 @@ def salvar_noticia(
     finally:
         conn.close()
 
-def listar_hot_news(limit: int = 6):
+def listar_hot_news(horas: int = 3, limit: int = 24):
     """
     Notícias em destaque (home).
-    Critério simples e eficiente:
-    - tem conteúdo editorial
+
+    Critério:
+    - com conteúdo editorial
+    - criadas nas últimas X horas
     - ordenadas por mais recentes
     """
     conn = get_conn()
@@ -116,9 +118,10 @@ def listar_hot_news(limit: int = 6):
                 SELECT *
                 FROM noticias
                 WHERE conteudo_editorial IS NOT NULL
+                  AND criada_em >= NOW() - INTERVAL '%s hours'
                 ORDER BY criada_em DESC
                 LIMIT %s
-            """, (limit,))
+            """, (horas, limit))
             return cur.fetchall()
     finally:
         conn.close()
