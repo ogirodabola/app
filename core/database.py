@@ -44,7 +44,7 @@ def criar_tabelas():
 
 
 # ======================================================
-# HOME – ÚLTIMA HORA (notícias mais recentes)
+# HOME – ÚLTIMA HORA
 # ======================================================
 def listar_ultima_hora(limit: int = 8):
     conn = get_conn()
@@ -68,7 +68,7 @@ def listar_ultima_hora(limit: int = 8):
 
 
 # ======================================================
-# HOME – POR CATEGORIA
+# HOME – POR CATEGORIA (GENÉRICO)
 # ======================================================
 def listar_por_categoria(categoria: str, limit: int = 10):
     conn = get_conn()
@@ -90,6 +90,18 @@ def listar_por_categoria(categoria: str, limit: int = 10):
             return cur.fetchall()
     finally:
         conn.close()
+
+
+# ======================================================
+# HOME – BRASILEIRÃO (ALIAS EDITORIAL)
+# ======================================================
+def listar_brasileirao(limit: int = 10):
+    """
+    Wrapper semântico para o bloco editorial 'Brasileirão'.
+    NÃO duplica query.
+    Mantém contrato com main.py.
+    """
+    return listar_por_categoria("Brasileirão", limit)
 
 
 # ======================================================
@@ -164,7 +176,7 @@ def listar_categorias():
 
 
 # ======================================================
-# INSERIR / ATUALIZAR NOTÍCIA
+# INSERIR / ATUALIZAR NOTÍCIA (crawler)
 # ======================================================
 def salvar_noticia(
     titulo,
@@ -203,7 +215,7 @@ def salvar_noticia(
 
 
 # ======================================================
-# ATUALIZA EDITORIAL (worker)
+# ATUALIZA EDITORIAL (worker IA)
 # ======================================================
 def atualizar_editorial(
     noticia_id: int,
@@ -236,7 +248,7 @@ def atualizar_editorial(
 
 
 # ======================================================
-# BUSCAR NOTÍCIAS SEM EDITORIAL (worker)
+# BUSCAR NOTÍCIAS SEM EDITORIAL (worker IA)
 # ======================================================
 def listar_pendentes_editorial(limit: int = 10):
     conn = get_conn()
