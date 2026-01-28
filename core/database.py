@@ -35,21 +35,21 @@ def criar_tabelas():
 
 
 def salvar_noticia(
-    titulo: str,
-    resumo: str,
-    url: str,
-    fonte: str,
-    categoria: str,
-    slug: str
+    titulo, resumo, url, fonte, categoria, slug,
+    imagem=None, imagem_credito=None
 ):
     conn = get_conn()
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO noticias (titulo, resumo, url, fonte, categoria, slug)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO noticias
+                (titulo, resumo, url, fonte, categoria, slug, imagem, imagem_credito)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (url) DO NOTHING;
-            """, (titulo, resumo, url, fonte, categoria, slug))
+            """, (
+                titulo, resumo, url, fonte, categoria,
+                slug, imagem, imagem_credito
+            ))
         conn.commit()
     finally:
         conn.close()
