@@ -4,17 +4,20 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
+
+# ======================================================
+# CONFIGURAÇÕES
+# ======================================================
 
 HEADERS = {
     "User-Agent": "O Giro da Bola"
 }
 
 MAX_POR_FONTE = 20
-
-criar_tabelas()
 
 PALAVRAS_PROIBIDAS = [
     "privacy", "policy", "cookies", "termos", "login",
@@ -24,6 +27,12 @@ PALAVRAS_PROIBIDAS = [
 
 IMAGENS_DIR = "static/img/noticias"
 os.makedirs(IMAGENS_DIR, exist_ok=True)
+
+criar_tabelas()
+
+# ======================================================
+# UTILITÁRIOS
+# ======================================================
 
 def link_valido(url: str, dominio: str) -> bool:
     if not url:
@@ -42,6 +51,19 @@ def link_valido(url: str, dominio: str) -> bool:
         return False
 
     return True
+
+
+def limpar_titulo(titulo: str) -> str:
+    # remove datas e horas
+    titulo = re.sub(r"\d{2}/\d{2}/\d{4}\s*\d{2}h\d{2}", "", titulo)
+    # remove múltiplos espaços
+    titulo = re.sub(r"\s{2,}", " ", titulo)
+    return titulo.strip()
+
+
+# ======================================================
+# IMAGENS
+# ======================================================
 
 def baixar_imagem(url: str) -> str | None:
     try:
@@ -64,6 +86,7 @@ def baixar_imagem(url: str) -> str | None:
         print(f"[IMG DOWNLOAD ERRO] {e}")
         return None
 
+
 def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
     try:
         html = requests.get(url_noticia, headers=HEADERS, timeout=15)
@@ -75,8 +98,7 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             imagem_url = og["content"]
         else:
             img = soup.select_one("article img")
-            imagem_url = img["src"] if img else None
-            imagem, imagem_credito = extrair_imagem_e_credito(url, fonte["nome"])
+            imagem_url = img["src"] if img and img.get("src") else None
 
         if not imagem_url:
             return None, None
@@ -95,18 +117,10 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
         print(f"[IMG EXTRAÇÃO ERRO] {e}")
         return None, None
 
-def limpar_titulo(titulo: str) -> str:
-    """
-    Remove datas, horas e ruídos comuns vindos dos portais.
-    Ex: '...clube27/01/2026 22h06'
-    """
-    # remove datas e horas
-    titulo = re.sub(r"\d{2}/\d{2}/\d{4}\s*\d{2}h\d{2}", "", titulo)
 
-    # remove múltiplos espaços
-    titulo = re.sub(r"\s{2,}", " ", titulo)
-
-    return titulo.strip()
+# ======================================================
+# EXTRAÇÃO DE NOTÍCIAS
+# ======================================================
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
@@ -140,6 +154,15 @@ def extrair_noticias_fonte(fonte):
         slug = gerar_slug(titulo)
         resumo = titulo if len(titulo) <= 160 else titulo[:157] + "..."
 
+        # ⚠️ GARANTE ESCOPO
+        imagem = None
+        imagem_credito = None
+
+        imagem, imagem_credito = extrair_imagem_e_credito(
+            url,
+            fonte["nome"]
+        )
+
         noticias.append({
             "titulo": titulo,
             "url": url,
@@ -151,9 +174,12 @@ def extrair_noticias_fonte(fonte):
             "imagem_credito": imagem_credito
         })
 
-
     return noticias
 
+
+# ======================================================
+# EXECUÇÃO PRINCIPAL
+# ======================================================
 
 def rodar_crawler():
     total = 0
@@ -173,7 +199,6 @@ def rodar_crawler():
                     imagem=n["imagem"],
                     imagem_credito=n["imagem_credito"]
                 )
-
                 total += 1
 
         except Exception as e:
