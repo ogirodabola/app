@@ -26,3 +26,36 @@
     font-size: 0.85rem;
     color: #777;
 }
+/* ================================
+   IMAGEM DA NOTÍCIA
+================================ */
+
+.imagem-noticia {
+  max-width: 900px;       /* largura ideal de leitura */
+  margin: 24px auto;     /* centraliza */
+}
+
+.imagem-noticia img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;     /* evita imagem gigante */
+  object-fit: cover;     /* corta excesso sem distorcer */
+  border-radius: 6px;
+  display: block;
+}
+
+.imagem-noticia figcaption {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 6px;
+  text-align: right;
+}
+@media (max-width: 768px) {
+  .imagem-noticia {
+    margin: 16px 12px;
+  }
+
+  .imagem-noticia img {
+    max-height: 320px;
+  }
+}
