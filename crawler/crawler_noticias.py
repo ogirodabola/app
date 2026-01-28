@@ -1,7 +1,7 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
@@ -38,6 +38,18 @@ def link_valido(url: str, dominio: str) -> bool:
 
     return True
 
+def limpar_titulo(titulo: str) -> str:
+    """
+    Remove datas, horas e ruídos comuns vindos dos portais.
+    Ex: '...clube27/01/2026 22h06'
+    """
+    # remove datas e horas
+    titulo = re.sub(r"\d{2}/\d{2}/\d{4}\s*\d{2}h\d{2}", "", titulo)
+
+    # remove múltiplos espaços
+    titulo = re.sub(r"\s{2,}", " ", titulo)
+
+    return titulo.strip()
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
@@ -58,7 +70,7 @@ def extrair_noticias_fonte(fonte):
         if len(noticias) >= MAX_POR_FONTE:
             break
 
-        titulo = a.get_text(strip=True)
+        titulo = limpar_titulo(a.get_text(strip=True))
         url = a.get("href")
 
         if not titulo or len(titulo) < 40:
@@ -69,7 +81,7 @@ def extrair_noticias_fonte(fonte):
 
         categoria = classificar_noticia(titulo)
         slug = gerar_slug(titulo)
-        resumo = titulo[:160]
+        resumo = titulo if len(titulo) <= 160 else titulo[:157] + "..."
 
         noticias.append({
             "titulo": titulo,
