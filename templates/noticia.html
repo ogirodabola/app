@@ -29,18 +29,18 @@
   </header>
 
   <!-- IMAGEM PRINCIPAL -->
-  {% if noticia.imagem %}
-    <figure class="imagem-noticia">
-      <img
-        src="{{ noticia.imagem }}"
-        alt="{{ noticia.titulo }}"
-        loading="lazy"
-      >
-      {% if noticia.imagem_credito %}
-        <figcaption>{{ noticia.imagem_credito }}</figcaption>
-      {% endif %}
-    </figure>
-  {% endif %}
+{% if noticia.imagem %}
+  <figure class="imagem-noticia">
+    <img src="{{ noticia.imagem }}" alt="{{ noticia.titulo }}" loading="lazy">
+    {% if noticia.imagem_credito %}
+      <figcaption>{{ noticia.imagem_credito }}</figcaption>
+    {% endif %}
+  </figure>
+{% else %}
+  <figure class="imagem-noticia placeholder">
+    <img src="https://via.placeholder.com/800x450?text=O+Giro+da+Bola" alt="O Giro da Bola">
+  </figure>
+{% endif %}
 
   <!-- CONTEÚDO EDITORIAL -->
   <section class="conteudo-editorial">
