@@ -1,3 +1,5 @@
+import os
+import hashlib
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -20,6 +22,9 @@ PALAVRAS_PROIBIDAS = [
     "contato", "institucional", "legislacao"
 ]
 
+IMAGENS_DIR = "static/img/noticias"
+os.makedirs(IMAGENS_DIR, exist_ok=True)
+
 def link_valido(url: str, dominio: str) -> bool:
     if not url:
         return False
@@ -37,6 +42,58 @@ def link_valido(url: str, dominio: str) -> bool:
         return False
 
     return True
+
+def baixar_imagem(url: str) -> str | None:
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=15)
+        r.raise_for_status()
+
+        ext = url.split("?")[0].split(".")[-1].lower()
+        if ext not in ["jpg", "jpeg", "png", "webp"]:
+            ext = "jpg"
+
+        nome = hashlib.md5(url.encode()).hexdigest()
+        caminho = f"{IMAGENS_DIR}/{nome}.{ext}"
+
+        with open(caminho, "wb") as f:
+            f.write(r.content)
+
+        return "/" + caminho  # caminho público
+
+    except Exception as e:
+        print(f"[IMG DOWNLOAD ERRO] {e}")
+        return None
+
+def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
+    try:
+        html = requests.get(url_noticia, headers=HEADERS, timeout=15)
+        soup = BeautifulSoup(html.text, "lxml")
+
+        # 1️⃣ Open Graph
+        og = soup.find("meta", property="og:image")
+        if og and og.get("content"):
+            imagem_url = og["content"]
+        else:
+            img = soup.select_one("article img")
+            imagem_url = img["src"] if img else None
+            imagem, imagem_credito = extrair_imagem_e_credito(url, fonte["nome"])
+
+        if not imagem_url:
+            return None, None
+
+        # Crédito
+        figcaption = soup.find("figcaption")
+        if figcaption:
+            credito = figcaption.get_text(strip=True)
+        else:
+            credito = f"Foto: {fonte_nome}"
+
+        imagem_local = baixar_imagem(imagem_url)
+        return imagem_local, credito
+
+    except Exception as e:
+        print(f"[IMG EXTRAÇÃO ERRO] {e}")
+        return None, None
 
 def limpar_titulo(titulo: str) -> str:
     """
@@ -89,8 +146,11 @@ def extrair_noticias_fonte(fonte):
             "fonte": fonte["nome"],
             "categoria": categoria,
             "slug": slug,
-            "resumo": resumo
+            "resumo": resumo,
+            "imagem": imagem,
+            "imagem_credito": imagem_credito
         })
+
 
     return noticias
 
@@ -109,8 +169,11 @@ def rodar_crawler():
                     url=n["url"],
                     fonte=n["fonte"],
                     categoria=n["categoria"],
-                    slug=n["slug"]
+                    slug=n["slug"],
+                    imagem=n["imagem"],
+                    imagem_credito=n["imagem_credito"]
                 )
+
                 total += 1
 
         except Exception as e:
