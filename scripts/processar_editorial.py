@@ -133,7 +133,7 @@ def processar():
                     conteudo_editorial = %s,
                     categoria = %s,
                     tags = %s,
-                    editorial_status = 'pronto'
+                    editorial_status = 'pronto',
                     WHERE id = %s;
 
                 )
