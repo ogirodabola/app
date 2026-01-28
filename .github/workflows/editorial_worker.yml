@@ -1,0 +1,35 @@
+name: Editorial Worker
+
+on:
+  schedule:
+    # roda a cada 30 minutos
+    - cron: "*/30 * * * *"
+
+  workflow_dispatch: # permite rodar manualmente no GitHub
+
+jobs:
+  editorial:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Rodar worker editorial
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          EDITORIAL_BATCH_LIMIT: "5"
+          EDITORIAL_SLEEP: "3"
+        run: |
+          python -m scripts.processar_editorial
