@@ -102,18 +102,19 @@ def salvar_noticia(
     finally:
         conn.close()
 
-def listar_hot_news(horas: int = 3, limit: int = 24):
+def listar_hot_news(horas: int = 6, limit: int = 24):
     """
     Notícias em destaque (home).
 
-    Critério:
-    - com conteúdo editorial
-    - criadas nas últimas X horas
-    - ordenadas por mais recentes
+    Prioridade:
+    1. Notícias com conteúdo editorial
+    2. Fallback para notícias recentes sem editorial
     """
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            # 1️⃣ Tenta com editorial
             cur.execute("""
                 SELECT *
                 FROM noticias
@@ -122,7 +123,23 @@ def listar_hot_news(horas: int = 3, limit: int = 24):
                 ORDER BY criada_em DESC
                 LIMIT %s
             """, (horas, limit))
+
+            noticias = cur.fetchall()
+
+            if noticias:
+                return noticias
+
+            # 2️⃣ Fallback: sem editorial
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE criada_em >= NOW() - INTERVAL '%s hours'
+                ORDER BY criada_em DESC
+                LIMIT %s
+            """, (horas, limit))
+
             return cur.fetchall()
+
     finally:
         conn.close()
 
