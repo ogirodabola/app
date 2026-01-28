@@ -28,7 +28,7 @@ app.mount(
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
-@@app.get("/")
+@app.get("/")
 def home(request: Request):
     return templates.TemplateResponse(
         "index.html",
