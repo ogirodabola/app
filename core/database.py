@@ -49,7 +49,7 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
                 cur.execute("""
                     SELECT
                         id,
-                        COALESCE(titulo_editorial, titulo) AS titulo,
+                        titulo,
                         slug,
                         fonte,
                         categoria,
@@ -64,7 +64,7 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
                 cur.execute("""
                     SELECT
                         id,
-                        COALESCE(titulo_editorial, titulo) AS titulo,
+                        titulo,
                         slug,
                         fonte,
                         categoria,
@@ -76,7 +76,6 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
                 """, (limit,))
 
             return cur.fetchall()
-
     finally:
         conn.close()
 
@@ -113,34 +112,23 @@ def buscar_noticia_por_slug(slug: str):
 # HOT NEWS (prioriza editorial)
 # ======================================================
 def listar_hot_news(limit: int = 24):
-    """
-    Home principal:
-    1. Prioriza notícias com título editorial
-    2. Completa com notícias sem editorial
-    """
-
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-
             cur.execute("""
                 SELECT
                     id,
-                    COALESCE(titulo_editorial, titulo) AS titulo,
+                    titulo,
                     slug,
                     fonte,
                     categoria,
                     imagem,
                     criada_em
                 FROM noticias
-                ORDER BY
-                    (titulo_editorial IS NOT NULL) DESC,
-                    criada_em DESC
+                ORDER BY criada_em DESC
                 LIMIT %s;
             """, (limit,))
-
             return cur.fetchall()
-
     finally:
         conn.close()
 
