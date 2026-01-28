@@ -181,3 +181,121 @@ def salvar_noticia(
         conn.commit()
     finally:
         conn.close()
+# ======================================================
+# HOME – BLOCOS EDITORIAIS
+# ======================================================
+
+def listar_ultima_hora(limit: int = 8):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  categoria,
+                  criada_em
+                FROM noticias
+                WHERE categoria = 'Futebol'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def listar_brasileirao(limit: int = 10):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE
+                  categoria = 'Campeonato Brasileiro'
+                  OR tags && ARRAY['Brasileirão','Série A','Série B']
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def listar_mercado_bola(limit: int = 10):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE
+                  categoria = 'Mercado da Bola'
+                  OR tags && ARRAY[
+                    'Contratação','Transferência','Renovação','Mercado'
+                  ]
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def listar_analises(limit: int = 6):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  titulo_editorial AS titulo,
+                  slug,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE
+                  conteudo_editorial IS NOT NULL
+                  AND categoria IN ('Análise','Opinião')
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def listar_bastidores(limit: int = 6):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE
+                  categoria IN ('Gestão','Bastidores')
+                  OR tags && ARRAY['Gestão','Finanças','CBF','Bastidores']
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
