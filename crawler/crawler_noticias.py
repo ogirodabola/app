@@ -50,9 +50,26 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
         r.raise_for_status()
         soup = BeautifulSoup(r.text, "lxml")
 
-        og = soup.find("meta", property="og:image")
-        imagem_url = og["content"] if og else None
+        imagem_url = None
 
+        # 1️⃣ Open Graph padrão
+        og = soup.find("meta", property="og:image")
+        if og and og.get("content"):
+            imagem_url = og["content"]
+
+        # 2️⃣ OG secure
+        if not imagem_url:
+            ogs = soup.find("meta", property="og:image:secure_url")
+            if ogs and ogs.get("content"):
+                imagem_url = ogs["content"]
+
+        # 3️⃣ Primeira imagem do artigo
+        if not imagem_url:
+            img = soup.select_one("article img")
+            if img and img.get("src"):
+                imagem_url = img["src"]
+
+        # Crédito
         figcaption = soup.find("figcaption")
         credito = figcaption.get_text(strip=True) if figcaption else f"Foto: {fonte_nome}"
 
