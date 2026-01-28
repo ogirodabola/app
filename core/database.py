@@ -19,11 +19,12 @@ def criar_tabelas():
                 CREATE TABLE IF NOT EXISTS noticias (
                     id SERIAL PRIMARY KEY,
                     titulo TEXT NOT NULL,
+                    titulo_editorial TEXT,
                     resumo TEXT,
                     url TEXT UNIQUE,
                     fonte TEXT,
                     categoria TEXT,
-                    slug TEXT,
+                    slug TEXT UNIQUE,
                     imagem TEXT,
                     imagem_credito TEXT,
                     conteudo_editorial TEXT,
@@ -36,61 +37,151 @@ def criar_tabelas():
         conn.close()
 
 
-def listar_noticias(limit: int = 20):
+# ======================================================
+# LISTAGEM PRINCIPAL (HOME)
+# ======================================================
+def listar_noticias(limit: int = 20, categoria: str | None = None):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            if categoria:
+                cur.execute("""
+                    SELECT
+                      id,
+                      COALESCE(titulo_editorial, titulo) AS titulo,
+                      resumo,
+                      slug,
+                      fonte,
+                      categoria,
+                      imagem,
+                      criada_em
+                    FROM noticias
+                    WHERE categoria = %s
+                    ORDER BY criada_em DESC
+                    LIMIT %s;
+                """, (categoria, limit))
+            else:
+                cur.execute("""
+                    SELECT
+                      id,
+                      COALESCE(titulo_editorial, titulo) AS titulo,
+                      resumo,
+                      slug,
+                      fonte,
+                      categoria,
+                      imagem,
+                      criada_em
+                    FROM noticias
+                    ORDER BY criada_em DESC
+                    LIMIT %s;
+                """, (limit,))
+
+            return cur.fetchall()
+
+    finally:
+        conn.close()
+
+
+# ======================================================
+# NOTÍCIA INDIVIDUAL
+# ======================================================
+def buscar_noticia_por_slug(slug: str):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT
                   id,
-                  titulo,
-                  titulo_editorial,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  titulo AS titulo_original,
                   resumo,
-                  slug,
+                  conteudo_editorial,
+                  imagem,
+                  imagem_credito,
                   fonte,
                   categoria,
-                  imagem,
+                  tags,
                   criada_em
                 FROM noticias
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def listar_noticias_por_categoria(categoria: str, limit: int = 20):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT *
-                FROM noticias
-                WHERE categoria = %s
-                ORDER BY criada_em DESC
-                LIMIT %s
-            """, (categoria, limit))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def buscar_noticia_por_slug(slug: str):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT *
-                FROM noticias
                 WHERE slug = %s
-                LIMIT 1
+                LIMIT 1;
             """, (slug,))
             return cur.fetchone()
     finally:
         conn.close()
 
 
+# ======================================================
+# HOT NEWS (prioriza editorial)
+# ======================================================
+def listar_hot_news(horas: int = 6, limit: int = 24):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            # 1️⃣ Prioriza notícias com conteúdo editorial
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  categoria,
+                  criada_em
+                FROM noticias
+                WHERE conteudo_editorial IS NOT NULL
+                  AND criada_em >= NOW() - INTERVAL '%s hours'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (horas, limit))
+
+            noticias = cur.fetchall()
+            if noticias:
+                return noticias
+
+            # 2️⃣ Fallback geral
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  categoria,
+                  criada_em
+                FROM noticias
+                WHERE criada_em >= NOW() - INTERVAL '%s hours'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (horas, limit))
+
+            return cur.fetchall()
+
+    finally:
+        conn.close()
+
+
+# ======================================================
+# CATEGORIAS
+# ======================================================
+def listar_categorias():
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT DISTINCT categoria
+                FROM noticias
+                WHERE categoria IS NOT NULL
+                ORDER BY categoria ASC;
+            """)
+            return [row[0] for row in cur.fetchall()]
+    finally:
+        conn.close()
+
+
+# ======================================================
+# SALVAR / ATUALIZAR NOTÍCIA
+# ======================================================
 def salvar_noticia(
     titulo, resumo, url, fonte, categoria, slug,
     imagem=None, imagem_credito=None
@@ -111,77 +202,5 @@ def salvar_noticia(
                 slug, imagem, imagem_credito
             ))
         conn.commit()
-    finally:
-        conn.close()
-
-def listar_hot_news(horas: int = 6, limit: int = 24):
-    """
-    Notícias em destaque (home).
-
-    Prioridade:
-    1. Notícias com conteúdo editorial
-    2. Fallback para notícias recentes sem editorial
-    """
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-
-            # 1️⃣ Tenta com editorial
-            cur.execute("""
-                SELECT
-                  id,
-                  titulo,
-                  titulo_editorial,
-                  slug,
-                  fonte,
-                  categoria,
-                  criada_em
-                FROM noticias
-                WHERE criada_em >= NOW() - INTERVAL '%s hours'
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (horas, limit))
-
-            noticias = cur.fetchall()
-
-            if noticias:
-                return noticias
-
-            # 2️⃣ Fallback: sem editorial
-            cur.execute("""
-                SELECT
-                  id,
-                  titulo,
-                  titulo_editorial,
-                  slug,
-                  fonte,
-                  categoria,
-                  criada_em
-                FROM noticias
-                WHERE criada_em >= NOW() - INTERVAL '%s hours'
-                ORDER BY criada_em DESC
-                LIMIT %s;
-
-            """, (horas, limit))
-
-            return cur.fetchall()
-
-    finally:
-        conn.close()
-
-def listar_categorias():
-    """
-    Retorna lista de categorias disponíveis no site.
-    """
-    conn = get_conn()
-    try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                SELECT DISTINCT categoria
-                FROM noticias
-                WHERE categoria IS NOT NULL
-                ORDER BY categoria ASC
-            """)
-            return [row[0] for row in cur.fetchall()]
     finally:
         conn.close()
