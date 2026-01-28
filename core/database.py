@@ -101,3 +101,24 @@ def salvar_noticia(
         conn.commit()
     finally:
         conn.close()
+
+def listar_hot_news(limit: int = 6):
+    """
+    Notícias em destaque (home).
+    Critério simples e eficiente:
+    - tem conteúdo editorial
+    - ordenadas por mais recentes
+    """
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE conteudo_editorial IS NOT NULL
+                ORDER BY criada_em DESC
+                LIMIT %s
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
