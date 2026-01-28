@@ -1,45 +1,141 @@
+/* ================================
+   RESET BÁSICO
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #ffffff;
+  color: #111;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* ================================
+   LINKS (BASE)
+================================ */
+a {
+  color: #4b0082; /* roxo tech */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   CATEGORIAS (MENU)
+================================ */
 .categorias {
-    margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .categorias a {
-    margin-right: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    color: #555;
+  margin-right: 12px;
+  font-weight: 600;
+  color: #666;
 }
 
 .categorias a.ativa {
-    color: #000;
-    border-bottom: 2px solid #000;
+  color: #111;
+  border-bottom: 2px solid #111;
 }
 
+/* ================================
+   HOME – BLOCOS
+================================ */
+.home {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.bloco {
+  margin-bottom: 40px;
+}
+
+.bloco h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+/* ================================
+   LISTA DE NOTÍCIAS (HOME)
+================================ */
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista li {
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.lista a {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.fonte {
+  font-size: 12px;
+  color: #777;
+  margin-left: 6px;
+}
+
+/* ================================
+   DESTAQUE (HOME)
+================================ */
+.destaque {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* ================================
+   NOTÍCIA – CONTAINER
+================================ */
 .noticia {
-    margin-bottom: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
-.noticia h2 {
-    margin: 0;
+/* ================================
+   NOTÍCIA – CABEÇALHO
+================================ */
+.noticia-header h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 12px;
 }
 
 .meta {
-    font-size: 0.85rem;
-    color: #777;
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 20px;
 }
+
 /* ================================
    IMAGEM DA NOTÍCIA
 ================================ */
-
 .imagem-noticia {
-  max-width: 900px;       /* largura ideal de leitura */
-  margin: 24px auto;     /* centraliza */
+  max-width: 900px;
+  margin: 24px auto;
 }
 
 .imagem-noticia img {
   width: 100%;
   height: auto;
-  max-height: 500px;     /* evita imagem gigante */
-  object-fit: cover;     /* corta excesso sem distorcer */
+  max-height: 500px;
+  object-fit: cover;
   border-radius: 6px;
   display: block;
 }
@@ -50,54 +146,50 @@
   margin-top: 6px;
   text-align: right;
 }
+
+/* ================================
+   CONTEÚDO EDITORIAL
+================================ */
+.conteudo-editorial p {
+  margin-bottom: 16px;
+}
+
+.conteudo-editorial h2 {
+  font-size: 20px;
+  margin: 28px 0 12px;
+}
+
+/* ================================
+   TAGS
+================================ */
+.tags {
+  margin-top: 32px;
+  font-size: 14px;
+}
+
+.tags .tag {
+  display: inline-block;
+  background: #f3f3f3;
+  padding: 4px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* ================================
+   RESPONSIVO
+================================ */
 @media (max-width: 768px) {
-  .imagem-noticia {
-    margin: 16px 12px;
+  .noticia-header h1 {
+    font-size: 24px;
   }
 
   .imagem-noticia img {
     max-height: 320px;
   }
-}
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-  background: #fff;
-  color: #111;
-  line-height: 1.6;
-}
 
-.bloco {
-  margin-bottom: 32px;
-}
-
-.bloco h2 {
-  font-size: 20px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 6px;
-  margin-bottom: 12px;
-}
-
-.lista {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.lista li {
-  margin-bottom: 8px;
-}
-
-.lista a {
-  text-decoration: none;
-  color: #4b0082; /* roxo tech */
-}
-
-.lista a:hover {
-  text-decoration: underline;
-}
-
-.fonte {
-  font-size: 12px;
-  color: #777;
-  margin-left: 6px;
+  .home,
+  .noticia {
+    padding: 0 12px;
+  }
 }
