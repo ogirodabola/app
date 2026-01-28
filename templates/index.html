@@ -2,15 +2,17 @@
 
 {% block content %}
 
-<h2>🔥 Última Hora</h2>
-<ul>
-  {% for n in ultima_hora %}
-    <li>
-      <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
-      <small>({{ n.fonte }})</small>
-    </li>
-  {% endfor %}
-</ul>
+<section class="bloco">
+  <h2>🔥 Última Hora</h2>
+  <ul class="lista">
+    {% for n in ultima_hora %}
+      <li>
+        <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
+        <span class="fonte">{{ n.fonte }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
 
 <h2>🏆 Brasileirão</h2>
 <ul>
