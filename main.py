@@ -35,12 +35,12 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
-            "ultima_hora": listar_ultima_hora(),
-            "brasileirao": listar_brasileirao(),
-            "mercado": listar_mercado_bola(),
-            "analises": listar_analises(),
-            "bastidores": listar_bastidores(),
-            "categorias": listar_categorias()
+
+            "ultima_hora": listar_ultima_hora(8),
+            "brasileirao": listar_por_categoria("Brasileirão", 8),
+            "mercado": listar_por_categoria("Mercado da Bola", 6),
+            "analises": listar_por_categoria("Análises", 5),
+            "bastidores": listar_por_categoria("Bastidores", 5),
         }
     )
 
