@@ -41,10 +41,19 @@ def listar_noticias(limit: int = 20):
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-                SELECT *
+                SELECT
+                  id,
+                  titulo,
+                  titulo_editorial,
+                  resumo,
+                  slug,
+                  fonte,
+                  categoria,
+                  imagem,
+                  criada_em
                 FROM noticias
                 ORDER BY criada_em DESC
-                LIMIT %s
+                LIMIT %s;
             """, (limit,))
             return cur.fetchall()
     finally:
@@ -119,12 +128,18 @@ def listar_hot_news(horas: int = 6, limit: int = 24):
 
             # 1️⃣ Tenta com editorial
             cur.execute("""
-                SELECT *
+                SELECT
+                  id,
+                  titulo,
+                  titulo_editorial,
+                  slug,
+                  fonte,
+                  categoria,
+                  criada_em
                 FROM noticias
-                WHERE conteudo_editorial IS NOT NULL
-                  AND criada_em >= NOW() - INTERVAL '%s hours'
+                WHERE criada_em >= NOW() - INTERVAL '%s hours'
                 ORDER BY criada_em DESC
-                LIMIT %s
+                LIMIT %s;
             """, (horas, limit))
 
             noticias = cur.fetchall()
@@ -134,11 +149,19 @@ def listar_hot_news(horas: int = 6, limit: int = 24):
 
             # 2️⃣ Fallback: sem editorial
             cur.execute("""
-                SELECT *
+                SELECT
+                  id,
+                  titulo,
+                  titulo_editorial,
+                  slug,
+                  fonte,
+                  categoria,
+                  criada_em
                 FROM noticias
                 WHERE criada_em >= NOW() - INTERVAL '%s hours'
                 ORDER BY criada_em DESC
-                LIMIT %s
+                LIMIT %s;
+
             """, (horas, limit))
 
             return cur.fetchall()
