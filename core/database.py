@@ -25,11 +25,59 @@ def criar_tabelas():
                     categoria TEXT,
                     slug TEXT,
                     imagem TEXT,
+                    imagem_credito TEXT,
                     conteudo_editorial TEXT,
+                    tags TEXT[],
                     criada_em TIMESTAMP DEFAULT NOW()
                 );
             """)
         conn.commit()
+    finally:
+        conn.close()
+
+
+def listar_noticias(limit: int = 20):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                ORDER BY criada_em DESC
+                LIMIT %s
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def listar_noticias_por_categoria(categoria: str, limit: int = 20):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE categoria = %s
+                ORDER BY criada_em DESC
+                LIMIT %s
+            """, (categoria, limit))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+def buscar_noticia_por_slug(slug: str):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE slug = %s
+                LIMIT 1
+            """, (slug,))
+            return cur.fetchone()
     finally:
         conn.close()
 
