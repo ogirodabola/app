@@ -1,39 +1,110 @@
+# core/editorial.py
 import os
-import google.generativeai as genai
+import json
+from typing import Optional, List, Tuple
+from openai import OpenAI
 
-genai.configure(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+MODEL_NAME = "gpt-4.1-mini"
+USE_MOCK = False
 
-MODEL = "gemini-2.0-flash"
+_client: Optional[OpenAI] = None
+if OPENAI_API_KEY:
+    _client = OpenAI(api_key=OPENAI_API_KEY)
 
+CATEGORIAS_VALIDAS = [
+    "Última Hora",
+    "Brasileirão",
+    "Mercado da Bola",
+    "Onde Assistir",
+    "Análises",
+    "Bastidores",
+    "Agenda"
+]
 
-def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
+# ======================================================
+# CLASSIFICAÇÃO + TAGS
+# ======================================================
+def classificar_editorial(titulo: str, resumo: str) -> Tuple[str, List[str]]:
+    if USE_MOCK or not _client:
+        return "Última Hora", ["Futebol"]
+
     prompt = f"""
-Você é o editorial do site O Giro da Bola.
+Classifique a notícia abaixo.
 
-Reescreva a notícia abaixo:
-- Linguagem jornalística popular
-- SEO-friendly
-- Não cite a fonte original
-- Não copie frases
-- Crie uma análise final
+CATEGORIAS (escolha uma):
+{", ".join(CATEGORIAS_VALIDAS)}
 
-Título:
-{titulo}
+Retorne APENAS JSON no formato:
+{{
+  "categoria": "Categoria",
+  "tags": ["tag1", "tag2", "tag3"]
+}}
 
-Resumo:
-{resumo}
-
-Categoria:
-{categoria}
+Título: {titulo}
+Resumo: {resumo}
 """
 
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=200,
+    )
+
     try:
-        model = genai.GenerativeModel(MODEL)
-        response = model.generate_content(prompt)
-        return response.text.strip()
+        data = json.loads(resp.output_text)
+        categoria = data.get("categoria", "Última Hora")
+        tags = data.get("tags", [])
+
+        if categoria not in CATEGORIAS_VALIDAS:
+            categoria = "Última Hora"
+
+        return categoria, tags[:6]
 
     except Exception as e:
-        print(f"[ERRO GEMINI] {e}")
-        return resumo
+        print("[EDITORIAL CLASSIFICAÇÃO ERRO]", e)
+        return "Última Hora", ["Futebol"]
+
+
+# ======================================================
+# CONTEÚDO EDITORIAL
+# ======================================================
+def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
+    if USE_MOCK or not _client:
+        return f"<p>{resumo}</p>"
+
+    prompt = f"""
+Você é o editorial do portal O Giro da Bola.
+
+Reescreva a notícia com:
+- Linguagem jornalística popular
+- SEO-friendly
+- Lead + desenvolvimento + fechamento
+- HTML puro usando apenas <p> e <h2>
+
+Título: {titulo}
+Resumo: {resumo}
+Categoria: {categoria}
+"""
+
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=900,
+    )
+
+    texto = resp.output_text.strip()
+    texto = texto.replace("```html", "").replace("```", "").strip()
+
+    if len(texto) < 200:
+        raise ValueError("Conteúdo editorial muito curto")
+
+    return texto
+
+
+# ======================================================
+# FUNÇÃO DE COMPATIBILIDADE (NÃO REMOVER)
+# ======================================================
+def gerar_tags_editoriais(titulo: str, resumo: str, categoria: str) -> List[str]:
+    _, tags = classificar_editorial(titulo, resumo)
+    return tags
