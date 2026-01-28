@@ -15,9 +15,13 @@ def get_conn():
 
 
 # ======================================================
-# TABELA (SEM QUEBRAR BANCO EXISTENTE)
+# TABELA (REFLETE O BANCO ATUAL)
 # ======================================================
 def criar_tabelas():
+    """
+    Não recria nem altera colunas existentes.
+    Apenas garante que a tabela existe em novos ambientes.
+    """
     conn = get_conn()
     try:
         with conn.cursor() as cur:
@@ -29,12 +33,13 @@ def criar_tabelas():
                     url TEXT UNIQUE,
                     fonte TEXT,
                     categoria TEXT,
-                    slug TEXT UNIQUE,
+                    slug TEXT,
                     imagem TEXT,
-                    imagem_credito TEXT,
+                    criada_em TIMESTAMP DEFAULT NOW(),
                     conteudo_editorial TEXT,
                     tags TEXT[],
-                    criada_em TIMESTAMP DEFAULT NOW()
+                    imagem_credito TEXT,
+                    titulo_editorial TEXT
                 );
             """)
         conn.commit()
@@ -43,7 +48,7 @@ def criar_tabelas():
 
 
 # ======================================================
-# HOME / LISTAGEM
+# HOME – LISTAGEM GERAL
 # ======================================================
 def listar_noticias(limit: int = 30, categoria: str | None = None):
     conn = get_conn()
@@ -54,11 +59,10 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
                 cur.execute("""
                     SELECT
                         id,
-                        titulo,
+                        COALESCE(titulo_editorial, titulo) AS titulo,
                         slug,
                         fonte,
                         categoria,
-                        imagem,
                         criada_em
                     FROM noticias
                     WHERE categoria = %s
@@ -69,11 +73,10 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
                 cur.execute("""
                     SELECT
                         id,
-                        titulo,
+                        COALESCE(titulo_editorial, titulo) AS titulo,
                         slug,
                         fonte,
                         categoria,
-                        imagem,
                         criada_em
                     FROM noticias
                     ORDER BY criada_em DESC
@@ -86,32 +89,7 @@ def listar_noticias(limit: int = 30, categoria: str | None = None):
 
 
 # ======================================================
-# HOT NEWS
-# ======================================================
-def listar_hot_news(limit: int = 24):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                    id,
-                    titulo,
-                    slug,
-                    fonte,
-                    categoria,
-                    imagem,
-                    criada_em
-                FROM noticias
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-# ======================================================
-# NOTÍCIA INDIVIDUAL (EDITORIAL AQUI SIM)
+# NOTÍCIA INDIVIDUAL
 # ======================================================
 def buscar_noticia_por_slug(slug: str):
     conn = get_conn()
@@ -120,7 +98,8 @@ def buscar_noticia_por_slug(slug: str):
             cur.execute("""
                 SELECT
                     id,
-                    titulo,
+                    COALESCE(titulo_editorial, titulo) AS titulo,
+                    titulo AS titulo_original,
                     resumo,
                     conteudo_editorial,
                     imagem,
@@ -139,7 +118,31 @@ def buscar_noticia_por_slug(slug: str):
 
 
 # ======================================================
-# CATEGORIAS
+# HOT NEWS / ÚLTIMA HORA
+# ======================================================
+def listar_hot_news(limit: int = 24):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    id,
+                    COALESCE(titulo_editorial, titulo) AS titulo,
+                    slug,
+                    fonte,
+                    categoria,
+                    criada_em
+                FROM noticias
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
+
+
+# ======================================================
+# CATEGORIAS (MENU)
 # ======================================================
 def listar_categorias():
     conn = get_conn()
@@ -163,6 +166,10 @@ def salvar_noticia(
     titulo, resumo, url, fonte, categoria, slug,
     imagem=None, imagem_credito=None
 ):
+    """
+    Nunca sobrescreve editorial nem título editorial.
+    Apenas insere ou complementa imagem/crédito.
+    """
     conn = get_conn()
     try:
         with conn.cursor() as cur:
@@ -175,127 +182,15 @@ def salvar_noticia(
                     imagem = COALESCE(noticias.imagem, EXCLUDED.imagem),
                     imagem_credito = COALESCE(noticias.imagem_credito, EXCLUDED.imagem_credito);
             """, (
-                titulo, resumo, url, fonte,
-                categoria, slug, imagem, imagem_credito
+                titulo,
+                resumo,
+                url,
+                fonte,
+                categoria,
+                slug,
+                imagem,
+                imagem_credito
             ))
         conn.commit()
-    finally:
-        conn.close()
-# ======================================================
-# HOME – BLOCOS EDITORIAIS
-# ======================================================
-
-def listar_ultima_hora(limit: int = 8):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  slug,
-                  fonte,
-                  categoria,
-                  criada_em
-                FROM noticias
-                WHERE categoria = 'Futebol'
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def listar_brasileirao(limit: int = 10):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  slug,
-                  fonte,
-                  criada_em
-                FROM noticias
-                WHERE
-                  categoria = 'Campeonato Brasileiro'
-                  OR tags && ARRAY['Brasileirão','Série A','Série B']
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def listar_mercado_bola(limit: int = 10):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  slug,
-                  fonte,
-                  criada_em
-                FROM noticias
-                WHERE
-                  categoria = 'Mercado da Bola'
-                  OR tags && ARRAY[
-                    'Contratação','Transferência','Renovação','Mercado'
-                  ]
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def listar_analises(limit: int = 6):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  titulo_editorial AS titulo,
-                  slug,
-                  fonte,
-                  criada_em
-                FROM noticias
-                WHERE
-                  conteudo_editorial IS NOT NULL
-                  AND categoria IN ('Análise','Opinião')
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
-    finally:
-        conn.close()
-
-
-def listar_bastidores(limit: int = 6):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  slug,
-                  fonte,
-                  criada_em
-                FROM noticias
-                WHERE
-                  categoria IN ('Gestão','Bastidores')
-                  OR tags && ARRAY['Gestão','Finanças','CBF','Bastidores']
-                ORDER BY criada_em DESC
-                LIMIT %s;
-            """, (limit,))
-            return cur.fetchall()
     finally:
         conn.close()
