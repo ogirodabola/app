@@ -58,20 +58,17 @@ def home(request: Request):
 # LISTAGEM POR CATEGORIA
 # ======================================================
 @app.get("/categoria/{categoria}", response_class=HTMLResponse)
-def pagina_categoria(request: Request, categoria: str):
+def pagina_categoria(categoria: str, request: Request):
+    noticias = listar_por_categoria(categoria)
+
     return templates.TemplateResponse(
-        "index.html",
+        "categoria.html",
         {
             "request": request,
-            "ultima_hora": [],
-            "brasileirao": [],
-            "mercado": [],
-            "analises": [],
-            "bastidores": [],
-
-            "lista_categoria": listar_por_categoria(categoria, 50),
+            "categoria": categoria,
+            "noticias": noticias,
             "categorias": listar_categorias(),
-            "categoria_ativa": categoria
+            "categoria_ativa": categoria,
         }
     )
 
