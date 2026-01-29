@@ -38,7 +38,7 @@ MAIN
 <main class="max-w-7xl mx-auto px-6 py-10 space-y-16">
 
   <!-- ======================================================
-  ÚLTIMA HORA — GRID CENTRAL
+  ÚLTIMA HORA
   ====================================================== -->
   <section>
     <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-6">
@@ -62,7 +62,9 @@ MAIN
           {% endif %}
 
           <div class="p-6">
-            <span class="text-xs text-[#00E676] uppercase tracking-wider">
+            <span class="inline-block text-[10px] uppercase tracking-widest
+                         text-[#7C5CFF] border border-[#7C5CFF]/60
+                         rounded-full px-2 py-0.5">
               {{ n.categoria }}
             </span>
 
@@ -80,21 +82,22 @@ MAIN
   </section>
 
   <!-- ======================================================
-  BRASILEIRÃO — RAIL HORIZONTAL
+  RAILS DE CATEGORIA
   ====================================================== -->
+  {% macro rail(titulo, lista, url) %}
   <section>
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xs uppercase tracking-widest text-gray-400">
-        Brasileirão
+        {{ titulo }}
       </h2>
-      <a href="/categoria/Brasileirão"
+      <a href="{{ url }}"
          class="text-xs text-gray-500 hover:text-white transition">
         ver tudo →
       </a>
     </div>
 
     <div class="flex gap-4 overflow-x-auto pb-2">
-      {% for n in brasileirao %}
+      {% for n in lista %}
         <a href="/noticia/{{ n.slug }}"
            class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
 
@@ -110,7 +113,9 @@ MAIN
           {% endif %}
 
           <div class="p-4">
-            <span class="text-xs text-[#00E676] uppercase">
+            <span class="inline-block text-[10px] uppercase tracking-widest
+                         text-[#7C5CFF] border border-[#7C5CFF]/60
+                         rounded-full px-2 py-0.5">
               {{ n.categoria }}
             </span>
 
@@ -126,150 +131,12 @@ MAIN
       {% endfor %}
     </div>
   </section>
+  {% endmacro %}
 
-  <!-- ======================================================
-  MERCADO DA BOLA
-  ====================================================== -->
-  <section>
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xs uppercase tracking-widest text-gray-400">
-        Mercado da Bola
-      </h2>
-      <a href="/categoria/Mercado da Bola"
-         class="text-xs text-gray-500 hover:text-white transition">
-        ver tudo →
-      </a>
-    </div>
-
-    <div class="flex gap-4 overflow-x-auto pb-2">
-      {% for n in mercado %}
-        <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
-
-          {% if n.imagem %}
-            <div class="h-32 overflow-hidden">
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo }}"
-                class="w-full h-full object-cover group-hover:scale-105 transition"
-                loading="lazy"
-              >
-            </div>
-          {% endif %}
-
-          <div class="p-4">
-            <span class="text-xs text-[#00E676] uppercase">
-              {{ n.categoria }}
-            </span>
-
-            <h3 class="mt-2 font-medium leading-snug">
-              {{ n.titulo }}
-            </h3>
-
-            <p class="mt-2 text-xs text-gray-400">
-              {{ n.fonte }}
-            </p>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <!-- ======================================================
-  ANÁLISES
-  ====================================================== -->
-  <section>
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xs uppercase tracking-widest text-gray-400">
-        Análises
-      </h2>
-      <a href="/categoria/Análises"
-         class="text-xs text-gray-500 hover:text-white transition">
-        ver tudo →
-      </a>
-    </div>
-
-    <div class="flex gap-4 overflow-x-auto pb-2">
-      {% for n in analises %}
-        <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
-
-          {% if n.imagem %}
-            <div class="h-32 overflow-hidden">
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo }}"
-                class="w-full h-full object-cover group-hover:scale-105 transition"
-                loading="lazy"
-              >
-            </div>
-          {% endif %}
-
-          <div class="p-4">
-            <span class="text-xs text-[#00E676] uppercase">
-              {{ n.categoria }}
-            </span>
-
-            <h3 class="mt-2 font-medium leading-snug">
-              {{ n.titulo }}
-            </h3>
-
-            <p class="mt-2 text-xs text-gray-400">
-              {{ n.fonte }}
-            </p>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <!-- ======================================================
-  BASTIDORES
-  ====================================================== -->
-  <section>
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xs uppercase tracking-widest text-gray-400">
-        Bastidores
-      </h2>
-      <a href="/categoria/Bastidores"
-         class="text-xs text-gray-500 hover:text-white transition">
-        ver tudo →
-      </a>
-    </div>
-
-    <div class="flex gap-4 overflow-x-auto pb-2">
-      {% for n in bastidores %}
-        <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
-
-          {% if n.imagem %}
-            <div class="h-32 overflow-hidden">
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo }}"
-                class="w-full h-full object-cover group-hover:scale-105 transition"
-                loading="lazy"
-              >
-            </div>
-          {% endif %}
-
-          <div class="p-4">
-            <span class="text-xs text-[#00E676] uppercase">
-              {{ n.categoria }}
-            </span>
-
-            <h3 class="mt-2 font-medium leading-snug">
-              {{ n.titulo }}
-            </h3>
-
-            <p class="mt-2 text-xs text-gray-400">
-              {{ n.fonte }}
-            </p>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-  </section>
+  {{ rail("Brasileirão", brasileirao, "/categoria/Brasileirão") }}
+  {{ rail("Mercado da Bola", mercado, "/categoria/Mercado da Bola") }}
+  {{ rail("Análises", analises, "/categoria/Análises") }}
+  {{ rail("Bastidores", bastidores, "/categoria/Bastidores") }}
 
 </main>
 
