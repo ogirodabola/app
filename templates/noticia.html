@@ -1,83 +1,123 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ noticia.titulo }} | O Giro da Bola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block title %}
-{{ noticia.titulo }} | O Giro da Bola
-{% endblock %}
+  <!-- Tailwind CDN (temporário) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-{% block content %}
-<article class="noticia">
+<body class="bg-[#0E0E11] text-gray-100 antialiased">
 
-  <!-- TÍTULO -->
-  <header class="noticia-header">
-    <h1>{{ noticia.titulo }}</h1>
+<!-- ======================================================
+HEADER (MESMO DA HOME, CONSISTÊNCIA)
+====================================================== -->
+<header class="sticky top-0 z-50 bg-[#0E0E11]/80 backdrop-blur border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <a href="/" class="font-semibold tracking-tight text-lg">
+      <span class="text-white">O Giro</span>
+      <span class="text-[#00E676]"> da Bola</span>
+    </a>
 
-    <p class="meta">
+    <nav class="hidden md:flex gap-6 text-sm text-gray-400">
+      <a href="/" class="hover:text-white transition">Home</a>
       {% if noticia.categoria %}
-        <span class="categoria">{{ noticia.categoria }}</span>
+        <a href="/categoria/{{ noticia.categoria }}"
+           class="hover:text-white transition">
+          {{ noticia.categoria }}
+        </a>
       {% endif %}
+    </nav>
+  </div>
+</header>
 
+<!-- ======================================================
+MAIN
+====================================================== -->
+<main class="max-w-5xl mx-auto px-6 py-14">
+
+  <!-- ======================================================
+  CABEÇALHO DA NOTÍCIA
+  ====================================================== -->
+  <header class="mb-12">
+    {% if noticia.categoria %}
+      <a href="/categoria/{{ noticia.categoria }}"
+         class="inline-block text-xs uppercase tracking-widest text-[#00E676] mb-4">
+        {{ noticia.categoria }}
+      </a>
+    {% endif %}
+
+    <h1 class="text-3xl md:text-4xl font-semibold leading-tight">
+      {{ noticia.titulo }}
+    </h1>
+
+    <div class="mt-4 text-sm text-gray-400 flex flex-wrap gap-2">
       {% if noticia.fonte %}
-        · <span class="fonte">{{ noticia.fonte }}</span>
+        <span>{{ noticia.fonte }}</span>
       {% endif %}
-
-      {% if noticia.criada_em %}
-        · <time datetime="{{ noticia.criada_em }}">
-            {{ noticia.criada_em.strftime("%d/%m/%Y %H:%M") }}
-          </time>
-      {% endif %}
-    </p>
+      <span>•</span>
+      <time datetime="{{ noticia.criada_em }}">
+        {{ noticia.criada_em.strftime("%d de %B de %Y, %H:%M") }}
+      </time>
+    </div>
   </header>
 
-  <!-- IMAGEM PRINCIPAL -->
-{% if noticia.imagem %}
-<figure class="imagem-noticia">
-  <img
-    src="{{ noticia.imagem }}"
-    alt="{{ noticia.titulo_editorial or noticia.titulo }}"
-    loading="lazy"
-  >
-  {% if noticia.imagem_credito %}
-    <figcaption>{{ noticia.imagem_credito }}</figcaption>
-  {% endif %}
-</figure>
-{% endif %}
+  <!-- ======================================================
+  CONTEÚDO
+  ====================================================== -->
+  <article class="prose prose-invert max-w-none prose-p:leading-relaxed prose-p:text-gray-200">
+    {{ noticia.conteudo_editorial | safe }}
+  </article>
 
-  <!-- CONTEÚDO EDITORIAL -->
-  <section class="conteudo-editorial">
-    {% if noticia.conteudo_editorial %}
-      {{ noticia.conteudo_editorial | safe }}
-    {% else %}
-      <p><em>Conteúdo em atualização pela redação do O Giro da Bola.</em></p>
-    {% endif %}
-  </section>
-
-  <!-- TAGS -->
-  {% if noticia.tags and noticia.tags|length > 0 %}
-    <footer class="tags">
-      <strong>Tags:</strong>
-      {% for tag in noticia.tags %}
-        <span class="tag">{{ tag }}</span>
-      {% endfor %}
-    </footer>
+  <!-- ======================================================
+  TAGS
+  ====================================================== -->
+  {% if noticia.tags %}
+    <section class="mt-12">
+      <div class="flex flex-wrap gap-2">
+        {% for tag in noticia.tags %}
+          <span class="px-3 py-1 text-xs rounded-full bg-white/5 text-gray-300">
+            #{{ tag }}
+          </span>
+        {% endfor %}
+      </div>
+    </section>
   {% endif %}
 
-</article>
-{% if recomendadas %}
-<hr>
+  <!-- ======================================================
+  RECOMENDADAS
+  ====================================================== -->
+  {% if recomendadas %}
+    <section class="mt-16">
+      <h2 class="text-sm uppercase tracking-widest text-gray-400 mb-6">
+        Você também pode gostar
+      </h2>
 
-<section class="recomendadas">
-  <h3>Você também pode gostar</h3>
+      <div class="flex gap-4 overflow-x-auto pb-2">
+        {% for n in recomendadas %}
+          <a href="/noticia/{{ n.slug }}"
+             class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
+            
+            <span class="text-xs text-[#00E676] uppercase">
+              {{ n.categoria }}
+            </span>
 
-  <ul>
-    {% for n in recomendadas %}
-      <li>
-        <a href="/noticia/{{ n.slug }}">
-          {{ n.titulo }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
-{% endif %}
+            <h3 class="mt-2 font-medium leading-snug">
+              {{ n.titulo }}
+            </h3>
 
-{% endblock %}
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }}
+            </p>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+</main>
+
+</body>
+</html>
