@@ -27,13 +27,11 @@ PAUSA_ENTRE_ITENS = int(os.getenv("EDITORIAL_SLEEP", 2))
 # CONEXÃO
 # ======================================================
 def get_conn():
-    if not DATABASE_URL:
-        raise RuntimeError("DATABASE_URL não definida")
     return psycopg2.connect(DATABASE_URL)
 
 
 # ======================================================
-# BUSCAR NOTÍCIAS PENDENTES
+# BUSCAR NOTÍCIAS PENDENTES (CORRETO)
 # ======================================================
 def buscar_pendentes(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -41,7 +39,7 @@ def buscar_pendentes(conn):
             """
             SELECT id, titulo, resumo
             FROM noticias
-            WHERE editorial_status = 'rapido'
+            WHERE editorial_status = 'pendente'
             ORDER BY criada_em ASC
             LIMIT %s
             FOR UPDATE SKIP LOCKED;
@@ -68,24 +66,33 @@ def atualizar_status(conn, noticia_id, status):
 
 
 # ======================================================
-# SALVAR RESULTADO EDITORIAL
+# SALVAR RESULTADO EDITORIAL (COMPLETO)
 # ======================================================
 def salvar_editorial(
     conn,
     noticia_id,
-    conteudo_editorial
+    titulo_editorial,
+    conteudo_editorial,
+    categoria,
+    tags
 ):
     with conn.cursor() as cur:
         cur.execute(
             """
             UPDATE noticias
             SET
+              titulo_editorial = %s,
               conteudo_editorial = %s,
+              categoria = %s,
+              tags = %s,
               editorial_status = 'pronto'
             WHERE id = %s;
             """,
             (
+                titulo_editorial,
                 conteudo_editorial,
+                categoria,
+                tags,
                 noticia_id
             )
         )
@@ -120,13 +127,9 @@ def processar():
             try:
                 atualizar_status(conn, noticia_id, "processando")
 
-                # Classificação + tags
                 categoria, tags = classificar_editorial(titulo, resumo)
-
-                # Título editorial (rápido)
                 titulo_editorial = gerar_titulo_editorial(titulo)
 
-                # Conteúdo editorial
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo,
                     resumo=resumo,
@@ -154,8 +157,5 @@ def processar():
         print("🔒 Worker encerrado.")
 
 
-# ======================================================
-# ENTRYPOINT
-# ======================================================
 if __name__ == "__main__":
     processar()
