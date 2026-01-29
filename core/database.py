@@ -268,3 +268,34 @@ def listar_pendentes_editorial(limit: int = 10):
             return cur.fetchall()
     finally:
         conn.close()
+
+def listar_recomendadas_por_slug(slug: str, limit: int = 5):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT
+                  n2.id,
+                  COALESCE(n2.titulo_editorial, n2.titulo) AS titulo,
+                  n2.slug,
+                  n2.categoria,
+                  n2.criada_em,
+                  cardinality(n2.tags && n1.tags) AS score
+                FROM noticias n1
+                JOIN noticias n2
+                  ON n2.id != n1.id
+                WHERE
+                  n1.slug = %s
+                  AND n2.categoria = n1.categoria
+                  AND n2.tags && n1.tags
+                ORDER BY
+                  score DESC,
+                  n2.criada_em DESC
+                LIMIT %s;
+                """,
+                (slug, limit)
+            )
+            return cur.fetchall()
+    finally:
+        conn.close()
