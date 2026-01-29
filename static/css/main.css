@@ -1,277 +1,120 @@
-/* ================================
-   RESET BÁSICO
-================================ */
+/* ======================================================
+RESET BÁSICO / BASE
+====================================================== */
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
   background: #0E0E11;
-  color: #E5E7EB;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
+  color: #e5e7eb;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji",
+               "Segoe UI Emoji";
 }
 
-
-/* ================================
-   LINKS (BASE)
-================================ */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* ================================
-   CATEGORIAS (MENU)
-================================ */
-.categorias {
-  margin-bottom: 24px;
-}
-
-.categorias a {
-  margin-right: 12px;
-  font-weight: 600;
-  color: #666;
-}
-
-.categorias a.ativa {
-  color: #111;
-  border-bottom: 2px solid #111;
-}
-
-/* ================================
-   HOME – BLOCOS
-================================ */
-.home {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.bloco {
-  margin-bottom: 40px;
-}
-
-.bloco h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #eee;
-}
-
-/* ================================
-   LISTA DE NOTÍCIAS (HOME)
-================================ */
-.lista {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.lista li {
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.lista a {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.fonte {
-  font-size: 12px;
-  color: #777;
-  margin-left: 6px;
-}
-
-/* ================================
-   DESTAQUE (HOME)
-================================ */
-.destaque {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-
-/* ================================
-   NOTÍCIA – CONTAINER
-================================ */
-.noticia {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-/* ================================
-   NOTÍCIA – CABEÇALHO
-================================ */
-.noticia-header h1 {
-  font-size: 28px;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.meta {
-  font-size: 0.85rem;
-  color: #777;
-  margin-bottom: 20px;
-}
-
-/* ================================
-   IMAGEM DA NOTÍCIA
-================================ */
-.imagem-noticia {
-  max-width: 900px;
-  margin: 24px auto;
-}
-
-.imagem-noticia img {
-  width: 100%;
-  height: auto;
-  max-height: 500px;
-  object-fit: cover;
-  border-radius: 6px;
-  display: block;
-}
-
-.imagem-noticia figcaption {
-  font-size: 0.85rem;
-  color: #555;
-  margin-top: 6px;
-  text-align: right;
-}
-
-/* ================================
-   CONTEÚDO EDITORIAL
-================================ */
-.conteudo-editorial p {
-  margin-bottom: 16px;
-}
-
-.conteudo-editorial h2 {
-  font-size: 20px;
-  margin: 28px 0 12px;
-}
-
-/* ================================
-   TAGS
-================================ */
-.tags {
-  margin-top: 32px;
-  font-size: 14px;
-}
-
-.tags .tag {
-  display: inline-block;
-  background: #f3f3f3;
-  padding: 4px 8px;
-  margin-right: 6px;
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-/* ================================
-   RESPONSIVO
-================================ */
-@media (max-width: 768px) {
-  .noticia-header h1 {
-    font-size: 24px;
-  }
-
-  .imagem-noticia img {
-    max-height: 320px;
-  }
-
-  .home,
-  .noticia {
-    padding: 0 12px;
-  }
-}
-
-
-/* Header principal */
+/* ======================================================
+HEADER
+====================================================== */
 .site-header {
-  height: 68px; /* mais alto, mais elegante */
+  height: 72px;
   background: linear-gradient(
     to bottom,
-    rgba(14,14,17,0.92),
-    rgba(14,14,17,0.88)
+    rgba(14,14,17,0.95),
+    rgba(14,14,17,0.9)
   );
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
-
+/* ======================================================
+LOGO
+====================================================== */
 .site-logo {
-  font-weight: 800;              /* negrito */
-  font-style: italic;            /* levemente itálico */
-  letter-spacing: -0.04em;       /* letras mais próximas */
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.05em;
   font-size: 18px;
   text-transform: uppercase;
   color: #ffffff;
   display: flex;
-  gap: 6px;
   align-items: center;
+  gap: 6px;
+  line-height: 1;
 }
 
 .site-logo span {
-  color: #00E676; /* verde tech */
+  color: #00E676;
   font-weight: 800;
 }
 
+/* ======================================================
+MENU DESKTOP (DESATIVADO VISUALMENTE)
+====================================================== */
+.nav-desktop {
+  display: none;
+}
+
+/* ======================================================
+MENU SANDUÍCHE
+====================================================== */
 .menu-toggle {
   width: 28px;
   height: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   cursor: pointer;
+  position: relative;
 }
 
-.menu-toggle span,
+.menu-toggle span {
+  height: 2px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 2px;
+  position: relative;
+}
+
 .menu-toggle span::before,
 .menu-toggle span::after {
   content: "";
-  display: block;
-  height: 2px;
+  position: absolute;
+  left: 0;
   width: 100%;
-  background: #fff;
+  height: 2px;
+  background: #ffffff;
   border-radius: 2px;
-  transition: all 0.3s ease;
 }
 
 .menu-toggle span::before {
-  transform: translateY(-7px);
+  top: -7px;
 }
 
 .menu-toggle span::after {
-  transform: translateY(5px);
+  bottom: -7px;
 }
 
+/* ======================================================
+MENU MOBILE / OVERLAY
+====================================================== */
 .mobile-menu {
   position: absolute;
-  top: 68px;
+  top: 72px;
   right: 16px;
+  width: 240px;
   background: #0E0E11;
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 16px;
-  width: 220px;
+  border-radius: 14px;
+  padding: 18px 16px;
   display: none;
   flex-direction: column;
   gap: 14px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.7);
 }
 
 .mobile-menu.open {
@@ -281,6 +124,8 @@ a:hover {
 .mobile-menu a {
   font-size: 14px;
   color: #e5e7eb;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .mobile-menu a:hover {
@@ -289,8 +134,77 @@ a:hover {
 
 .mobile-menu .anuncie {
   margin-top: 8px;
-  padding-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255,255,255,0.08);
   color: #00E676;
   font-weight: 600;
+}
+
+/* ======================================================
+SEÇÕES / TÍTULOS
+====================================================== */
+section h2 {
+  letter-spacing: 0.25em;
+}
+
+/* ======================================================
+CARDS DE NOTÍCIA
+====================================================== */
+a.group {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+a.group:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+}
+
+/* ======================================================
+BADGES (CATEGORIAS)
+====================================================== */
+.badge,
+span[class*="rounded-full"] {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+/* ======================================================
+BADGE "AGORA"
+====================================================== */
+span.text-yellow-400 {
+  background: rgba(234,179,8,0.08);
+}
+
+/* ======================================================
+IMAGENS
+====================================================== */
+img {
+  transition: transform 0.4s ease;
+}
+
+/* ======================================================
+SCROLL HORIZONTAL DOS RAILS
+====================================================== */
+section .overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+section .overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+section .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+}
+
+/* ======================================================
+RESPONSIVO
+====================================================== */
+@media (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
 }
