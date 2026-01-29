@@ -52,13 +52,15 @@ def listar_ultima_hora(limit: int = 8):
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT
-                    id,
-                    COALESCE(titulo_editorial, titulo) AS titulo,
-                    slug,
-                    fonte,
-                    categoria,
-                    criada_em
-                FROM noticias
+              id,
+              COALESCE(titulo_editorial, titulo) AS titulo,
+              slug,
+              fonte,
+              categoria,
+              imagem,
+              criada_em
+            FROM noticias
+
                 ORDER BY criada_em DESC
                 LIMIT %s;
             """, (limit,))
@@ -76,13 +78,15 @@ def listar_por_categoria(categoria: str, limit: int = 10):
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT
-                    id,
-                    COALESCE(titulo_editorial, titulo) AS titulo,
-                    slug,
-                    fonte,
-                    categoria,
-                    criada_em
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  categoria,
+                  imagem,
+                  criada_em
                 FROM noticias
+
                 WHERE categoria = %s
                 ORDER BY criada_em DESC
                 LIMIT %s;
@@ -113,13 +117,15 @@ def listar_noticias(limit: int = 30):
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT
-                    id,
-                    COALESCE(titulo_editorial, titulo) AS titulo,
-                    slug,
-                    fonte,
-                    categoria,
-                    criada_em
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  slug,
+                  fonte,
+                  categoria,
+                  imagem,
+                  criada_em
                 FROM noticias
+
                 ORDER BY criada_em DESC
                 LIMIT %s;
             """, (limit,))
