@@ -59,6 +59,12 @@ MAIN
                 loading="lazy"
               >
             </div>
+            {% if n.editorial_status == 'pendente' %}
+            <span class="text-[10px] uppercase tracking-widest
+                         text-yellow-400 border border-yellow-400/40
+                         rounded-full px-2 py-0.5 ml-2">
+              agora
+            </span>
           {% endif %}
 
           <div class="p-6">
