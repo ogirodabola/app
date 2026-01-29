@@ -14,6 +14,11 @@ from core.editorial import (
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL não definida — verifique secrets da GitHub Action"
+    )
+
 LIMITE_POR_EXECUCAO = int(os.getenv("EDITORIAL_BATCH_LIMIT", 10))
 PAUSA_ENTRE_ITENS = int(os.getenv("EDITORIAL_SLEEP", 2))
 
