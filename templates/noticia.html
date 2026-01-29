@@ -62,4 +62,22 @@
   {% endif %}
 
 </article>
+{% if recomendadas %}
+<hr>
+
+<section class="recomendadas">
+  <h3>Você também pode gostar</h3>
+
+  <ul>
+    {% for n in recomendadas %}
+      <li>
+        <a href="/noticia/{{ n.slug }}">
+          {{ n.titulo }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 {% endblock %}
