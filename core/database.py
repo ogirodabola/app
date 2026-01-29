@@ -281,7 +281,14 @@ def listar_recomendadas_por_slug(slug: str, limit: int = 5):
                   n2.slug,
                   n2.categoria,
                   n2.criada_em,
-                  cardinality(n2.tags && n1.tags) AS score
+                  array_length(
+                    ARRAY(
+                      SELECT UNNEST(n2.tags)
+                      INTERSECT
+                      SELECT UNNEST(n1.tags)
+                    ),
+                    1
+                  ) AS score
                 FROM noticias n1
                 JOIN noticias n2
                   ON n2.id != n1.id
@@ -290,7 +297,7 @@ def listar_recomendadas_por_slug(slug: str, limit: int = 5):
                   AND n2.categoria = n1.categoria
                   AND n2.tags && n1.tags
                 ORDER BY
-                  score DESC,
+                  score DESC NULLS LAST,
                   n2.criada_em DESC
                 LIMIT %s;
                 """,
