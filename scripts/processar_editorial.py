@@ -36,7 +36,7 @@ def buscar_pendentes(conn):
             """
             SELECT id, titulo, resumo
             FROM noticias
-            WHERE editorial_status = 'pendente'
+            WHERE editorial_status = 'rapido'
             ORDER BY criada_em ASC
             LIMIT %s
             FOR UPDATE SKIP LOCKED;
@@ -68,28 +68,19 @@ def atualizar_status(conn, noticia_id, status):
 def salvar_editorial(
     conn,
     noticia_id,
-    titulo_editorial,
-    conteudo_editorial,
-    categoria,
-    tags
+    conteudo_editorial
 ):
     with conn.cursor() as cur:
         cur.execute(
             """
             UPDATE noticias
             SET
-              titulo_editorial = %s,
               conteudo_editorial = %s,
-              categoria = %s,
-              tags = %s,
               editorial_status = 'pronto'
             WHERE id = %s;
             """,
             (
-                titulo_editorial,
                 conteudo_editorial,
-                categoria,
-                tags,
                 noticia_id
             )
         )
