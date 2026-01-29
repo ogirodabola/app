@@ -5,7 +5,7 @@
   <title>O Giro da Bola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Tailwind (CDN provisório) -->
+  <!-- Tailwind CDN (provisório) -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -16,10 +16,10 @@ HEADER
 ====================================================== -->
 <header class="sticky top-0 z-50 bg-[#0E0E11]/80 backdrop-blur border-b border-white/5">
   <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-    <div class="font-semibold tracking-tight text-lg">
+    <a href="/" class="font-semibold tracking-tight text-lg">
       <span class="text-white">O Giro</span>
       <span class="text-[#00E676]"> da Bola</span>
-    </div>
+    </a>
 
     <nav class="hidden md:flex gap-6 text-sm text-gray-400">
       {% for cat in categorias %}
@@ -38,7 +38,7 @@ MAIN
 <main class="max-w-7xl mx-auto px-6 py-10 space-y-16">
 
   <!-- ======================================================
-  ÚLTIMA HORA (GRID CENTRAL)
+  ÚLTIMA HORA — GRID CENTRAL
   ====================================================== -->
   <section>
     <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-6">
@@ -48,26 +48,39 @@ MAIN
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {% for n in ultima_hora %}
         <a href="/noticia/{{ n.slug }}"
-           class="group bg-white/5 rounded-xl p-6 hover:bg-white/10 transition">
-          
-          <span class="text-xs text-[#00E676] uppercase tracking-wider">
-            {{ n.categoria }}
-          </span>
+           class="group bg-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition">
 
-          <h3 class="mt-3 text-lg font-semibold leading-snug group-hover:underline">
-            {{ n.titulo }}
-          </h3>
+          {% if n.imagem %}
+            <div class="h-40 overflow-hidden">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
 
-          <p class="mt-2 text-xs text-gray-400">
-            {{ n.fonte }} · {{ n.criada_em.strftime("%d/%m %H:%M") }}
-          </p>
+          <div class="p-6">
+            <span class="text-xs text-[#00E676] uppercase tracking-wider">
+              {{ n.categoria }}
+            </span>
+
+            <h3 class="mt-3 text-lg font-semibold leading-snug group-hover:underline">
+              {{ n.titulo }}
+            </h3>
+
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }} · {{ n.criada_em.strftime("%d/%m %H:%M") }}
+            </p>
+          </div>
         </a>
       {% endfor %}
     </div>
   </section>
 
   <!-- ======================================================
-  BLOCO REUTILIZÁVEL — BRASILEIRÃO
+  BRASILEIRÃO — RAIL HORIZONTAL
   ====================================================== -->
   <section>
     <div class="flex items-center justify-between mb-4">
@@ -83,19 +96,32 @@ MAIN
     <div class="flex gap-4 overflow-x-auto pb-2">
       {% for n in brasileirao %}
         <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
-          
-          <span class="text-xs text-[#00E676] uppercase">
-            {{ n.categoria }}
-          </span>
+           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
 
-          <h3 class="mt-2 font-medium leading-snug">
-            {{ n.titulo }}
-          </h3>
+          {% if n.imagem %}
+            <div class="h-32 overflow-hidden">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
 
-          <p class="mt-2 text-xs text-gray-400">
-            {{ n.fonte }}
-          </p>
+          <div class="p-4">
+            <span class="text-xs text-[#00E676] uppercase">
+              {{ n.categoria }}
+            </span>
+
+            <h3 class="mt-2 font-medium leading-snug">
+              {{ n.titulo }}
+            </h3>
+
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }}
+            </p>
+          </div>
         </a>
       {% endfor %}
     </div>
@@ -118,19 +144,32 @@ MAIN
     <div class="flex gap-4 overflow-x-auto pb-2">
       {% for n in mercado %}
         <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
-          
-          <span class="text-xs text-[#00E676] uppercase">
-            {{ n.categoria }}
-          </span>
+           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
 
-          <h3 class="mt-2 font-medium leading-snug">
-            {{ n.titulo }}
-          </h3>
+          {% if n.imagem %}
+            <div class="h-32 overflow-hidden">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
 
-          <p class="mt-2 text-xs text-gray-400">
-            {{ n.fonte }}
-          </p>
+          <div class="p-4">
+            <span class="text-xs text-[#00E676] uppercase">
+              {{ n.categoria }}
+            </span>
+
+            <h3 class="mt-2 font-medium leading-snug">
+              {{ n.titulo }}
+            </h3>
+
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }}
+            </p>
+          </div>
         </a>
       {% endfor %}
     </div>
@@ -153,19 +192,32 @@ MAIN
     <div class="flex gap-4 overflow-x-auto pb-2">
       {% for n in analises %}
         <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
-          
-          <span class="text-xs text-[#00E676] uppercase">
-            {{ n.categoria }}
-          </span>
+           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
 
-          <h3 class="mt-2 font-medium leading-snug">
-            {{ n.titulo }}
-          </h3>
+          {% if n.imagem %}
+            <div class="h-32 overflow-hidden">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
 
-          <p class="mt-2 text-xs text-gray-400">
-            {{ n.fonte }}
-          </p>
+          <div class="p-4">
+            <span class="text-xs text-[#00E676] uppercase">
+              {{ n.categoria }}
+            </span>
+
+            <h3 class="mt-2 font-medium leading-snug">
+              {{ n.titulo }}
+            </h3>
+
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }}
+            </p>
+          </div>
         </a>
       {% endfor %}
     </div>
@@ -188,19 +240,32 @@ MAIN
     <div class="flex gap-4 overflow-x-auto pb-2">
       {% for n in bastidores %}
         <a href="/noticia/{{ n.slug }}"
-           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
-          
-          <span class="text-xs text-[#00E676] uppercase">
-            {{ n.categoria }}
-          </span>
+           class="min-w-[280px] bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition">
 
-          <h3 class="mt-2 font-medium leading-snug">
-            {{ n.titulo }}
-          </h3>
+          {% if n.imagem %}
+            <div class="h-32 overflow-hidden">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
 
-          <p class="mt-2 text-xs text-gray-400">
-            {{ n.fonte }}
-          </p>
+          <div class="p-4">
+            <span class="text-xs text-[#00E676] uppercase">
+              {{ n.categoria }}
+            </span>
+
+            <h3 class="mt-2 font-medium leading-snug">
+              {{ n.titulo }}
+            </h3>
+
+            <p class="mt-2 text-xs text-gray-400">
+              {{ n.fonte }}
+            </p>
+          </div>
         </a>
       {% endfor %}
     </div>
