@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ categoria }} | O Giro da Bola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#0E0E11] text-gray-100 antialiased">
+
+<header class="sticky top-0 z-50 bg-[#0E0E11]/80 backdrop-blur border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <a href="/" class="font-semibold tracking-tight text-lg">
+      <span class="text-white">O Giro</span>
+      <span class="text-[#00E676]"> da Bola</span>
+    </a>
+
+    <nav class="hidden md:flex gap-6 text-sm text-gray-400">
+      {% for cat in categorias %}
+        <a href="/categoria/{{ cat }}"
+           class="{% if categoria_ativa == cat %}text-white{% else %}hover:text-white{% endif %} transition">
+          {{ cat }}
+        </a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-12">
+
+  <h1 class="text-2xl font-semibold mb-8">
+    {{ categoria }}
+  </h1>
+
+  <div class="space-y-6">
+    {% for n in noticias %}
+      <a href="/noticia/{{ n.slug }}"
+         class="block bg-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition">
+
+        {% if n.imagem %}
+          <img src="{{ n.imagem }}"
+               alt="{{ n.titulo }}"
+               class="w-full h-48 object-cover">
+        {% endif %}
+
+        <div class="p-6">
+          <span class="inline-block text-[10px] uppercase tracking-widest
+                       text-[#7C5CFF] border border-[#7C5CFF]/60
+                       rounded-full px-2 py-0.5 mb-2">
+            {{ n.categoria }}
+          </span>
+
+          <h2 class="text-lg font-medium leading-snug">
+            {{ n.titulo }}
+          </h2>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }} · {{ n.criada_em.strftime("%d/%m %H:%M") }}
+          </p>
+        </div>
+      </a>
+    {% else %}
+      <p class="text-gray-500">
+        Nenhuma notícia encontrada nesta categoria.
+      </p>
+    {% endfor %}
+  </div>
+
+</main>
+
+</body>
+</html>
