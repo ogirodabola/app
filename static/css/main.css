@@ -198,121 +198,99 @@ a:hover {
 
 /* Header principal */
 .site-header {
-  height: 100%; /* antes provavelmente ~56px */
-  display: flex;
-  align-items: center;
-  background: rgba(14, 14, 17, 0.92);
-  backdrop-filter: blur(8px);
-
-  /* sombra elegante no rodapé */
-  box-shadow: 
-    0 1px 0 rgba(255, 255, 255, 0.04),
-    0 6px 20px rgba(0, 0, 0, 0.35);
-
+  height: 68px; /* mais alto, mais elegante */
+  background: linear-gradient(
+    to bottom,
+    rgba(14,14,17,0.92),
+    rgba(14,14,17,0.88)
+  );
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
+
 .site-logo {
+  font-weight: 800;              /* negrito */
+  font-style: italic;            /* levemente itálico */
+  letter-spacing: -0.04em;       /* letras mais próximas */
   font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.04em; /* letras mais próximas */
   text-transform: uppercase;
-  font-style: italic;
   color: #ffffff;
-  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
-/* Destaque sutil na palavra Bola */
 .site-logo span {
-  color: #00E676;
-  font-weight: 700;
+  color: #00E676; /* verde tech */
+  font-weight: 800;
 }
 
 .menu-toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 28px;
+  height: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-
+  flex-direction: column;
+  justify-content: space-between;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.menu-toggle:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.menu-toggle span {
-  width: 18px;
-  height: 2px;
-  background: #fff;
-  display: block;
-  position: relative;
-}
-
+.menu-toggle span,
 .menu-toggle span::before,
 .menu-toggle span::after {
   content: "";
-  position: absolute;
-  width: 18px;
+  display: block;
   height: 2px;
+  width: 100%;
   background: #fff;
-  left: 0;
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
 .menu-toggle span::before {
-  top: -6px;
+  transform: translateY(-7px);
 }
 
 .menu-toggle span::after {
-  top: 6px;
+  transform: translateY(5px);
 }
 
 .mobile-menu {
   position: absolute;
-  top: 72px;
+  top: 68px;
   right: 16px;
+  background: #0E0E11;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
   width: 220px;
-
-  background: #111115;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  padding: 12px;
-
   display: none;
-}
-
-.mobile-menu a {
-  display: block;
-  padding: 10px 12px;
-  font-size: 14px;
-  color: #d1d1d1;
-  border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.mobile-menu a:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-}
-
-.mobile-menu a.anuncie {
-  color: #00E676;
-  font-weight: 600;
-}
-.nav-desktop {
-  display: none;
-}
-.mobile-menu {
-  display: none;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 .mobile-menu.open {
-  display: block;
+  display: flex;
+}
+
+.mobile-menu a {
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.mobile-menu a:hover {
+  color: #00E676;
+}
+
+.mobile-menu .anuncie {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: #00E676;
+  font-weight: 600;
 }
