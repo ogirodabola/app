@@ -2,7 +2,7 @@ name: Editorial Worker
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          EDITORIAL_BATCH_LIMIT: 5
-          EDITORIAL_SLEEP: 3
+          EDITORIAL_BATCH_LIMIT: 10
+          EDITORIAL_SLEEP: 8
         run: |
           python scripts/processar_editorial.py
