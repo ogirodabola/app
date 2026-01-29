@@ -19,7 +19,7 @@ body {
    LINKS (BASE)
 ================================ */
 a {
-  color: #4b0082; /* roxo tech */
+  color: inherit;
   text-decoration: none;
 }
 
@@ -198,7 +198,7 @@ a:hover {
 
 /* Header principal */
 .site-header {
-  height: 72px; /* antes provavelmente ~56px */
+  height: 100%; /* antes provavelmente ~56px */
   display: flex;
   align-items: center;
   background: rgba(14, 14, 17, 0.92);
