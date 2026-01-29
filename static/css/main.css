@@ -308,3 +308,10 @@ a:hover {
 .nav-desktop {
   display: none;
 }
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu.open {
+  display: block;
+}
