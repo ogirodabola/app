@@ -3,6 +3,8 @@ import os
 import json
 from typing import Optional, List, Tuple
 from openai import OpenAI
+import unicodedata
+import re
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_NAME = "gpt-4.1-mini"
@@ -72,7 +74,16 @@ RESUMO:
     try:
         data = json.loads(resp.output_text)
         categoria = data.get("categoria", "Última Hora")
-        tags = data.get("tags", [])
+        tags_raw = data.get("tags", [])
+        tags = []
+
+        for tag in tags_raw:
+            t = normalizar_tag(tag)
+            if t and t not in tags:
+                tags.append(t)
+        
+        tags = tags[:8]
+
 
         if categoria not in CATEGORIAS_VALIDAS:
             categoria = "Última Hora"
@@ -126,6 +137,12 @@ Categoria: {categoria}
 def gerar_tags_editoriais(titulo: str, resumo: str, categoria: str) -> List[str]:
     _, tags = classificar_editorial(titulo, resumo)
     return tags
+
+def normalizar_tag(tag: str) -> str:
+    tag = unicodedata.normalize("NFKD", tag).encode("ascii", "ignore").decode("ascii")
+    tag = tag.lower()
+    tag = re.sub(r"[^a-z0-9]", "", tag)
+    return tag
 
 def gerar_titulo_editorial(titulo: str) -> str:
     if USE_MOCK or not _client:
