@@ -3,10 +3,11 @@ import time
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
+
 load_dotenv()
+
 from core.editorial import (
     gerar_conteudo_editorial,
-    gerar_tags_editoriais,
     classificar_editorial,
     gerar_titulo_editorial
 )
@@ -31,14 +32,17 @@ def get_conn():
 # ======================================================
 def buscar_pendentes(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute("""
+        cur.execute(
+            """
             SELECT id, titulo, resumo
             FROM noticias
             WHERE editorial_status = 'pendente'
             ORDER BY criada_em ASC
             LIMIT %s
             FOR UPDATE SKIP LOCKED;
-        """, (LIMITE_POR_EXECUCAO,))
+            """,
+            (LIMITE_POR_EXECUCAO,)
+        )
         return cur.fetchall()
 
 
@@ -47,11 +51,14 @@ def buscar_pendentes(conn):
 # ======================================================
 def atualizar_status(conn, noticia_id, status):
     with conn.cursor() as cur:
-        cur.execute("""
+        cur.execute(
+            """
             UPDATE noticias
             SET editorial_status = %s
             WHERE id = %s;
-        """, (status, noticia_id))
+            """,
+            (status, noticia_id)
+        )
     conn.commit()
 
 
@@ -67,7 +74,8 @@ def salvar_editorial(
     tags
 ):
     with conn.cursor() as cur:
-        cur.execute("""
+        cur.execute(
+            """
             UPDATE noticias
             SET
               titulo_editorial = %s,
@@ -76,14 +84,17 @@ def salvar_editorial(
               tags = %s,
               editorial_status = 'pronto'
             WHERE id = %s;
-        """, (
-            titulo_editorial,
-            conteudo_editorial,
-            categoria,
-            tags,
-            noticia_id
-        ))
+            """,
+            (
+                titulo_editorial,
+                conteudo_editorial,
+                categoria,
+                tags,
+                noticia_id
+            )
+        )
     conn.commit()
+
 
 # ======================================================
 # PROCESSAMENTO PRINCIPAL
@@ -140,7 +151,6 @@ def processar():
 
             except Exception as e:
                 print(f"   ❌ Erro no ID {noticia_id}: {e}")
-
                 atualizar_status(conn, noticia_id, "erro")
 
     finally:
