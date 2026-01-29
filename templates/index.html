@@ -1,57 +1,212 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>O Giro da Bola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block title %}
-O Giro da Bola | Futebol em Tempo Real
-{% endblock %}
+  <!-- Tailwind (CDN provisório) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-{% block content %}
+<body class="bg-[#0E0E11] text-gray-100 antialiased">
 
-<section class="bloco">
-  <h2>🔥 Última Hora</h2>
-  <ul class="lista">
-    {% for n in ultima_hora %}
-      <li>
-        <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
-        <span class="fonte">{{ n.fonte }}</span>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
+<!-- ======================================================
+HEADER
+====================================================== -->
+<header class="sticky top-0 z-50 bg-[#0E0E11]/80 backdrop-blur border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="font-semibold tracking-tight text-lg">
+      <span class="text-white">O Giro</span>
+      <span class="text-[#00E676]"> da Bola</span>
+    </div>
 
-<section class="bloco">
-  <h2>🏆 Brasileirão</h2>
-  <ul class="lista">
-    {% for n in brasileirao %}
-      <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-    {% endfor %}
-  </ul>
-</section>
+    <nav class="hidden md:flex gap-6 text-sm text-gray-400">
+      {% for cat in categorias %}
+        <a href="/categoria/{{ cat }}"
+           class="hover:text-white transition {% if categoria_ativa == cat %}text-white{% endif %}">
+          {{ cat }}
+        </a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
 
-<section class="bloco">
-  <h2>💼 Mercado da Bola</h2>
-  <ul class="lista">
-    {% for n in mercado %}
-      <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-    {% endfor %}
-  </ul>
-</section>
+<!-- ======================================================
+MAIN
+====================================================== -->
+<main class="max-w-7xl mx-auto px-6 py-10 space-y-16">
 
-<section class="bloco">
-  <h2>🧠 Análises</h2>
-  <ul class="lista">
-    {% for n in analises %}
-      <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-    {% endfor %}
-  </ul>
-</section>
+  <!-- ======================================================
+  ÚLTIMA HORA (GRID CENTRAL)
+  ====================================================== -->
+  <section>
+    <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-6">
+      Última Hora
+    </h2>
 
-<section class="bloco">
-  <h2>🏛 Bastidores</h2>
-  <ul class="lista">
-    {% for n in bastidores %}
-      <li><a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a></li>
-    {% endfor %}
-  </ul>
-</section>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for n in ultima_hora %}
+        <a href="/noticia/{{ n.slug }}"
+           class="group bg-white/5 rounded-xl p-6 hover:bg-white/10 transition">
+          
+          <span class="text-xs text-[#00E676] uppercase tracking-wider">
+            {{ n.categoria }}
+          </span>
 
-{% endblock %}
+          <h3 class="mt-3 text-lg font-semibold leading-snug group-hover:underline">
+            {{ n.titulo }}
+          </h3>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }} · {{ n.criada_em.strftime("%d/%m %H:%M") }}
+          </p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ======================================================
+  BLOCO REUTILIZÁVEL — BRASILEIRÃO
+  ====================================================== -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xs uppercase tracking-widest text-gray-400">
+        Brasileirão
+      </h2>
+      <a href="/categoria/Brasileirão"
+         class="text-xs text-gray-500 hover:text-white transition">
+        ver tudo →
+      </a>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto pb-2">
+      {% for n in brasileirao %}
+        <a href="/noticia/{{ n.slug }}"
+           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
+          
+          <span class="text-xs text-[#00E676] uppercase">
+            {{ n.categoria }}
+          </span>
+
+          <h3 class="mt-2 font-medium leading-snug">
+            {{ n.titulo }}
+          </h3>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }}
+          </p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ======================================================
+  MERCADO DA BOLA
+  ====================================================== -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xs uppercase tracking-widest text-gray-400">
+        Mercado da Bola
+      </h2>
+      <a href="/categoria/Mercado da Bola"
+         class="text-xs text-gray-500 hover:text-white transition">
+        ver tudo →
+      </a>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto pb-2">
+      {% for n in mercado %}
+        <a href="/noticia/{{ n.slug }}"
+           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
+          
+          <span class="text-xs text-[#00E676] uppercase">
+            {{ n.categoria }}
+          </span>
+
+          <h3 class="mt-2 font-medium leading-snug">
+            {{ n.titulo }}
+          </h3>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }}
+          </p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ======================================================
+  ANÁLISES
+  ====================================================== -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xs uppercase tracking-widest text-gray-400">
+        Análises
+      </h2>
+      <a href="/categoria/Análises"
+         class="text-xs text-gray-500 hover:text-white transition">
+        ver tudo →
+      </a>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto pb-2">
+      {% for n in analises %}
+        <a href="/noticia/{{ n.slug }}"
+           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
+          
+          <span class="text-xs text-[#00E676] uppercase">
+            {{ n.categoria }}
+          </span>
+
+          <h3 class="mt-2 font-medium leading-snug">
+            {{ n.titulo }}
+          </h3>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }}
+          </p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ======================================================
+  BASTIDORES
+  ====================================================== -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xs uppercase tracking-widest text-gray-400">
+        Bastidores
+      </h2>
+      <a href="/categoria/Bastidores"
+         class="text-xs text-gray-500 hover:text-white transition">
+        ver tudo →
+      </a>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto pb-2">
+      {% for n in bastidores %}
+        <a href="/noticia/{{ n.slug }}"
+           class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
+          
+          <span class="text-xs text-[#00E676] uppercase">
+            {{ n.categoria }}
+          </span>
+
+          <h3 class="mt-2 font-medium leading-snug">
+            {{ n.titulo }}
+          </h3>
+
+          <p class="mt-2 text-xs text-gray-400">
+            {{ n.fonte }}
+          </p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
