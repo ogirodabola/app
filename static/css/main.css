@@ -193,3 +193,118 @@ a:hover {
     padding: 0 12px;
   }
 }
+
+
+/* Header principal */
+.site-header {
+  height: 72px; /* antes provavelmente ~56px */
+  display: flex;
+  align-items: center;
+  background: rgba(14, 14, 17, 0.92);
+  backdrop-filter: blur(8px);
+
+  /* sombra elegante no rodapé */
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.04),
+    0 6px 20px rgba(0, 0, 0, 0.35);
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.site-logo {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.04em; /* letras mais próximas */
+  text-transform: uppercase;
+  font-style: italic;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* Destaque sutil na palavra Bola */
+.site-logo span {
+  color: #00E676;
+  font-weight: 700;
+}
+
+.menu-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-toggle span {
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  display: block;
+  position: relative;
+}
+
+.menu-toggle span::before,
+.menu-toggle span::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  left: 0;
+}
+
+.menu-toggle span::before {
+  top: -6px;
+}
+
+.menu-toggle span::after {
+  top: 6px;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 72px;
+  right: 16px;
+  width: 220px;
+
+  background: #111115;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  padding: 12px;
+
+  display: none;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #d1d1d1;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mobile-menu a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.mobile-menu a.anuncie {
+  color: #00E676;
+  font-weight: 600;
+}
+.nav-desktop {
+  display: none;
+}
