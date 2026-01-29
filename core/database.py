@@ -46,7 +46,7 @@ def criar_tabelas():
 # ======================================================
 # HOME – ÚLTIMA HORA
 # ======================================================
-def listar_ultima_hora(limit=10):
+def listar_ultima_hora(limit=12):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -54,14 +54,18 @@ def listar_ultima_hora(limit=10):
                 """
                 SELECT
                   id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  CASE
+                    WHEN editorial_status IN ('rapido', 'pronto')
+                      THEN titulo_editorial
+                    ELSE titulo
+                  END AS titulo,
                   slug,
                   fonte,
                   categoria,
                   imagem,
-                  criada_em
+                  criada_em,
+                  editorial_status
                 FROM noticias
-                WHERE editorial_status IN ('rapido', 'pronto')
                 ORDER BY criada_em DESC
                 LIMIT %s;
                 """,
