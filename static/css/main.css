@@ -20,9 +20,13 @@ body {
   z-index: 1000;
   height: 72px;
   background: #0b0b0d;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-}
 
+  /* Linha sutil */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  /* Sombra elegante */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
 /* CONTAINER */
 .header-container {
   max-width: 1280px;
