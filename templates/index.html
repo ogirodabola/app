@@ -14,36 +14,30 @@
 
 <body class="bg-[#0E0E11] text-gray-100 antialiased">
 
-<!-- ======================================================
-HEADER
-====================================================== -->
 <header class="site-header">
-  <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between relative">
-
+  <div class="header-container">
+    
     <!-- LOGO -->
-    <a href="/" class="site-logo">
-      O GIRO <span>DA BOLA</span>
-    </a>
+    <div class="logo">
+      <a href="/">GIRO DESPORTIVO</a>
+    </div>
 
-    <!-- MENU DESKTOP (mantido escondido pelo CSS) -->
-    <nav class="nav-desktop">
-      {% for cat in categorias %}
-        <a href="/categoria/{{ cat }}">{{ cat }}</a>
-      {% endfor %}
-    </nav>
-
-    <!-- MENU SANDUÍCHE -->
-    <div class="menu-toggle" id="menuToggle">
+    <!-- MENU SANDUICHE -->
+    <button class="menu-toggle" aria-label="Abrir menu">
       <span></span>
-    </div>
+      <span></span>
+      <span></span>
+    </button>
 
-    <!-- MENU MOBILE -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="/ultima-hora">Últimas Notícias</a>
-      <a href="/agenda">Jogos do Dia</a>
-      <a href="/onde-assistir">Onde Assistir</a>
-      <a href="/anuncie" class="anuncie">Anuncie</a>
-    </div>
+    <!-- MENU -->
+    <nav class="mobile-menu">
+      <ul>
+        <li><a href="/ultimas-noticias">Últimas Notícias</a></li>
+        <li><a href="/jogos-do-dia">Jogos do Dia</a></li>
+        <li><a href="/onde-assistir">Onde Assistir</a></li>
+        <li><a href="/anuncie">Anuncie</a></li>
+      </ul>
+    </nav>
 
   </div>
 </header>
