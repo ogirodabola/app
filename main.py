@@ -21,11 +21,7 @@ app = FastAPI()
 criar_tabelas()
 
 # arquivos estáticos
-app.mount(
-    "/static",
-    StaticFiles(directory=BASE_DIR / "static"),
-    name="static"
-)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
