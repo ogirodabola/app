@@ -9,63 +9,32 @@
   <section>
     <h2 class="section-title">Última Hora</h2>
 
-    <div class="grid">
+    <div class="cards-grid">
       {% for n in ultima_hora %}
         <a href="/noticia/{{ n.slug }}" class="card">
 
           {% if n.imagem %}
-            <div class="card-image">
-              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
-            </div>
+          <div class="card-image">
+            <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
+          </div>
           {% endif %}
 
           <div class="card-body">
             <span class="badge">{{ n.categoria }}</span>
 
-            <h3 class="card-title">{{ n.titulo }}</h3>
+            <h3 class="card-title">
+              {{ n.titulo }}
+            </h3>
 
             <p class="card-meta">
               {{ n.fonte }} · {{ n.criada_em.strftime("%d/%m %H:%M") }}
             </p>
           </div>
+
         </a>
       {% endfor %}
     </div>
   </section>
-
-  <!-- MACRO RAIL -->
-  {% macro rail(titulo, lista, url) %}
-  <section>
-    <div class="rail-header">
-      <h2 class="section-title">{{ titulo }}</h2>
-      <a href="{{ url }}" class="rail-link">ver tudo →</a>
-    </div>
-
-    <div class="rail">
-      {% for n in lista %}
-        <a href="/noticia/{{ n.slug }}" class="rail-card">
-
-          {% if n.imagem %}
-            <div class="rail-image">
-              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
-            </div>
-          {% endif %}
-
-          <div class="rail-body">
-            <span class="badge">{{ n.categoria }}</span>
-            <h3 class="rail-title">{{ n.titulo }}</h3>
-            <p class="card-meta">{{ n.fonte }}</p>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-  </section>
-  {% endmacro %}
-
-  {{ rail("Brasileirão", brasileirao, "/categoria/Brasileirão") }}
-  {{ rail("Mercado da Bola", mercado, "/categoria/Mercado da Bola") }}
-  {{ rail("Análises", analises, "/categoria/Análises") }}
-  {{ rail("Bastidores", bastidores, "/categoria/Bastidores") }}
 
 </div>
 {% endblock %}
