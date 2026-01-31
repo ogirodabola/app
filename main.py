@@ -17,11 +17,13 @@ BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 
-# garante estrutura mínima
 criar_tabelas()
 
-# arquivos estáticos
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "static"),
+    name="static"
+)
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
