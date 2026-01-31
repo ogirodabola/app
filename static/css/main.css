@@ -5,12 +5,11 @@ RESET BÁSICO / BASE
   box-sizing: border-box;
 }
 
-body {
-  background: #0E0E11;
-  color: #e5e7eb;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-               "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji",
-               "Segoe UI Emoji";
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #0b0b0b; /* nunca branco */
+  color: #eaeaea;
 }
 
 /* ======================================================
@@ -95,22 +94,14 @@ HEADER – GIRO DESPORTIVO (BLINDADO)
 }
 
 /* linha inferior visível */
-.site-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-
-  background: linear-gradient(
-    to right,
-    rgba(255,255,255,0),
-    rgba(255,255,255,0.18),
-    rgba(255,255,255,0)
-  );
-
-  box-shadow: 0 3px 8px rgba(0,0,0,0.7);
+/* HEADER */
+.site-header {
+  position: sticky;
+  top: 0;
+  height: 72px;
+  background-color: #111;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  z-index: 1000;
 }
 
 /* container */
@@ -119,6 +110,17 @@ HEADER – GIRO DESPORTIVO (BLINDADO)
   height: 100%;
   margin: 0 auto;
   padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header__inner {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -157,27 +159,35 @@ HEADER – GIRO DESPORTIVO (BLINDADO)
 //* MENU LATERAL – CORRETO */
 .mobile-menu {
   position: fixed;
-  top: 72px;
+  top: 0;
   right: 0;
-  width: 260px;
-  height: calc(100vh - 72px);
-  background: #111114;
+  width: 280px;
+  height: 100vh;
 
-  /* escondido por padrão */
+  background-color: #111;
+  padding: 24px;
+
   transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1100;
+}
+
+/* Estado ativo */
+.mobile-menu.is-open {
+  transform: translateX(0);
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
   opacity: 0;
   pointer-events: none;
-
-  transition: transform 0.3s ease, opacity 0.2s ease;
-  z-index: 9999;
+  transition: opacity 0.2s ease;
+  z-index: 1050;
 }
 
-.mobile-menu.open {
-  transform: translateX(0);
+.menu-overlay.is-active {
   opacity: 1;
-  pointer-events: auto;
-}
-
-html, body {
-  background-color: #0E0E11 !important;
+  pointer-events: all;
 }
