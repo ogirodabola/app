@@ -13,24 +13,42 @@
 <body>
 
   <!-- HEADER -->
-  <header class="site-header">
-    <div class="container site-header__inner">
-      <h1 class="logo">⚽ GIRO <strong>DESPORTIVO</strong></h1>
+  <<header class="site-header">
+  <div class="container site-header__inner">
 
-      <nav class="desktop-nav">
-        <a href="/">Notícias</a>
-        <a href="/agenda">Agenda</a>
-      </nav>
-
-      <button
-        class="menu-toggle"
-        data-menu-toggle
-        aria-label="Abrir menu">
-        ☰
-      </button>
+    <div class="logo">
+      ⚽ GIRO DESPORTIVO
     </div>
-  </header>
 
+    <!-- NAV DESKTOP -->
+    <nav class="desktop-nav">
+      <a href="/">Notícias</a>
+      <a href="/agenda">Agenda</a>
+    </nav>
+
+    <!-- BOTÃO SANDUÍCHE (MOBILE) -->
+    <button
+      class="menu-toggle"
+      data-menu-toggle
+      aria-label="Abrir menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+</header>
+
+<!-- OVERLAY -->
+<div class="menu-overlay"></div>
+
+<!-- MENU MOBILE -->
+<nav class="mobile-menu" aria-hidden="true">
+  <ul>
+    <li><a href="/">Notícias</a></li>
+    <li><a href="/agenda">Agenda</a></li>
+  </ul>
+</nav>
   <!-- OVERLAY -->
   <div class="menu-overlay"></div>
 
