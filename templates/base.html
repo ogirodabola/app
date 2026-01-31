@@ -17,22 +17,26 @@
 
     <!-- LOGO -->
     <div class="logo">
-  <a href="/" aria-label="Giro Desportivo - Página inicial">
-    <img
-      src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
-      alt="Giro Desportivo"
-      loading="eager"
-    >
-  </a>
-</div>
+      <a href="/" aria-label="Giro Desportivo - Página inicial">
+        <img
+          src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
+          alt="Giro Desportivo"
+        >
+      </a>
+    </div>
 
-    <!-- NAV FIXO (SEMPRE VISÍVEL) -->
-    <nav class="top-nav">
-      <a href="/">Notícias</a>
-      <a href="/agenda">Agenda</a>
+    <!-- NAV PRINCIPAL (DIREITA) -->
+    <nav class="desktop-nav">
+      <a href="/" class="{% if categoria_ativa == None %}active{% endif %}">
+        Notícias
+      </a>
+      <a href="/classificacao">Classificação</a>
+      <a href="/onde-assistir">Onde Assistir</a>
+      <a href="/categoria/Mercado da Bola">Mercado da Bola</a>
+      <a href="/anuncie">Anuncie</a>
     </nav>
 
-    <!-- BOTÃO SANDUÍCHE (SEMPRE VISÍVEL) -->
+    <!-- MENU SANDUÍCHE (SEMPRE VISÍVEL) -->
     <button
       class="menu-toggle"
       data-menu-toggle
@@ -44,6 +48,7 @@
 
   </div>
 </header>
+
 
 
   <!-- OVERLAY -->
