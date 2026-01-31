@@ -15,9 +15,7 @@ from core.editorial import (
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise RuntimeError(
-        "DATABASE_URL não definida — verifique secrets da GitHub Action"
-    )
+    raise RuntimeError("DATABASE_URL não definida")
 
 LIMITE_POR_EXECUCAO = int(os.getenv("EDITORIAL_BATCH_LIMIT", 10))
 PAUSA_ENTRE_ITENS = int(os.getenv("EDITORIAL_SLEEP", 2))
@@ -31,7 +29,7 @@ def get_conn():
 
 
 # ======================================================
-# BUSCAR NOTÍCIAS PENDENTES (CORRETO)
+# BUSCAR NOTÍCIAS PENDENTES (CORRETO PARA O SCHEMA ATUAL)
 # ======================================================
 def buscar_pendentes(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -39,10 +37,9 @@ def buscar_pendentes(conn):
             """
             SELECT id, titulo, resumo
             FROM noticias
-            WHERE editorial_status = 'pendente'
+            WHERE conteudo_editorial IS NULL
             ORDER BY criada_em ASC
-            LIMIT %s
-            FOR UPDATE SKIP LOCKED;
+            LIMIT %s;
             """,
             (LIMITE_POR_EXECUCAO,)
         )
@@ -50,23 +47,7 @@ def buscar_pendentes(conn):
 
 
 # ======================================================
-# ATUALIZAR STATUS
-# ======================================================
-def atualizar_status(conn, noticia_id, status):
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            UPDATE noticias
-            SET editorial_status = %s
-            WHERE id = %s;
-            """,
-            (status, noticia_id)
-        )
-    conn.commit()
-
-
-# ======================================================
-# SALVAR RESULTADO EDITORIAL (COMPLETO)
+# SALVAR RESULTADO EDITORIAL
 # ======================================================
 def salvar_editorial(
     conn,
@@ -84,8 +65,7 @@ def salvar_editorial(
               titulo_editorial = %s,
               conteudo_editorial = %s,
               categoria = %s,
-              tags = %s,
-              editorial_status = 'pronto'
+              tags = %s
             WHERE id = %s;
             """,
             (
@@ -125,8 +105,6 @@ def processar():
             print(f"   Título original: {titulo}")
 
             try:
-                atualizar_status(conn, noticia_id, "processando")
-
                 categoria, tags = classificar_editorial(titulo, resumo)
                 titulo_editorial = gerar_titulo_editorial(titulo)
 
@@ -150,7 +128,6 @@ def processar():
 
             except Exception as e:
                 print(f"   ❌ Erro no ID {noticia_id}: {e}")
-                atualizar_status(conn, noticia_id, "erro")
 
     finally:
         conn.close()
