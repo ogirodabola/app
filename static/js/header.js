@@ -1,10 +1,13 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const toggle = document.querySelector(".menu-toggle");
-  const menu = document.querySelector(".mobile-menu");
+const btn = document.querySelector('[data-menu-toggle]');
+const menu = document.querySelector('.mobile-menu');
+const overlay = document.querySelector('.menu-overlay');
 
-  if (!toggle || !menu) return;
+btn.addEventListener('click', () => {
+  menu.classList.add('is-open');
+  overlay.classList.add('is-active');
+});
 
-  toggle.addEventListener("click", function () {
-    menu.classList.toggle("open");
-  });
+overlay.addEventListener('click', () => {
+  menu.classList.remove('is-open');
+  overlay.classList.remove('is-active');
 });
