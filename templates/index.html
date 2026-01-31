@@ -12,35 +12,36 @@
     <div class="latest-news">
       <h2 class="section-title">Últimas Notícias</h2>
 
-      <ul class="latest-news-list">
-        {% for n in ultimas_noticias %}
-          <li class="latest-news-item">
-            <a href="/noticia/{{ n.slug }}">
+      <<ul class="latest-news-list">
+  {% for n in ultimas_noticias %}
+    <li class="latest-news-item">
+      <a href="/noticia/{{ n.slug }}">
 
-              {% if n.imagem %}
-                <img src="{{ n.imagem }}" alt="{{ n.titulo_editorial or n.titulo }}">
-              {% endif %}
+        {% if n.imagem %}
+          <img src="{{ n.imagem }}" alt="{{ n.titulo_editorial or n.titulo }}">
+        {% endif %}
 
-              <div class="latest-news-text">
-                <span class="latest-news-category">
-                  {{ n.categoria }}
-                </span>
+        <div class="latest-news-text">
+          <span class="latest-news-category">
+            {{ n.categoria }}
+          </span>
 
-                <h3 class="latest-news-title">
-                  {{ n.titulo_editorial or n.titulo }}
-                </h3>
+          <h3 class="latest-news-title">
+            {{ n.titulo_editorial or n.titulo }}
+          </h3>
 
-                {% if n.fonte %}
-                  <div class="latest-news-meta">
-                    {{ n.fonte }}
-                  </div>
-                {% endif %}
-              </div>
+          {% if n.fonte %}
+            <div class="latest-news-meta">
+              {{ n.fonte }}
+            </div>
+          {% endif %}
+        </div>
 
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
     </div>
 
     <!-- ADS LATERAL -->
