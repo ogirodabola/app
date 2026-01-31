@@ -14,6 +14,7 @@ from core.database import (
     listar_ultimas_editoriais
 )
 
+
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
