@@ -908,9 +908,10 @@ HOME – ÚLTIMAS NOTÍCIAS
 }
 
 .latest-news-text h3 {
-  font-size: 15px;
-  line-height: 1.3;
-  margin: 4px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .latest-news-category {
