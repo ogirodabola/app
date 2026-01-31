@@ -9,7 +9,8 @@ from core.database import (
     listar_ultima_hora,
     listar_por_categoria,
     listar_categorias,
-    buscar_noticia_por_slug
+    buscar_noticia_por_slug,
+    listar_recomendadas_por_slug
 )
 
 BASE_DIR = Path(__file__).resolve().parent
