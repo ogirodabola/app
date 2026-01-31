@@ -9,15 +9,14 @@ from core.database import (
     listar_ultima_hora,
     listar_por_categoria,
     listar_categorias,
-    buscar_noticia_por_slug,
-    listar_recomendadas_por_slug
+    buscar_noticia_por_slug
 )
 
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 
-# cria tabelas ao subir a aplicação
+# garante estrutura mínima
 criar_tabelas()
 
 # arquivos estáticos
@@ -27,8 +26,8 @@ app.mount(
     name="static"
 )
 
-# templates
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
 
 # ======================================================
 # HOME
@@ -40,7 +39,7 @@ def home(request: Request):
         {
             "request": request,
 
-            # blocos principais
+            # blocos editoriais
             "ultima_hora": listar_ultima_hora(8),
             "brasileirao": listar_por_categoria("Brasileirão", 8),
             "mercado": listar_por_categoria("Mercado da Bola", 6),
@@ -53,23 +52,23 @@ def home(request: Request):
         }
     )
 
+
 # ======================================================
 # LISTAGEM POR CATEGORIA
 # ======================================================
 @app.get("/categoria/{categoria}", response_class=HTMLResponse)
-def pagina_categoria(categoria: str, request: Request):
-    noticias = listar_por_categoria(categoria)
-
+def pagina_categoria(request: Request, categoria: str):
     return templates.TemplateResponse(
         "categoria.html",
         {
             "request": request,
             "categoria": categoria,
-            "noticias": noticias,
+            "noticias": listar_por_categoria(categoria, 50),
             "categorias": listar_categorias(),
-            "categoria_ativa": categoria,
+            "categoria_ativa": categoria
         }
     )
+
 
 # ======================================================
 # NOTÍCIA INDIVIDUAL
@@ -81,13 +80,10 @@ def noticia(slug: str, request: Request):
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
-    recomendadas = listar_recomendadas_por_slug(slug, limit=5)
-
     return templates.TemplateResponse(
         "noticia.html",
         {
             "request": request,
-            "noticia": noticia,
-            "recomendadas": recomendadas
+            "noticia": noticia
         }
     )
