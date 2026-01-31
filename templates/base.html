@@ -9,6 +9,84 @@
   <!-- CSS DO PROJETO -->
   <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
 </head>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+
+    <!-- BRAND / LOGO -->
+    <div class="footer-brand">
+      <img
+        src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
+        alt="Giro Desportivo"
+        class="footer-logo"
+      >
+      <p class="footer-tagline">
+        Informação esportiva, clara e objetiva.
+      </p>
+    </div>
+
+    <!-- INSTITUCIONAL -->
+    <div class="footer-column">
+      <span class="footer-title">Institucional</span>
+      <ul>
+        <li><a href="/sobre">Sobre o Giro Desportivo</a></li>
+        <li><a href="/politica-editorial">Política Editorial</a></li>
+        <li><a href="/politica-privacidade">Política de Privacidade</a></li>
+        <li><a href="/termos">Termos de Uso</a></li>
+        <li><a href="/anuncie">Anuncie Conosco</a></li>
+      </ul>
+    </div>
+
+    <!-- CATEGORIAS -->
+    <div class="footer-column">
+      <span class="footer-title">Categorias</span>
+      <ul>
+        <li><a href="/categoria/Brasileirão">Brasileirão</a></li>
+        <li><a href="/categoria/Mercado da Bola">Mercado da Bola</a></li>
+        <li><a href="/categoria/Análises">Análises</a></li>
+        <li><a href="/categoria/Bastidores">Bastidores</a></li>
+        <li><a href="/onde-assistir">Onde Assistir</a></li>
+      </ul>
+    </div>
+
+    <!-- CONTATO / REDES -->
+    <div class="footer-column">
+      <span class="footer-title">Contato & Redes</span>
+      <ul>
+        <li><a href="mailto:contato@girodesportivo.com">contato@girodesportivo.com</a></li>
+        <li class="footer-socials">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://x.com/" target="_blank" rel="noopener">X (Twitter)</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="footer-disclaimer">
+    <div class="container">
+      <p>
+        As matérias publicadas no Giro Desportivo são produzidas com apoio de inteligência artificial,
+        a partir de conteúdos jornalísticos de fontes públicas e confiáveis.
+        Mantemos sempre a referência à fonte original.
+        O Giro Desportivo não se responsabiliza por eventuais imprecisões ou interpretações decorrentes
+        do uso automatizado dessas informações.
+      </p>
+    </div>
+  </div>
+
+  <!-- COPYRIGHT -->
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <span>© {{ 2026 }} Giro Desportivo. Todos os direitos reservados.</span>
+      <span class="footer-made">
+        Produzido com <span class="heart">♥</span> em São Paulo
+      </span>
+    </div>
+  </div>
+</footer>
+
 <body>
 
   <!-- HEADER -->
