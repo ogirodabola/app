@@ -30,15 +30,11 @@
             {{ n.titulo_editorial or n.titulo }}
           </h3>
 
-          <div class="latest-news-meta">
-            {% if n.fonte %}
-              <span>{{ n.fonte }}</span>
-              <span>•</span>
-            {% endif %}
-            <time datetime="{{ n.criada_em }}">
-              {{ n.criada_em.strftime("%d/%m/%Y %H:%M") }}
-            </time>
-          </div>
+          <<div class="latest-news-meta">
+  {{ n.fonte }}
+  · {{ n.criada_em.astimezone().strftime("%d/%m %H:%M") }}
+</div>
+
         </div>
 
       </a>
