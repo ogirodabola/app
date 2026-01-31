@@ -1,17 +1,25 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.querySelector('[data-menu-toggle]');
+<script>
+(function () {
+  const toggle = document.querySelector('[data-menu-toggle]');
   const menu = document.querySelector('.mobile-menu');
   const overlay = document.querySelector('.menu-overlay');
+  const body = document.body;
 
-  if (!btn || !menu || !overlay) return;
+  if (!toggle || !menu || !overlay) return;
 
-  btn.addEventListener('click', () => {
+  function openMenu() {
     menu.classList.add('is-open');
     overlay.classList.add('is-active');
-  });
+    body.classList.add('menu-open');
+  }
 
-  overlay.addEventListener('click', () => {
+  function closeMenu() {
     menu.classList.remove('is-open');
     overlay.classList.remove('is-active');
-  });
-});
+    body.classList.remove('menu-open');
+  }
+
+  toggle.addEventListener('click', openMenu);
+  overlay.addEventListener('click', closeMenu);
+})();
+</script>
