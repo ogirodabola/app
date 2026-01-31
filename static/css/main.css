@@ -5,12 +5,39 @@ RESET BÁSICO / BASE
   box-sizing: border-box;
 }
 
-html, body {
+/* =========================
+   RESET CONTROLADO
+========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
-  background-color: #0b0b0b; /* nunca branco */
+  min-height: 100%;
+  background-color: #0b0b0b;
   color: #eaeaea;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+
+/* =========================
+   LAYOUT GLOBAL
+========================= */
+.page {
+  min-height: 100vh;
+  background-color: #0b0b0b;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
 
 /* ======================================================
 SEÇÕES / TÍTULOS
