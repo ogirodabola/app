@@ -79,27 +79,34 @@ def listar_ultimas_editoriais(limit=5):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
 
+    # 1️⃣ tenta só editoriais IA
     cursor.execute("""
-        SELECT
-            id,
-            slug,
-            titulo,
-            titulo_editorial,
-            categoria,
-            imagem,
-            fonte,
-            criada_em
+        SELECT id, slug, titulo, titulo_editorial, categoria, imagem, fonte, criada_em
         FROM noticias
         WHERE
             conteudo_editorial IS NOT NULL
+            AND titulo_editorial IS NOT NULL
             AND categoria NOT IN ('Agenda', 'Onde Assistir')
         ORDER BY criada_em DESC
         LIMIT %s;
     """, (limit,))
 
-    noticias = cursor.fetchall()
+    rows = cursor.fetchall()
+
+    # 2️⃣ fallback se não tiver conteúdo IA suficiente
+    if len(rows) < limit:
+        cursor.execute("""
+            SELECT id, slug, titulo, titulo_editorial, categoria, imagem, fonte, criada_em
+            FROM noticias
+            WHERE
+                categoria NOT IN ('Agenda', 'Onde Assistir')
+            ORDER BY criada_em DESC
+            LIMIT %s;
+        """, (limit,))
+        rows = cursor.fetchall()
+
     conn.close()
-    return noticias
+    return rows
 
 # ======================================================
 # HOME – POR CATEGORIA (GENÉRICO)
