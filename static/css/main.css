@@ -82,7 +82,7 @@ LOGO
 LOGO – GIRO DESPORTIVO
 ====================================================== */
 .logo img {
-  height: 34px; /* tamanho ideal editorial */
+  height: 120px; /* tamanho ideal editorial */
   width: auto;
   display: block;
 }
