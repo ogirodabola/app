@@ -319,3 +319,18 @@ def listar_recomendadas_por_slug(slug: str, limit: int = 5):
             return cur.fetchall()
     finally:
         conn.close()
+
+def listar_recomendadas_por_slug(slug_atual, limit=5):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT id, titulo, titulo_editorial, slug, categoria, imagem, fonte
+                FROM noticias
+                WHERE slug != %s
+                ORDER BY criada_em DESC
+                LIMIT %s
+                """,
+                (slug_atual, limit)
+            )
+            return cur.fetchall()
