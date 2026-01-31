@@ -697,3 +697,20 @@ BLOCO EDITORIAL – OVERLAY SUAVE DE LEITURA
     border-radius: 14px;
   }
 }
+/* ======================================================
+RECOMENDAÇÕES – BLOCO FINAL
+====================================================== */
+
+.news-related {
+  margin-top: 96px;
+}
+
+.news-related .section-title {
+  margin-bottom: 32px;
+}
+
+.news-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
