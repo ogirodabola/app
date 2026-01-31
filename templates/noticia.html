@@ -8,58 +8,49 @@
 
 <article class="news-article">
 
-  <!-- ================= HERO / IMAGEM DE DESTAQUE ================= -->
+  <!-- ================= HERO ================= -->
   {% if noticia.imagem %}
-<section class="news-hero"
-  style="background-image: url('{{ noticia.imagem }}');">
-  
-  <div class="news-hero-overlay"></div>
+  <section class="news-hero"
+    style="background-image: url('{{ noticia.imagem }}');">
+    
+    <div class="news-hero-overlay"></div>
 
-  <div class="news-hero-content container">
-    {% if noticia.categoria %}
-      <span class="news-category">{{ noticia.categoria }}</span>
-    {% endif %}
-
-    <h1 class="news-title">
-      {{ noticia.titulo_editorial or noticia.titulo }}
-    </h1>
-
-    <div class="news-meta">
-      {% if noticia.fonte %}
-        <span>{{ noticia.fonte }}</span>
-        <span>•</span>
+    <div class="news-hero-content container">
+      {% if noticia.categoria %}
+        <span class="news-category">{{ noticia.categoria }}</span>
       {% endif %}
-      <time datetime="{{ noticia.criada_em }}">
-        {{ noticia.criada_em.strftime("%d/%m/%Y %H:%M") }}
-      </time>
-    </div>
-  </div>
-</section>
-{% endif %}
 
-<section class="news-content-wrapper">
-  <article class="news-content editorial-content">
-    {{ noticia.conteudo_editorial | safe }}
-  </article>
-</section>
+      <h1 class="news-title">
+        {{ noticia.titulo_editorial or noticia.titulo }}
+      </h1>
+
+      <div class="news-meta">
+        {% if noticia.fonte %}
+          <span>{{ noticia.fonte }}</span>
+          <span>•</span>
+        {% endif %}
+        <time datetime="{{ noticia.criada_em }}">
+          {{ noticia.criada_em.strftime("%d/%m/%Y %H:%M") }}
+        </time>
+      </div>
+    </div>
+  </section>
+  {% endif %}
 
   <!-- ================= CONTEÚDO ================= -->
-  <section class="news-body">
-    <div class="container news-content">
-
-      <div class="news-text">
+  <section class="news-content-wrapper">
+    <div class="container">
+      <article class="news-content editorial-content">
         {{ noticia.conteudo_editorial | safe }}
-      </div>
+      </article>
 
-      <!-- ================= TAGS ================= -->
       {% if noticia.tags %}
       <div class="news-tags">
         {% for tag in noticia.tags %}
-          <span>#{{ tag }}</span>
+          <span class="news-tag">#{{ tag }}</span>
         {% endfor %}
       </div>
       {% endif %}
-
     </div>
   </section>
 
