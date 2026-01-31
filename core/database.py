@@ -75,6 +75,20 @@ def listar_ultima_hora(limit=12):
     finally:
         conn.close()
 
+def listar_ultimas_editoriais(limit=5):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT *
+                FROM noticias
+                WHERE categoria NOT IN ('Onde Assistir', 'Agenda')
+                ORDER BY criada_em DESC
+                LIMIT %s;
+                """,
+                (limit,)
+            )
+            return cur.fetchall()
 
 # ======================================================
 # HOME – POR CATEGORIA (GENÉRICO)
