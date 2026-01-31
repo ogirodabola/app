@@ -2,217 +2,154 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}GIRO DESPORTIVO{% endblock %}</title>
+  <title>{% block title %}Giro Desportivo{% endblock %}</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS DO PROJETO -->
+  <!-- CSS PRINCIPAL -->
   <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
 </head>
+
 <body>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header class="site-header">
-  <div class="container site-header__inner">
+    <div class="container site-header__inner">
 
-    <!-- LOGO -->
-    <div class="logo">
-      <a href="/" aria-label="Giro Desportivo - Página inicial">
-        <img
-          src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
-          alt="Giro Desportivo"
-        >
-      </a>
+      <!-- LOGO -->
+      <div class="logo">
+        <a href="/">
+          <img src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
+               alt="Giro Desportivo">
+        </a>
+      </div>
+
+      <!-- NAV DESKTOP -->
+      <nav class="desktop-nav">
+        <a href="/">Notícias</a>
+        <a href="/classificacao">Classificação</a>
+        <a href="/onde-assistir">Onde Assistir</a>
+        <a href="/mercado">Mercado da Bola</a>
+        <a href="/anuncie">Anuncie</a>
+      </nav>
+
+      <!-- BOTÃO SANDUÍCHE -->
+      <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
     </div>
-
-    <!-- NAV PRINCIPAL (DIREITA) -->
-    <nav class="desktop-nav">
-      <a href="/" class="{% if categoria_ativa == None %}active{% endif %}">
-        Notícias
-      </a>
-      <a href="/classificacao">Classificação</a>
-      <a href="/onde-assistir">Onde Assistir</a>
-      <a href="/categoria/Mercado da Bola">Mercado da Bola</a>
-      <a href="/anuncie">Anuncie</a>
-    </nav>
-
-    <!-- MENU SANDUÍCHE (SEMPRE VISÍVEL) -->
-    <button
-      class="menu-toggle"
-      data-menu-toggle
-      aria-label="Abrir menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-  </div>
-</header>
-
-
+  </header>
 
   <!-- OVERLAY -->
   <div class="menu-overlay"></div>
 
-  <!-- MENU MOBILE -->
+  <!-- MENU SANDUÍCHE -->
   <nav class="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-section">
+      <h4>Futebol</h4>
+      <ul>
+        <li><a href="/categoria/brasileirao">Campeonato Brasileiro</a></li>
+        <li><a href="/categoria/nacionais">Campeonatos Nacionais</a></li>
+        <li><a href="/categoria/sulamericanos">Torneios Sul-Americanos</a></li>
+        <li><a href="/categoria/europa">Ligas Europeias</a></li>
+      </ul>
+    </div>
 
-  <!-- FUTEBOL -->
-  <div class="menu-section">
-    <span class="menu-title">Futebol</span>
-    <ul>
-      <li>
-        <a href="/categoria/campeonato-brasileiro">
-          Campeonato Brasileiro
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/campeonatos-nacionais">
-          Campeonatos Nacionais
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/torneios-sulamericanos">
-          Torneios Sul-Americanos
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/ligas-europeias">
-          Ligas Europeias
-        </a>
-      </li>
-    </ul>
-  </div>
+    <div class="mobile-menu-section">
+      <h4>Giro Desportivo</h4>
+      <ul>
+        <li><a href="/categoria/basquete">Basquete</a></li>
+        <li><a href="/categoria/volei">Vôlei</a></li>
+        <li><a href="/categoria/tenis">Tênis</a></li>
+        <li><a href="/categoria/f1">Fórmula 1</a></li>
+      </ul>
+    </div>
+  </nav>
 
-  <!-- DIVISOR -->
-  <div class="menu-divider"></div>
-
-  <!-- GIRO DESPORTIVO -->
-  <div class="menu-section">
-    <span class="menu-title">Giro Desportivo</span>
-    <ul>
-      <li>
-        <a href="/categoria/basquete">
-          Basquete
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/volei">
-          Vôlei
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/tenis">
-          Tênis
-        </a>
-      </li>
-      <li>
-        <a href="/categoria/formula-1">
-          Fórmula 1
-        </a>
-      </li>
-    </ul>
-  </div>
-
-</nav>
-
-
-  <!-- CONTEÚDO -->
+  <!-- ================= CONTEÚDO ================= -->
   <main class="page">
     {% block content %}{% endblock %}
   </main>
 
-  <a href="/"
-   class="{% if categoria_ativa == None %}active{% endif %}">
-  Notícias
-</a>
-
-  <a href="/categoria/{{ categoria }}"
-   class="{% if categoria_ativa == categoria %}active{% endif %}">
-
-  <!-- FOOTER -->
+  <!-- ================= FOOTER ================= -->
   <footer class="site-footer">
-    <p>© GIRO DESPORTIVO</p>
+
+    <div class="footer-top">
+      <div class="container footer-grid">
+
+        <!-- LOGO -->
+        <div class="footer-brand">
+          <img src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
+               alt="Giro Desportivo" width="102">
+          <p>Informação esportiva clara, objetiva e atualizada.</p>
+        </div>
+
+        <!-- INSTITUCIONAL -->
+        <div>
+          <h5>Institucional</h5>
+          <ul>
+            <li><a href="/sobre">Sobre o Giro Desportivo</a></li>
+            <li><a href="/politica-editorial">Política Editorial</a></li>
+            <li><a href="/privacidade">Política de Privacidade</a></li>
+            <li><a href="/termos">Termos de Uso</a></li>
+            <li><a href="/anuncie">Anuncie Conosco</a></li>
+          </ul>
+        </div>
+
+        <!-- CATEGORIAS -->
+        <div>
+          <h5>Categorias</h5>
+          <ul>
+            <li><a href="/categoria/brasileirao">Brasileirão</a></li>
+            <li><a href="/categoria/mercado">Mercado da Bola</a></li>
+            <li><a href="/categoria/analises">Análises</a></li>
+            <li><a href="/categoria/bastidores">Bastidores</a></li>
+            <li><a href="/onde-assistir">Onde Assistir</a></li>
+          </ul>
+        </div>
+
+        <!-- CONTATO -->
+        <div>
+          <h5>Contato & Redes</h5>
+          <ul>
+            <li><a href="mailto:contato@girodesportivo.com">contato@girodesportivo.com</a></li>
+            <li><a href="#" target="_blank">Instagram</a></li>
+            <li><a href="#" target="_blank">YouTube</a></li>
+            <li><a href="#" target="_blank">X (Twitter)</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="footer-disclaimer">
+      <div class="container">
+        <p>
+          As matérias publicadas no Giro Desportivo são produzidas com apoio de
+          inteligência artificial a partir de fontes públicas e confiáveis.
+          Mantemos sempre a referência à fonte original.
+          O Giro Desportivo não se responsabiliza por eventuais imprecisões decorrentes
+          do processo automatizado.
+        </p>
+      </div>
+    </div>
+
+    <!-- COPYRIGHT -->
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span>© {{ 2026 }} Giro Desportivo. Todos os direitos reservados.</span>
+        <span>Produzido com <span class="heart">❤</span> em São Paulo</span>
+      </div>
+    </div>
+
   </footer>
 
-  <!-- JS DO HEADER -->
+  <!-- JS -->
   <script src="{{ url_for('static', path='js/header.js') }}" defer></script>
-<footer class="site-footer">
-  <div class="container footer-grid">
 
-    <!-- BRAND / LOGO -->
-    <div class="footer-brand">
-      <img
-        src="{{ url_for('static', path='img/giro-desportivo-logo.png') }}"
-        alt="Giro Desportivo"
-        class="footer-logo"
-      >
-      <p class="footer-tagline">
-        Informação esportiva, clara e objetiva.
-      </p>
-    </div>
-
-    <!-- INSTITUCIONAL -->
-    <div class="footer-column">
-      <span class="footer-title">Institucional</span>
-      <ul>
-        <li><a href="/sobre">Sobre o Giro Desportivo</a></li>
-        <li><a href="/politica-editorial">Política Editorial</a></li>
-        <li><a href="/politica-privacidade">Política de Privacidade</a></li>
-        <li><a href="/termos">Termos de Uso</a></li>
-        <li><a href="/anuncie">Anuncie Conosco</a></li>
-      </ul>
-    </div>
-
-    <!-- CATEGORIAS -->
-    <div class="footer-column">
-      <span class="footer-title">Categorias</span>
-      <ul>
-        <li><a href="/categoria/Brasileirão">Brasileirão</a></li>
-        <li><a href="/categoria/Mercado da Bola">Mercado da Bola</a></li>
-        <li><a href="/categoria/Análises">Análises</a></li>
-        <li><a href="/categoria/Bastidores">Bastidores</a></li>
-        <li><a href="/onde-assistir">Onde Assistir</a></li>
-      </ul>
-    </div>
-
-    <!-- CONTATO / REDES -->
-    <div class="footer-column">
-      <span class="footer-title">Contato & Redes</span>
-      <ul>
-        <li><a href="mailto:contato@girodesportivo.com">contato@girodesportivo.com</a></li>
-        <li class="footer-socials">
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a>
-          <a href="https://x.com/" target="_blank" rel="noopener">X (Twitter)</a>
-        </li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- DISCLAIMER -->
-  <div class="footer-disclaimer">
-    <div class="container">
-      <p>
-        As matérias publicadas no Giro Desportivo são produzidas com apoio de inteligência artificial,
-        a partir de conteúdos jornalísticos de fontes públicas e confiáveis.
-        Mantemos sempre a referência à fonte original.
-        O Giro Desportivo não se responsabiliza por eventuais imprecisões ou interpretações decorrentes
-        do uso automatizado dessas informações.
-      </p>
-    </div>
-  </div>
-
-  <!-- COPYRIGHT -->
-  <div class="footer-bottom">
-    <div class="container footer-bottom-inner">
-      <span>© {{ 2026 }} Giro Desportivo. Todos os direitos reservados.</span>
-      <span class="footer-made">
-        Produzido com <span class="heart">♥</span> em São Paulo
-      </span>
-    </div>
-  </div>
-</footer>
 </body>
 </html>
