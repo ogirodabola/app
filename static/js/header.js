@@ -5,7 +5,10 @@
   const overlay = document.querySelector('.menu-overlay');
   const body = document.body;
 
-  if (!toggle || !menu || !overlay) return;
+  if (!toggle || !menu || !overlay) {
+    console.warn("Menu: elementos não encontrados");
+    return;
+  }
 
   function openMenu() {
     menu.classList.add('is-open');
