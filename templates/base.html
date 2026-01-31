@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}O Giro da Bola{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/main.css">
+    <title>{% block title %}GIRO DESPORTIVO{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='main.css') }}">
 </head>
 <body>
 
 <header>
-    <h1>⚽ O Giro da Bola</h1>
+    <h1>⚽ GIRO DESPORTIVO</h1>
     <nav>
         <a href="/">Notícias</a>
         <a href="/agenda">Agenda</a>
@@ -18,7 +18,7 @@
 {% block content %}{% endblock %}
 
 <footer>
-    <p>© O Giro da Bola</p>
+    <p>© GIRO DESPORTIVO</p>
 </footer>
 
 </body>
