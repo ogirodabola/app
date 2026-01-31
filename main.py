@@ -17,16 +17,18 @@ BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 
+# cria tabelas ao subir a aplicação
 criar_tabelas()
 
+# arquivos estáticos
 app.mount(
     "/static",
     StaticFiles(directory=BASE_DIR / "static"),
     name="static"
 )
 
+# templates
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
-
 
 # ======================================================
 # HOME
@@ -51,7 +53,6 @@ def home(request: Request):
         }
     )
 
-
 # ======================================================
 # LISTAGEM POR CATEGORIA
 # ======================================================
@@ -69,7 +70,6 @@ def pagina_categoria(categoria: str, request: Request):
             "categoria_ativa": categoria,
         }
     )
-
 
 # ======================================================
 # NOTÍCIA INDIVIDUAL
@@ -91,71 +91,3 @@ def noticia(slug: str, request: Request):
             "recomendadas": recomendadas
         }
     )
-
-/* ======================================================
-GRID DE CARDS – HOME
-====================================================== */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-/* Tablet */
-@media (max-width: 1024px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ======================================================
-CARD
-====================================================== */
-.card {
-  display: block;
-  background: rgba(255,255,255,0.04);
-  border-radius: 14px;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
-}
-
-.card-image {
-  height: 180px;
-  overflow: hidden;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-body {
-  padding: 20px;
-}
-
-.card-title {
-  margin: 12px 0;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.card-meta {
-  font-size: 12px;
-  color: #9ca3af;
-}
