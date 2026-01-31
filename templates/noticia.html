@@ -1,122 +1,105 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ noticia.titulo }} | Giro Desportivo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
 
-  <!-- Tailwind CDN (temporário) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#0E0E11] text-gray-100 antialiased">
+{% block title %}
+{{ noticia.titulo_editorial or noticia.titulo }} | Giro Desportivo
+{% endblock %}
 
-<!-- ======================================================
-HEADER (MESMO DA HOME, CONSISTÊNCIA)
-====================================================== -->
-<header class="sticky top-0 z-50 bg-[#0E0E11]/80 backdrop-blur border-b border-white/5">
-  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-    <a href="/" class="font-semibold tracking-tight text-lg">
-      <span class="text-white">GIRO</span>
-      <span class="text-[#00E676]"> DESPORTIVO</span>
-    </a>
+{% block content %}
 
-    <nav class="hidden md:flex gap-6 text-sm text-gray-400">
-      <a href="/" class="hover:text-white transition">Home</a>
-      {% if noticia.categoria %}
-        <a href="/categoria/{{ noticia.categoria }}"
-           class="hover:text-white transition">
-          {{ noticia.categoria }}
-        </a>
-      {% endif %}
-    </nav>
-  </div>
-</header>
+<article class="news-article">
 
-<!-- ======================================================
-MAIN
-====================================================== -->
-<main class="max-w-5xl mx-auto px-6 py-14">
+  <!-- ================= HERO / IMAGEM DE DESTAQUE ================= -->
+  {% if noticia.imagem %}
+  <section class="news-hero">
+    <div class="news-hero-image"
+         style="background-image: url('{{ noticia.imagem }}');">
+      <div class="news-hero-overlay"></div>
 
-  <!-- ======================================================
-  CABEÇALHO DA NOTÍCIA
-  ====================================================== -->
-  <header class="mb-12">
-    {% if noticia.categoria %}
-      <a href="/categoria/{{ noticia.categoria }}"
-         class="inline-block text-xs uppercase tracking-widest text-[#00E676] mb-4">
-        {{ noticia.categoria }}
-      </a>
-    {% endif %}
+      <div class="container news-hero-content">
+        {% if noticia.categoria %}
+          <a href="/categoria/{{ noticia.categoria }}"
+             class="news-category">
+            {{ noticia.categoria }}
+          </a>
+        {% endif %}
 
-    <h1 class="text-3xl md:text-4xl font-semibold leading-tight">
-      {{ noticia.titulo }}
-    </h1>
+        <h1 class="news-title">
+          {{ noticia.titulo_editorial or noticia.titulo }}
+        </h1>
 
-    <div class="mt-4 text-sm text-gray-400 flex flex-wrap gap-2">
-      {% if noticia.fonte %}
-        <span>{{ noticia.fonte }}</span>
-      {% endif %}
-      <span>•</span>
-      <time datetime="{{ noticia.criada_em }}">
-        {{ noticia.criada_em.strftime("%d de %B de %Y, %H:%M") }}
-      </time>
-    </div>
-  </header>
-
-  <!-- ======================================================
-  CONTEÚDO
-  ====================================================== -->
-  <article class="prose prose-invert max-w-none prose-p:leading-relaxed prose-p:text-gray-200">
-    {{ noticia.conteudo_editorial | safe }}
-  </article>
-
-  <!-- ======================================================
-  TAGS
-  ====================================================== -->
-  {% if noticia.tags %}
-    <section class="mt-12">
-      <div class="flex flex-wrap gap-2">
-        {% for tag in noticia.tags %}
-          <span class="px-3 py-1 text-xs rounded-full bg-white/5 text-gray-300">
-            #{{ tag }}
-          </span>
-        {% endfor %}
+        <div class="news-meta">
+          {% if noticia.fonte %}
+            <span>{{ noticia.fonte }}</span>
+          {% endif %}
+          <span>•</span>
+          <time datetime="{{ noticia.criada_em }}">
+            {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
+          </time>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
   {% endif %}
 
-  <!-- ======================================================
-  RECOMENDADAS
-  ====================================================== -->
+  <!-- ================= CONTEÚDO ================= -->
+  <section class="news-body">
+    <div class="container news-content">
+
+      <div class="news-text">
+        {{ noticia.conteudo_editorial | safe }}
+      </div>
+
+      <!-- ================= TAGS ================= -->
+      {% if noticia.tags %}
+      <div class="news-tags">
+        {% for tag in noticia.tags %}
+          <span>#{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  <!-- ================= RECOMENDADAS ================= -->
   {% if recomendadas %}
-    <section class="mt-16">
-      <h2 class="text-sm uppercase tracking-widest text-gray-400 mb-6">
+  <section class="news-related">
+    <div class="container">
+
+      <h2 class="section-title">
         Você também pode gostar
       </h2>
 
-      <div class="flex gap-4 overflow-x-auto pb-2">
+      <div class="news-related-grid">
         {% for n in recomendadas %}
-          <a href="/noticia/{{ n.slug }}"
-             class="min-w-[280px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition">
-            
-            <span class="text-xs text-[#00E676] uppercase">
-              {{ n.categoria }}
-            </span>
+          <a href="/noticia/{{ n.slug }}" class="related-card">
 
-            <h3 class="mt-2 font-medium leading-snug">
-              {{ n.titulo }}
-            </h3>
+            {% if n.imagem %}
+              <div class="related-image">
+                <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
+              </div>
+            {% endif %}
 
-            <p class="mt-2 text-xs text-gray-400">
-              {{ n.fonte }}
-            </p>
+            <div class="related-body">
+              <span class="related-category">
+                {{ n.categoria }}
+              </span>
+
+              <h3>
+                {{ n.titulo_editorial or n.titulo }}
+              </h3>
+
+              <p>{{ n.fonte }}</p>
+            </div>
+
           </a>
         {% endfor %}
       </div>
-    </section>
+
+    </div>
+  </section>
   {% endif %}
 
-</main>
+</article>
 
-</body>
-</html>
+{% endblock %}
