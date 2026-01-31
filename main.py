@@ -80,10 +80,14 @@ def noticia(slug: str, request: Request):
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
+    # 🔁 Buscar recomendadas (garantindo lista)
+    recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
+
     return templates.TemplateResponse(
         "noticia.html",
         {
             "request": request,
-            "noticia": noticia
+            "noticia": noticia,
+            "recomendadas": recomendadas
         }
     )
