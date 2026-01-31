@@ -1,4 +1,3 @@
-<script>
 (function () {
   const toggle = document.querySelector('[data-menu-toggle]');
   const menu = document.querySelector('.mobile-menu');
@@ -25,4 +24,3 @@
   toggle.addEventListener('click', openMenu);
   overlay.addEventListener('click', closeMenu);
 })();
-</script>
