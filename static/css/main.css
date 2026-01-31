@@ -1,13 +1,6 @@
 /* ======================================================
-RESET BÁSICO / BASE
+RESET CONTROLADO / BASE
 ====================================================== */
-* {
-  box-sizing: border-box;
-}
-
-/* =========================
-   RESET CONTROLADO
-========================= */
 *,
 *::before,
 *::after {
@@ -24,9 +17,9 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* =========================
-   LAYOUT GLOBAL
-========================= */
+/* ======================================================
+LAYOUT GLOBAL
+====================================================== */
 .page {
   min-height: 100vh;
   background-color: #0b0b0b;
@@ -38,110 +31,32 @@ body {
   padding: 0 24px;
 }
 
-
-/* ======================================================
-SEÇÕES / TÍTULOS
-====================================================== */
-section h2 {
-  letter-spacing: 0.25em;
+.content-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
 }
 
 /* ======================================================
-CARDS DE NOTÍCIA
+TIPOGRAFIA / SEÇÕES
 ====================================================== */
-a.group {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-a.group:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
-}
-
-/* ======================================================
-BADGES (CATEGORIAS)
-====================================================== */
-.badge,
-span[class*="rounded-full"] {
-  font-size: 10px;
-  letter-spacing: 0.15em;
+.section-title {
+  font-size: 11px;
   text-transform: uppercase;
-  border-radius: 999px;
+  letter-spacing: 0.3em;
+  color: #9ca3af;
+  margin-bottom: 24px;
 }
 
 /* ======================================================
-BADGE "AGORA"
+HEADER – GIRO DESPORTIVO (DETERMINÍSTICO)
 ====================================================== */
-span.text-yellow-400 {
-  background: rgba(234,179,8,0.08);
-}
-
-/* ======================================================
-IMAGENS
-====================================================== */
-img {
-  transition: transform 0.4s ease;
-}
-
-/* ======================================================
-SCROLL HORIZONTAL DOS RAILS
-====================================================== */
-section .overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
-}
-
-section .overflow-x-auto::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-section .overflow-x-auto::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 999px;
-}
-
-/* ======================================================
-RESPONSIVO
-====================================================== */
-@media (min-width: 1024px) {
-  .menu-toggle {
-    display: none;
-  }
-}
-
-/* ======================================================
-HEADER – GIRO DESPORTIVO (BLINDADO)
-====================================================== */
-
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  height: 72px;
-  background: #0b0b0d;
-}
-
-/* linha inferior visível */
-/* HEADER */
 .site-header {
   position: sticky;
   top: 0;
   height: 72px;
   background-color: #111;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  z-index: 1000;
-}
-
-/* =========================
-   HEADER
-========================= */
-.site-header {
-  position: sticky;
-  top: 0;
-  height: 72px;
-
-  background-color: #111;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-
   z-index: 1000;
 }
 
@@ -152,61 +67,86 @@ HEADER – GIRO DESPORTIVO (BLINDADO)
   justify-content: space-between;
 }
 
-/* logo */
-.logo a {
-  font-size: 20px;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: -0.6px;
-  color: #ffffff;
-  text-decoration: none;
-  text-transform: uppercase;
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
-/* botão menu */
+/* ======================================================
+NAV DESKTOP
+====================================================== */
+.desktop-nav {
+  display: none;
+  gap: 24px;
+}
+
+.desktop-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.desktop-nav a:hover {
+  color: #ffffff;
+}
+
+/* ======================================================
+MENU TOGGLE (MOBILE)
+====================================================== */
 .menu-toggle {
-  width: 32px;
-  height: 24px;
   background: none;
   border: none;
+  color: #ffffff;
+  font-size: 24px;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
-.menu-toggle span {
-  height: 3px;
-  width: 100%;
-  background: #ffffff;
-  border-radius: 2px;
-}
-
-//* MENU LATERAL – CORRETO */
+/* ======================================================
+MENU MOBILE
+====================================================== */
 .mobile-menu {
   position: fixed;
   top: 0;
   right: 0;
   width: 280px;
   height: 100vh;
-
   background-color: #111;
   padding: 24px;
 
   transform: translateX(100%);
   transition: transform 0.3s ease;
+
   z-index: 1100;
 }
 
-/* Estado ativo */
 .mobile-menu.is-open {
   transform: translateX(0);
 }
 
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-menu li {
+  margin-bottom: 16px;
+}
+
+.mobile-menu a {
+  color: #eaeaea;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+/* ======================================================
+OVERLAY
+====================================================== */
 .menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.55);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -216,4 +156,101 @@ HEADER – GIRO DESPORTIVO (BLINDADO)
 .menu-overlay.is-active {
   opacity: 1;
   pointer-events: all;
+}
+
+/* ======================================================
+CARDS
+====================================================== */
+.card,
+.rail-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover,
+.rail-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+}
+
+.card-image img,
+.rail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body,
+.rail-body {
+  padding: 20px;
+}
+
+.card-title,
+.rail-title {
+  margin: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ======================================================
+BADGES
+====================================================== */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(124,92,255,0.6);
+  color: #7c5cff;
+}
+
+/* ======================================================
+RAILS
+====================================================== */
+.rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.rail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.rail-link {
+  font-size: 12px;
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.rail-link:hover {
+  color: #ffffff;
+}
+
+/* ======================================================
+RESPONSIVO
+====================================================== */
+@media (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .desktop-nav {
+    display: flex;
+  }
 }
