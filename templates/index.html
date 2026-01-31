@@ -10,29 +10,6 @@
   <link rel="stylesheet" href="{{ url_for('static', path='main.css') }}?v=3">
 
   <!-- 🔥 HOTFIX MENU (INJETAR AQUI) -->
-  <style>
-    .mobile-menu {
-      position: fixed;
-      top: 72px;
-      right: 0;
-      width: 260px;
-      height: calc(100vh - 72px);
-      background: #111114;
-
-      /* ESCONDE DE VERDADE */
-      transform: translateX(120%);
-      visibility: hidden;
-
-      transition: transform 0.3s ease, visibility 0.3s ease;
-      box-shadow: -4px 0 12px rgba(0,0,0,0.45);
-      z-index: 9999;
-    }
-
-    .mobile-menu.open {
-      transform: translateX(0);
-      visibility: visible;
-    }
-  </style>
 </head>
 
 
