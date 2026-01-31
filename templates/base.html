@@ -117,6 +117,14 @@
     {% block content %}{% endblock %}
   </main>
 
+  <a href="/"
+   class="{% if categoria_ativa == None %}active{% endif %}">
+  Notícias
+</a>
+
+  <a href="/categoria/{{ categoria }}"
+   class="{% if categoria_ativa == categoria %}active{% endif %}">
+
   <!-- FOOTER -->
   <footer class="site-footer">
     <p>© GIRO DESPORTIVO</p>
