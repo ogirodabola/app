@@ -519,3 +519,152 @@ RESPONSIVO
   padding-bottom: 96px; /* espaço antes do footer */
   background-color: var(--gd-blue-900);
 }
+
+/* ======================================================
+PÁGINA DE NOTÍCIA – EDITORIAL
+====================================================== */
+
+.news-hero {
+  position: relative;
+  margin-bottom: 64px;
+}
+
+.news-hero-image {
+  position: relative;
+  min-height: 60vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+}
+
+.news-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 12, 24, 0.95),
+    rgba(5, 12, 24, 0.3)
+  );
+}
+
+.news-hero-content {
+  position: relative;
+  padding-bottom: 48px;
+  max-width: 900px;
+}
+
+.news-category {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #7CFF00;
+}
+
+.news-title {
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.news-meta {
+  font-size: 13px;
+  color: #9ca3af;
+  display: flex;
+  gap: 8px;
+}
+
+/* ================= CONTEÚDO ================= */
+
+.news-body {
+  padding-bottom: 80px;
+}
+
+.news-content {
+  max-width: 800px;
+}
+
+.news-text p {
+  font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  color: #e5e7eb;
+}
+
+.news-text h2 {
+  margin-top: 48px;
+  margin-bottom: 16px;
+  font-size: 24px;
+}
+
+.news-tags {
+  margin-top: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.news-tags span {
+  font-size: 12px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+  color: #9ca3af;
+}
+
+/* ================= RECOMENDADAS ================= */
+
+.news-related {
+  padding-bottom: 96px;
+}
+
+.news-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.related-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.related-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,.45);
+}
+
+.related-image img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.related-body {
+  padding: 16px;
+}
+
+.related-category {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #7CFF00;
+}
+
+.related-body h3 {
+  margin: 10px 0;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.related-body p {
+  font-size: 12px;
+  color: #9ca3af;
+}
