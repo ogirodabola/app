@@ -10,37 +10,32 @@
 
   <!-- ================= HERO / IMAGEM DE DESTAQUE ================= -->
   {% if noticia.imagem %}
-  <section class="news-hero">
-    <div class="news-hero-image"
+  <section class="news-hero"
          style="background-image: url('{{ noticia.imagem }}');">
-      <div class="news-hero-overlay"></div>
+  <div class="news-hero-overlay"></div>
 
-      <div class="container news-hero-content">
-        {% if noticia.categoria %}
-          <a href="/categoria/{{ noticia.categoria }}"
-             class="news-category">
-            {{ noticia.categoria }}
-          </a>
-        {% endif %}
+  <div class="news-hero-content container">
+    <span class="news-category">{{ noticia.categoria }}</span>
 
-        <h1 class="news-title">
-          {{ noticia.titulo_editorial or noticia.titulo }}
-        </h1>
+    <h1 class="news-title">
+      {{ noticia.titulo_editorial or noticia.titulo }}
+    </h1>
 
-        <div class="news-meta">
-          {% if noticia.fonte %}
-            <span>{{ noticia.fonte }}</span>
-          {% endif %}
-          <span>•</span>
-          <time datetime="{{ noticia.criada_em }}">
-            {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
-          </time>
-        </div>
-      </div>
+    <div class="news-meta">
+      <span>{{ noticia.fonte }}</span>
+      <span>•</span>
+      <time datetime="{{ noticia.criada_em }}">
+        {{ noticia.criada_em.strftime("%d/%m/%Y %H:%M") }}
+      </time>
     </div>
-  </section>
+  </div>
+</section>
   {% endif %}
-
+<section class="news-content-wrapper">
+  <article class="news-content">
+    {{ noticia.conteudo_editorial | safe }}
+  </article>
+</section>
   <!-- ================= CONTEÚDO ================= -->
   <section class="news-body">
     <div class="container news-content">
