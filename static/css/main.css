@@ -242,13 +242,16 @@ OVERLAY
 /* ======================================================
 EMPURRÃO DO CONTEÚDO
 ====================================================== */
-body {
+
+.page {
   transition: transform 0.35s ease;
+  will-change: transform;
 }
 
-body.menu-open {
+.menu-open .page {
   transform: translateX(-300px);
 }
+
 
 /* ======================================================
 CARDS EDITORIAIS
