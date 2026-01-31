@@ -488,6 +488,10 @@ FOOTER – GIRO DESPORTIVO
   color: var(--gd-green-500);
 }
 
+.site-footer {
+  margin-top: 140px;
+}
+
 /* ======================================================
 RESPONSIVO
 ====================================================== */
@@ -508,4 +512,10 @@ RESPONSIVO
     gap: 8px;
     text-align: center;
   }
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 96px; /* espaço antes do footer */
+  background-color: var(--gd-blue-900);
 }
