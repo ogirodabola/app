@@ -36,15 +36,11 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 # ======================================================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    ultimas = listar_ultima_hora(5)
-
-    print("DEBUG ULTIMAS:", ultimas)  # 👈 IMPORTANTE
-
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "ultimas_noticias": ultimas,
+            "ultimas_noticias": listar_ultimas_editoriais(5),
             "ultima_hora": listar_ultima_hora(6),
             "categorias": listar_categorias(),
             "categoria_ativa": None
