@@ -111,18 +111,24 @@ NAV DESKTOP
 ====================================================== */
 .desktop-nav {
   display: flex;
+  align-items: center;
   gap: 28px;
 }
 
 .desktop-nav a {
   font-size: 14px;
+  font-weight: 500;
   color: var(--gd-gray-100);
-  text-decoration: none;
   position: relative;
+  transition: color 0.2s ease;
 }
 
-.desktop-nav a.active,
 .desktop-nav a:hover {
+  color: var(--gd-green-500);
+}
+
+/* link ativo */
+.desktop-nav a.active {
   color: var(--gd-green-500);
 }
 
@@ -136,6 +142,7 @@ NAV DESKTOP
   background: var(--gd-green-500);
 }
 
+
 /* ======================================================
 MENU TOGGLE
 ====================================================== */
@@ -148,6 +155,8 @@ MENU TOGGLE
   background: none;
   border: none;
   cursor: pointer;
+  margin-left: 24px;
+
 }
 
 .menu-toggle span {
@@ -352,4 +361,14 @@ RESPONSIVO
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* ======================================================
+RESET DE LINKS – SEM AZUL / ROXO
+====================================================== */
+a,
+a:visited,
+a:active {
+  color: inherit;
+  text-decoration: none;
 }
