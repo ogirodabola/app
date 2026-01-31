@@ -87,6 +87,11 @@ LOGO – GIRO DESPORTIVO
   display: block;
 }
 
+@media (max-width: 480px) {
+  .logo img {
+    height: 30px;
+  }
+}
 
 /* ======================================================
 NAV TOPO (SEMPRE VISÍVEL)
