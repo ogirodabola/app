@@ -1,13 +1,17 @@
-const btn = document.querySelector('[data-menu-toggle]');
-const menu = document.querySelector('.mobile-menu');
-const overlay = document.querySelector('.menu-overlay');
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('[data-menu-toggle]');
+  const menu = document.querySelector('.mobile-menu');
+  const overlay = document.querySelector('.menu-overlay');
 
-btn.addEventListener('click', () => {
-  menu.classList.add('is-open');
-  overlay.classList.add('is-active');
-});
+  if (!btn || !menu || !overlay) return;
 
-overlay.addEventListener('click', () => {
-  menu.classList.remove('is-open');
-  overlay.classList.remove('is-active');
+  btn.addEventListener('click', () => {
+    menu.classList.add('is-open');
+    overlay.classList.add('is-active');
+  });
+
+  overlay.addEventListener('click', () => {
+    menu.classList.remove('is-open');
+    overlay.classList.remove('is-active');
+  });
 });
