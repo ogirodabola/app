@@ -3,6 +3,51 @@
 {% block title %}Giro Desportivo{% endblock %}
 
 {% block content %}
+
+<!-- ================= ÚLTIMAS NOTÍCIAS + ADS ================= -->
+<section class="home-latest">
+  <div class="container home-latest-grid">
+
+    <!-- ÚLTIMAS NOTÍCIAS -->
+    <div class="latest-news">
+      <h2 class="section-title">Últimas Notícias</h2>
+
+      <ul class="latest-news-list">
+        {% for n in ultimas_noticias %}
+        <li class="latest-news-item">
+          <a href="/noticia/{{ n.slug }}">
+            {% if n.imagem %}
+              <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
+            {% endif %}
+
+            <div class="latest-news-text">
+              <span class="latest-news-category">
+                {{ n.categoria }}
+              </span>
+              <h3>{{ n.titulo_editorial or n.titulo }}</h3>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- ADS LATERAL -->
+    <aside class="latest-ads">
+      <div class="ads-placeholder">
+        ADS
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ================= GRID PRINCIPAL DE CARDS (JÁ EXISTENTE) ================= -->
+<section class="cards-grid">
+  <!-- seu código atual de cards continua aqui, SEM ALTERAR -->
+</section>
+
+{% endblock %}
 <div class="container content-stack">
 
   <!-- ÚLTIMA HORA -->
