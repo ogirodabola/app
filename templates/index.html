@@ -57,7 +57,7 @@
       <h2 class="section-title">Brasileirão 2026</h2>
 
       <div class="brasileirao-cards">
-        {% for n in brasileirao %}
+        {% for n in brasileirao | default([]) %}
           <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
 
             {% if n.imagem %}
@@ -82,7 +82,7 @@
       <h2 class="section-title">Tabela de Classificação</h2>
 
       <ul class="table-list">
-        {% for t in tabela_brasileirao %}
+        {% for t in tabela_brasileirao | default([]) %}
           <li class="table-row">
             <span class="table-pos">{{ t.posicao }}</span>
             <img src="{{ t.escudo }}" alt="{{ t.nome }}" class="table-shield">
