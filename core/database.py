@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from core.futebol_api import buscar_classificacao_brasileirao
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
