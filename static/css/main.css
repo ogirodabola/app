@@ -1131,3 +1131,20 @@ HOME – ÚLTIMAS NOTÍCIAS
 .team-cell span {
   font-weight: 500;
 }
+
+.table-footer {
+  margin-top: 12px;
+  text-align: right;
+}
+
+.table-more {
+  font-size: 13px;
+  font-weight: 500;
+  color: #22c55e;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.table-more:hover {
+  opacity: 0.75;
+}
