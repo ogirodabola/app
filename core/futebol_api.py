@@ -1,51 +1,37 @@
 import requests
 import os
 
-API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY")
-
-BASE_URL = "https://v3.football.api-sports.io"
+API_KEY = os.getenv("API_FOOTBALL_KEY")
 
 HEADERS = {
-    "x-apisports-key": API_FOOTBALL_KEY
+    "x-apisports-key": API_KEY
 }
 
-
 def buscar_classificacao_brasileirao():
-    url = f"{BASE_URL}/standings"
+    url = "https://v3.football.api-sports.io/standings"
 
-    params = {
-        "league": 71,     # Brasileirão Série A
-        "season": 2025    # ⚠️ USE 2025 por enquanto
-    }
+    for season in [2025, 2024, 2023]:
+        params = {
+            "league": 71,
+            "season": season
+        }
 
-    response = requests.get(url, headers=HEADERS, params=params, timeout=10)
-    response.raise_for_status()
+        response = requests.get(url, headers=HEADERS, params=params)
+        data = response.json()
 
-    data = response.json()
+        if data.get("response"):
+            standings = data["response"][0]["league"]["standings"][0]
 
-    # 🔒 PROTEÇÃO ABSOLUTA
-    if not data.get("response"):
-        print("⚠️ API-Football: resposta vazia para standings")
-        return []
+            return [
+                {
+                    "posicao": time["rank"],
+                    "nome": time["team"]["name"],
+                    "escudo": time["team"]["logo"],
+                    "jogos": time["all"]["played"],
+                    "vitorias": time["all"]["win"],
+                }
+                for time in standings[:6]
+            ]
 
-    league = data["response"][0].get("league")
-    if not league or not league.get("standings"):
-        print("⚠️ API-Football: standings não encontrados")
-        return []
-
-    tabela = league["standings"][0]
-
-    resultado = []
-
-    for time in tabela[:6]:
-        resultado.append({
-            "posicao": time.get("rank"),
-            "nome": time["team"].get("name"),
-            "escudo": time["team"].get("logo"),
-            "jogos": time["all"].get("played"),
-            "vitorias": time["all"].get("win")
-        })
-
-    return resultado
-    print("API-Football resposta:", data)
-    data = response.json()
+    # fallback absoluto (não quebra a home)
+    return []
