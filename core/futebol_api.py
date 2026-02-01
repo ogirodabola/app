@@ -27,11 +27,13 @@ def buscar_classificacao_brasileirao():
                     "posicao": time["rank"],
                     "nome": time["team"]["name"],
                     "escudo": time["team"]["logo"],
+                    "pontos": time["points"],
                     "jogos": time["all"]["played"],
                     "vitorias": time["all"]["win"],
                 }
                 for time in standings[:6]
             ]
+
 
     # fallback absoluto (não quebra a home)
     return []
