@@ -85,3 +85,23 @@ def noticia(slug: str, request: Request):
             "recomendadas": recomendadas
         }
     )
+
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "ultima_hora": listar_ultima_hora(6),
+            "ultimas_noticias": listar_ultimas_editoriais(5),
+
+            # Brasileirão (qualquer notícia por enquanto)
+            "brasileirao": listar_por_categoria("Brasileirão", 4),
+
+            # Tabela (mock por enquanto)
+            "tabela_brasileirao": tabela_brasileirao_mock(),
+
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
