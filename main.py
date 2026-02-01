@@ -40,18 +40,19 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
+
+            # já existentes
             "ultimas_noticias": listar_ultimas_editoriais(4),
             "ultima_hora": listar_ultima_hora(6),
 
-            # 👇 EVITA ERRO 500
-            "brasileirao": [],
+            # 👇 TEMPORÁRIO (mas obrigatório)
+            "brasileirao": listar_ultimas_editoriais(4),
             "tabela_brasileirao": [],
 
             "categorias": listar_categorias(),
             "categoria_ativa": None,
         }
     )
-
 
 # ======================================================
 # LISTAGEM POR CATEGORIA
