@@ -1063,20 +1063,24 @@ HOME – ÚLTIMAS NOTÍCIAS
 }
 
 /* ================= ADS ================= */
-.ads-horizontal {
-  margin: 64px 0;
+.home-ads-horizontal {
+  margin: 48px 0;
 }
 
-.ads-placeholder-horizontal {
+.ads-horizontal-placeholder {
   height: 120px;
-  border-radius: 14px;
-  border: 1px dashed rgba(0,230,118,0.5);
+  border: 1px dashed #2eea7f;
+  border-radius: 12px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00e676;
-  letter-spacing: 0.3em;
+
+  color: #2eea7f;
+  font-weight: 600;
+  letter-spacing: 0.15em;
 }
+
 
 /* ================= RESPONSIVO ================= */
 @media (max-width: 1024px) {
