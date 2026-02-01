@@ -116,3 +116,14 @@ def home(request: Request):
         }
     )
 
+@app.get("/classificacao", response_class=HTMLResponse)
+def classificacao(request: Request):
+    return templates.TemplateResponse(
+        "classificacao.html",
+        {
+            "request": request,
+            "tabela_brasileirao": buscar_classificacao_brasileirao(),
+            "ultima_hora": listar_ultima_hora()
+        }
+    )
+
