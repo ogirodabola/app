@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Classificação do Brasileirão 2026 | Giro Desportivo{% endblock %}
+
+{% block content %}
+
+<!-- ================= INTRO / CONTEXTO ================= -->
+<section class="page-intro container">
+  <h1 class="page-title">Tabela do Brasileirão Série A 2026</h1>
+
+  <p class="page-description">
+    Confira a classificação atualizada do Campeonato Brasileiro 2026.
+    Veja a pontuação, número de jogos e vitórias de cada equipe,
+    além da disputa pelo título, vagas na Libertadores e luta contra o rebaixamento.
+  </p>
+</section>
+
+<!-- ================= TABELA DE CLASSIFICAÇÃO ================= -->
+<section class="classification container">
+
+  <div class="classification-table">
+
+    <!-- CABEÇALHO -->
+    <div class="table-header">
+      <span>#</span>
+      <span>Equipe</span>
+      <span>P</span>
+      <span>J</span>
+      <span>V</span>
+    </div>
+
+    <!-- LINHAS -->
+    {% for t in tabela_brasileirao %}
+    <div class="table-row">
+
+      <span class="pos">{{ t.posicao }}</span>
+
+      <span class="team">
+        <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+        {{ t.nome }}
+      </span>
+
+      <span class="points">{{ t.pontos }}</span>
+      <span>{{ t.jogos }}</span>
+      <span>{{ t.vitorias }}</span>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+</section>
+
+<!-- ================= INSIGHTS / CONTEÚDO ================= -->
+<section class="classification-insights container">
+  <h2>Destaques do campeonato</h2>
+
+  <ul>
+    <li>🔥 A liderança segue disputada rodada a rodada</li>
+    <li>📈 Times do topo mantêm alto aproveitamento</li>
+    <li>⚠️ A briga por vagas internacionais segue aberta</li>
+  </ul>
+</section>
+
+<!-- ================= ADS ================= -->
+<section class="container">
+  <div class="ads-placeholder horizontal">
+    ADS
+  </div>
+</section>
+
+<!-- ================= ÚLTIMA HORA ================= -->
+<section class="container content-stack">
+  <section>
+    <h2 class="section-title">Última Hora</h2>
+
+    <div class="cards-grid">
+      {% for n in ultima_hora %}
+        <a href="/noticia/{{ n.slug }}" class="card">
+
+          {% if n.imagem %}
+            <div class="card-image">
+              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
+            </div>
+          {% endif %}
+
+          <div class="card-body">
+            <span class="badge">{{ n.categoria }}</span>
+
+            <h3 class="card-title">
+              {{ n.titulo }}
+            </h3>
+
+            {% if n.fonte %}
+              <p class="card-meta">{{ n.fonte }}</p>
+            {% endif %}
+          </div>
+
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+
+{% endblock %}
