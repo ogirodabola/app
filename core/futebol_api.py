@@ -48,3 +48,4 @@ def buscar_classificacao_brasileirao():
 
     return resultado
     print("API-Football resposta:", data)
+    data = response.json()
