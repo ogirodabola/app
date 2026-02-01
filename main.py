@@ -88,20 +88,23 @@ def noticia(slug: str, request: Request):
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+    brasileirao = listar_por_categoria("Brasileirão", 4) or []
+
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
+
+            # blocos existentes
             "ultima_hora": listar_ultima_hora(6),
-            "ultimas_noticias": listar_ultimas_editoriais(5),
+            "ultimas_noticias": listar_ultimas_editoriais(5) or [],
 
-            # Brasileirão (qualquer notícia por enquanto)
-            "brasileirao": listar_por_categoria("Brasileirão", 4),
-
-            # Tabela (mock por enquanto)
+            # NOVO BLOCO
+            "brasileirao": brasileirao,
             "tabela_brasileirao": tabela_brasileirao_mock(),
 
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
     )
+
