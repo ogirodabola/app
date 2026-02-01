@@ -84,4 +84,66 @@
   </section>
 </section>
 
+<!-- ================= BRASILEIRÃO + CLASSIFICAÇÃO ================= -->
+<section class="home-brasileirao">
+  <div class="container brasileirao-grid">
+
+    <!-- NOTÍCIAS DO BRASILEIRÃO -->
+    <div class="brasileirao-news">
+      <h2 class="section-title">Brasileirão 2026</h2>
+
+      <div class="brasileirao-cards">
+        {% for n in brasileirao %}
+          <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
+
+            {% if n.imagem %}
+              <div class="brasileirao-image">
+                <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
+              </div>
+            {% endif %}
+
+            <div class="brasileirao-body">
+              <h3>{{ n.titulo_editorial or n.titulo }}</h3>
+              <span class="brasileirao-meta">{{ n.fonte }}</span>
+            </div>
+
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- TABELA DE CLASSIFICAÇÃO -->
+    <div class="brasileirao-table">
+      <h2 class="section-title">Tabela de Classificação</h2>
+
+      <ul class="table-list">
+        {% for t in tabela_brasileirao %}
+          <li class="table-row">
+            <span class="pos">{{ t.posicao }}º</span>
+
+            <img src="{{ t.escudo }}" alt="{{ t.nome }}" class="team-logo">
+
+            <span class="team-name">{{ t.nome }}</span>
+
+            <span class="team-stats">
+              J {{ t.jogos }} · V {{ t.vitorias }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= ADS HORIZONTAL ================= -->
+<section class="ads-horizontal">
+  <div class="container">
+    <div class="ads-placeholder-horizontal">
+      ADS
+    </div>
+  </div>
+</section>
+
+
 {% endblock %}
