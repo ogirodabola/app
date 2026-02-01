@@ -34,23 +34,23 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 # ======================================================
 # HOME
 # ======================================================
-@app.get("/", response_class=HTMLResponse)
+@@app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
 
-            # blocos
-            "ultimas_noticias": listar_ultimas_editoriais(5),
+            "ultimas_noticias": listar_ultimas_editoriais(4),
             "ultima_hora": listar_ultima_hora(6),
-            "brasileirao": listar_brasileirao(4),
 
-            # tabela
-            "tabela_brasileirao": buscar_classificacao_brasileirao(),
+            # bloco editorial
+            "brasileirao": listar_brasileirao(4),
+            "tabela_brasileirao": tabela_brasileirao_mock(),
 
             # navegação
-            "categoria_ativa": None
+            "categorias": listar_categorias(),
+            "categoria_ativa": None,
         }
     )
 
