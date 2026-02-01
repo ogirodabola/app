@@ -31,6 +31,7 @@ app.mount(
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
+            "categoria_ativa": None
 
 # ======================================================
 # HOME
@@ -41,12 +42,17 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
-            "ultima_hora": listar_ultima_hora(6),
+
+            # 🔹 blocos editoriais
             "ultimas_noticias": listar_ultimas_editoriais(5),
-            "categorias": listar_categorias(),
+            "brasileirao": listar_brasileirao(4),   # 👈 AGORA EXISTE
+            "ultima_hora": listar_ultima_hora(6),
             "categoria_ativa": None
+            # 🔹 tabela
+            "tabela_brasileirao": buscar_classificacao_brasileirao(),
         }
     )
+
 
 # ======================================================
 # LISTAGEM POR CATEGORIA
