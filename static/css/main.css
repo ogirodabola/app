@@ -1170,3 +1170,13 @@ HOME – ÚLTIMAS NOTÍCIAS
 .table-more-btn:hover .arrow {
   transform: translateX(4px);
 }
+
+.classification {
+  margin-top: 40px;
+}
+
+.classification-table {
+  background: linear-gradient(180deg, #0b1d33, #081524);
+  border-radius: 16px;
+  padding: 20px;
+}
