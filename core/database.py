@@ -76,27 +76,25 @@ def listar_ultima_hora(limit=12):
         conn.close()
 
 def listar_ultimas_editoriais(limit=5):
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT
-            id,
-            slug,
-            titulo,
-            titulo_editorial,
-            categoria,
-            imagem,
-            fonte,
-            criada_em
-        FROM noticias
-        ORDER BY criada_em DESC
-        LIMIT %s;
-    """, (limit,))
-
-    rows = cursor.fetchall()
-    conn.close()
-    return rows
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    id,
+                    slug,
+                    titulo,
+                    titulo_editorial,
+                    categoria,
+                    imagem,
+                    fonte
+                FROM noticias
+                ORDER BY criada_em DESC
+                LIMIT %s
+            """, (limit,))
+            return cur.fetchall()
+    finally:
+        conn.close()
 
 
 # ======================================================
