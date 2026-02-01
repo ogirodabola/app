@@ -1088,3 +1088,46 @@ HOME – ÚLTIMAS NOTÍCIAS
     grid-template-columns: 1fr;
   }
 }
+
+.table-standings {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-standings th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.table-standings td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.table-standings tr:last-child td {
+  border-bottom: none;
+}
+
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-cell img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.team-cell span {
+  font-weight: 500;
+}
