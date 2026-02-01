@@ -1133,18 +1133,40 @@ HOME – ÚLTIMAS NOTÍCIAS
 }
 
 .table-footer {
-  margin-top: 12px;
-  text-align: right;
+  margin-top: 20px;
+  padding-top: 16px;
+  display: flex;
+  justify-content: center;
 }
 
-.table-more {
+.table-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  background: #22c55e; /* verde do Giro */
+  color: #0b1c2d;
+
   font-size: 13px;
-  font-weight: 500;
-  color: #22c55e;
+  font-weight: 600;
   text-decoration: none;
-  transition: opacity 0.2s ease;
+
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.table-more:hover {
-  opacity: 0.75;
+.table-more-btn .arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.table-more-btn:hover {
+  background: #16a34a; /* verde um pouco mais escuro */
+  transform: translateY(-1px);
+}
+
+.table-more-btn:hover .arrow {
+  transform: translateX(4px);
 }
