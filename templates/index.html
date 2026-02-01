@@ -49,41 +49,6 @@
   </div>
 </section>
 
-<!-- ================= ÚLTIMA HORA ================= -->
-<section class="container content-stack">
-  <section>
-    <h2 class="section-title">Última Hora</h2>
-
-    <div class="cards-grid">
-      {% for n in ultima_hora %}
-        <a href="/noticia/{{ n.slug }}" class="card">
-
-          {% if n.imagem %}
-            <div class="card-image">
-              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
-            </div>
-          {% endif %}
-
-          <div class="card-body">
-            <span class="badge">{{ n.categoria }}</span>
-
-            <h3 class="card-title">
-              {{ n.titulo }}
-            </h3>
-
-            {% if n.fonte %}
-              <p class="card-meta">
-                {{ n.fonte }}
-              </p>
-            {% endif %}
-          </div>
-
-        </a>
-      {% endfor %}
-    </div>
-  </section>
-</section>
-
 <!-- ================= BRASILEIRÃO + CLASSIFICAÇÃO ================= -->
 <section class="home-brasileirao">
   <div class="container brasileirao-grid">
@@ -146,4 +111,38 @@
 </section>
 
 
+<!-- ================= ÚLTIMA HORA ================= -->
+<section class="container content-stack">
+  <section>
+    <h2 class="section-title">Última Hora</h2>
+
+    <div class="cards-grid">
+      {% for n in ultima_hora %}
+        <a href="/noticia/{{ n.slug }}" class="card">
+
+          {% if n.imagem %}
+            <div class="card-image">
+              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
+            </div>
+          {% endif %}
+
+          <div class="card-body">
+            <span class="badge">{{ n.categoria }}</span>
+
+            <h3 class="card-title">
+              {{ n.titulo }}
+            </h3>
+
+            {% if n.fonte %}
+              <p class="card-meta">
+                {{ n.fonte }}
+              </p>
+            {% endif %}
+          </div>
+
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+</section>
 {% endblock %}
