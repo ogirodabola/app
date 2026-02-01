@@ -40,15 +40,13 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
-
             "ultimas_noticias": listar_ultimas_editoriais(4),
             "ultima_hora": listar_ultima_hora(6),
 
-            # bloco editorial
-            "brasileirao": listar_brasileirao(4),
-            "tabela_brasileirao": tabela_brasileirao_mock(),
+            # 👇 EVITA ERRO 500
+            "brasileirao": [],
+            "tabela_brasileirao": [],
 
-            # navegação
             "categorias": listar_categorias(),
             "categoria_ativa": None,
         }
