@@ -27,27 +27,34 @@
       <span>P</span>
       <span>J</span>
       <span>V</span>
+      <span>SG</span>
+      <span>GP</span>
+      <span>GC</span>
     </div>
 
     <!-- LINHAS -->
-    {% for t in tabela_brasileirao %}
-    <div class="table-row">
+    <div class="table-row
+  {% if t.posicao <= 6 %} zona-libertadores
+  {% elif t.posicao <= 12 %} zona-sulamericana
+  {% elif t.posicao >= 17 %} zona-rebaixamento
+  {% endif %}
+">
 
-      <span class="pos">{{ t.posicao }}</span>
+  <span class="pos">{{ t.posicao }}</span>
 
-      <span class="team">
-        <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-        {{ t.nome }}
-      </span>
+  <span class="team">
+    <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+    {{ t.nome }}
+  </span>
 
-      <span class="points">{{ t.pontos }}</span>
-      <span>{{ t.jogos }}</span>
-      <span>{{ t.vitorias }}</span>
+  <span class="points">{{ t.pontos }}</span>
+  <span>{{ t.jogos }}</span>
+  <span>{{ t.vitorias }}</span>
+  <span>{{ t.saldo_gols }}</span>
+  <span>{{ t.gols_pro }}</span>
+  <span>{{ t.gols_contra }}</span>
 
-    </div>
-    {% endfor %}
-
-  </div>
+</div>
 
 </section>
 
