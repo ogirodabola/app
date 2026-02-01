@@ -79,20 +79,33 @@
     </div>
 
     <aside class="brasileirao-table">
-      <h2 class="section-title">Tabela de Classificação</h2>
+  <h2 class="section-title">Tabela de Classificação</h2>
 
-      <ul class="table-list">
-        {% for t in tabela_brasileirao | default([]) %}
-          <li class="table-row">
-            <span class="table-pos">{{ t.posicao }}</span>
-            <img src="{{ t.escudo }}" alt="{{ t.nome }}" class="table-shield">
-            <span class="table-team">{{ t.nome }}</span>
-            <span class="table-stats">J {{ t.jogos }}</span>
-            <span class="table-stats">V {{ t.vitorias }}</span>
-          </li>
-        {% endfor %}
-      </ul>
-    </aside>
+  <table class="table-standings">
+    <thead>
+      <tr>
+        <th>Equipe</th>
+        <th>P</th>
+        <th>J</th>
+        <th>V</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in tabela_brasileirao %}
+      <tr>
+        <td class="team-cell">
+          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+          <span>{{ t.nome }}</span>
+        </td>
+        <td>{{ t.pontos }}</td>
+        <td>{{ t.jogos }}</td>
+        <td>{{ t.vitorias }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</aside>
+
 
   </div>
 </section>
