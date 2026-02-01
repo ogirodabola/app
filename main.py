@@ -41,8 +41,8 @@ def home(request: Request):
         "index.html",
         {
             "request": request,
-             "ultimas_noticias": listar_ultimas_editoriais(5),
             "ultima_hora": listar_ultima_hora(6),
+            "ultimas_noticias": listar_ultimas_editoriais(5),
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
