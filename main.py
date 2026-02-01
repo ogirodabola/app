@@ -11,7 +11,8 @@ from core.database import (
     listar_categorias,
     buscar_noticia_por_slug,
     listar_recomendadas_por_slug,
-    listar_ultimas_editoriais
+    listar_ultimas_editoriais,
+    buscar_classificacao_brasileirao
 )
 
 
@@ -41,16 +42,17 @@ def home(request: Request):
         {
             "request": request,
 
-            # já existentes
+            # notícias
             "ultimas_noticias": listar_ultimas_editoriais(4),
             "ultima_hora": listar_ultima_hora(6),
 
-            # 👇 TEMPORÁRIO (mas obrigatório)
-            "brasileirao": listar_ultimas_editoriais(4),
-            "tabela_brasileirao": [],
+            # brasileirao
+            "brasileirao": listar_por_categoria("Brasileirão", 4),
+            "tabela_brasileirao": buscar_classificacao_brasileirao(),
 
+            # navegação
             "categorias": listar_categorias(),
-            "categoria_ativa": None,
+            "categoria_ativa": None
         }
     )
 
