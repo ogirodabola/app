@@ -45,6 +45,56 @@ def criar_tabelas():
 # ======================================================
 # HOME – ÚLTIMA HORA
 # ======================================================
+
+def tabela_brasileirao_mock():
+    return [
+        {
+            "posicao": 1,
+            "nome": "Flamengo",
+            "escudo": "https://media.api-sports.io/football/teams/127.png",
+            "jogos": 10,
+            "vitorias": 7,
+        },
+        {
+            "posicao": 2,
+            "nome": "Palmeiras",
+            "escudo": "https://media.api-sports.io/football/teams/121.png",
+            "jogos": 10,
+            "vitorias": 6,
+        },
+        {
+            "posicao": 3,
+            "nome": "Atlético-MG",
+            "escudo": "https://media.api-sports.io/football/teams/106.png",
+            "jogos": 10,
+            "vitorias": 6,
+        },
+        {
+            "posicao": 4,
+            "nome": "Grêmio",
+            "escudo": "https://media.api-sports.io/football/teams/131.png",
+            "jogos": 10,
+            "vitorias": 5,
+        },
+        {
+            "posicao": 5,
+            "nome": "São Paulo",
+            "escudo": "https://media.api-sports.io/football/teams/126.png",
+            "jogos": 10,
+            "vitorias": 5,
+        },
+        {
+            "posicao": 6,
+            "nome": "Internacional",
+            "escudo": "https://media.api-sports.io/football/teams/130.png",
+            "jogos": 10,
+            "vitorias": 4,
+        },
+    ]
+
+# ======================================================
+# HOME – ÚLTIMA HORA
+# ======================================================
 def listar_ultima_hora(limit=12):
     conn = get_conn()
     try:
