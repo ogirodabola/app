@@ -1590,3 +1590,130 @@ HOME – ÚLTIMAS NOTÍCIAS
   font-weight: 600;
   font-size: 13px;
 }
+
+/* ======================================================
+HOME — BLOCO SECUNDÁRIO
+====================================================== */
+
+.home-secondary {
+  padding: 64px 0;
+}
+
+.home-secondary-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+/* ================= NOTÍCIAS ================= */
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.news-card {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.news-card:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.news-card-image img {
+  width: 96px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.news-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.news-card-category {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--gd-green-500);
+}
+
+.news-card-title {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.news-card-source {
+  font-size: 12px;
+  color: var(--gd-gray-300);
+}
+
+/* ================= JOGOS ================= */
+
+.games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.game-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.game-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gd-gray-300);
+  margin-bottom: 10px;
+}
+
+.game-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.team img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.game-score {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.game-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gd-green-500);
+}
+
+/* ================= RESPONSIVO ================= */
+
+@media (max-width: 1024px) {
+  .home-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+}
