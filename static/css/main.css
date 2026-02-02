@@ -1585,19 +1585,26 @@ JOGOS DO DIA — TIMES + PLACAR
 
 /* placar / horário */
 .home-secondary .game-score {
-  min-width: 72px;
+  width: 78px;              /* 🔒 largura fixa */
+  min-width: 78px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* placar */
+.home-secondary .game-score .score {
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.04em;
 }
 
-
-.home-secondary .game-score {
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
+.home-secondary .game-score .time {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gd-gray-200);
 }
 
 .home-secondary .game-link {
