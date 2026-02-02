@@ -78,66 +78,52 @@ def buscar_jogos_do_dia():
         return r.json().get("response", [])
 
     # =========================
-    # CONFIGURAÇÃO EDITORIAL
+    # PAÍSES PERMITIDOS
     # =========================
+    PAISES_BRASIL = ["Brazil"]
 
-    PRIORIDADE_LIGAS = [
-        "Brazil",
-        "Brasileirão",
-        "Copa do Brasil",
-        "UEFA Champions League",
-        "Premier League",
-        "La Liga",
-        "Serie A",
-        "Bundesliga",
-        "Ligue 1",
+    PAISES_EUROPA = [
+        "England", "Spain", "Italy", "Germany", "France",
+        "Portugal", "Netherlands", "Belgium", "Scotland",
+        "Turkey", "Greece", "Austria", "Switzerland"
     ]
 
-    PALAVRAS_BLOQUEADAS = [
-        "Women",
-        "Feminino",
-        "Friendlies",
-        "Friendly",
-        "Youth",
-        "U17",
-        "U20",
-        "U23",
+    # =========================
+    # PALAVRAS BLOQUEADAS
+    # =========================
+    BLOQUEIOS = [
+        "women", "feminino", "friendly",
+        "youth", "u17", "u20", "u23"
     ]
 
-    def bloqueado(f):
-        liga = f["league"]["name"]
-        tipo = f["league"].get("type", "")
-        texto = liga.lower()
+    def permitido(f):
+        liga = f["league"]["name"].lower()
+        pais = (f["league"]["country"] or "").lower()
 
-        if tipo.lower() == "friendly":
+        # bloqueio por palavra
+        for b in BLOQUEIOS:
+            if b in liga:
+                return False
+
+        # permite Brasil
+        if pais in [p.lower() for p in PAISES_BRASIL]:
             return True
 
-        for palavra in PALAVRAS_BLOQUEADAS:
-            if palavra.lower() in texto:
-                return True
+        # permite Europa
+        if pais in [p.lower() for p in PAISES_EUROPA]:
+            return True
 
         return False
-
-    def score_prioridade(f):
-        liga = f["league"]["name"]
-        pais = f["league"]["country"]
-        texto = f"{pais} {liga}".lower()
-
-        for idx, nome in enumerate(PRIORIDADE_LIGAS):
-            if nome.lower() in texto:
-                return idx
-        return 999
 
     # =========================
     # COLETA
     # =========================
-
     jogos_raw = []
-    jogos_raw.extend(fetch({"next": 15, "timezone": "America/Sao_Paulo"}))
-    jogos_raw.extend(fetch({"last": 15, "timezone": "America/Sao_Paulo"}))
+    jogos_raw.extend(fetch({"next": 20, "timezone": "America/Sao_Paulo"}))
+    jogos_raw.extend(fetch({"last": 20, "timezone": "America/Sao_Paulo"}))
 
     vistos = set()
-    jogos_filtrados = []
+    jogos = []
 
     for f in jogos_raw:
         fid = f["fixture"]["id"]
@@ -145,8 +131,7 @@ def buscar_jogos_do_dia():
             continue
         vistos.add(fid)
 
-        # filtros editoriais
-        if bloqueado(f):
+        if not permitido(f):
             continue
 
         home = f["teams"]["home"]
@@ -155,30 +140,21 @@ def buscar_jogos_do_dia():
         if not home.get("logo") or not away.get("logo"):
             continue
 
-        jogos_filtrados.append(f)
-
-    # ordena por prioridade
-    jogos_filtrados.sort(key=score_prioridade)
-
-    # =========================
-    # NORMALIZAÇÃO FINAL
-    # =========================
-
-    jogos = []
-
-    for f in jogos_filtrados[:6]:
         jogos.append({
             "liga": f["league"]["name"],
             "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
-            "casa": f["teams"]["home"]["name"],
-            "fora": f["teams"]["away"]["name"],
-            "casa_logo": f["teams"]["home"]["logo"],
-            "fora_logo": f["teams"]["away"]["logo"],
+            "casa": home["name"],
+            "fora": away["name"],
+            "casa_logo": home["logo"],
+            "fora_logo": away["logo"],
             "gols_casa": f["goals"]["home"],
             "gols_fora": f["goals"]["away"],
             "status": f["fixture"]["status"]["short"],
             "link": "#"
         })
+
+        if len(jogos) == 6:
+            break
 
     return jogos
