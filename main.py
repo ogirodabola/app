@@ -37,21 +37,32 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
-    tabela_completa = buscar_classificacao_brasileirao() or []
+    tabela_completa = buscar_classificacao_brasileirao()
 
-    # mock temporário de jogos (até plugar API)
     jogos_do_dia = [
         {
             "liga": "Supercopa do Brasil",
             "hora": "16:00",
             "casa": "Flamengo",
             "fora": "Corinthians",
-            "casa_logo": "/static/img/times/flamengo.png",
-            "fora_logo": "/static/img/times/corinthians.png",
+            "casa_logo": "/static/img/flamengo.png",
+            "fora_logo": "/static/img/corinthians.png",
             "gols_casa": 0,
             "gols_fora": 2,
             "link": "#"
+        },
+        {
+            "liga": "La Liga",
+            "hora": "10:00",
+            "casa": "Real Madrid",
+            "fora": "Rayo Vallecano",
+            "casa_logo": "/static/img/real.png",
+            "fora_logo": "/static/img/rayo.png",
+            "gols_casa": 2,
+            "gols_fora": 1,
+            "link": "#"
         }
+        # depois trocamos por API
     ]
 
     return templates.TemplateResponse(
@@ -59,17 +70,15 @@ def home(request: Request):
         {
             "request": request,
 
-            # notícias
-            "ultimas_noticias": listar_ultimas_editoriais()[:6],
-            "ultima_hora": listar_ultima_hora()[:6],
+            # topo / feed
+            "ultima_hora": listar_ultima_hora(6),
+            "ultimas_noticias": listar_ultimas_editoriais(6),
 
             # bloco brasileirão
-            "brasileirao": listar_por_categoria("Brasileirão")[:4],
-
-            # tabela resumida (HOME)
-            "tabela_brasileirao": tabela_completa[:8],
+            "brasileirao": listar_por_categoria("Brasileirão", limit=4),
 
             # widget lateral
+            "tabela_brasileirao": tabela_completa[:8],
             "jogos_do_dia": jogos_do_dia,
 
             # navegação
