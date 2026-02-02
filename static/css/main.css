@@ -1202,6 +1202,11 @@ HOME – ÚLTIMAS NOTÍCIAS
   text-align: center;
 }
 
+.table-header .team,
+.table-row .team {
+  justify-content: flex-start;
+}
+
 .table-header {
   padding: 14px 16px;
   font-size: 13px;
