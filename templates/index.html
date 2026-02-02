@@ -188,8 +188,13 @@
               </div>
 
               <div class="game-score">
-                {{ j.gols_casa }} × {{ j.gols_fora }}
+                {% if j.placar %}
+                  {{ j.placar }}
+                {% else %}
+                  {{ j.hora }}
+                {% endif %}
               </div>
+
 
               <div class="team">
                 <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
