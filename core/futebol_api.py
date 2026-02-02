@@ -34,7 +34,15 @@ def is_blacklisted(text: str) -> bool:
     return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
 
 
+from core.cache import get_cache, set_cache
+
 def buscar_jogos_do_dia():
+    cache_key = "jogos_do_dia"
+
+    cached = get_cache(cache_key)
+    if cached is not None:
+        return cached
+
     params = {
         "date": datetime.now().strftime("%Y-%m-%d"),
         "timezone": "America/Sao_Paulo"
@@ -118,7 +126,11 @@ def buscar_jogos_do_dia():
             if len(jogos) == 6:
                 break
 
+    # ✅ CACHE SALVO UMA ÚNICA VEZ
+    set_cache(cache_key, jogos, ttl=600)
+
     return jogos
+
 
 def buscar_classificacao_brasileirao():
     url = "https://v3.football.api-sports.io/standings"
