@@ -125,101 +125,79 @@
   </div>
 </section>
 
-<aside class="right-widget">
+ <!-- ================= BLOCO SECUNDÁRIO HOME ================= -->
+<section class="home-secondary">
+  <div class="container">
+    <div class="home-secondary-grid">
 
- <aside class="home-side-widgets">
+      <!-- COLUNA: ÚLTIMAS NOTÍCIAS -->
+      <div class="news-column">
+        <h2 class="section-title">Últimas Notícias</h2>
 
-  <div class="side-widgets-grid">
+        <div class="news-list">
+          {% for n in ultimas_noticias[:6] %}
+          <a href="/noticia/{{ n.slug }}" class="news-card">
 
-    <aside class="right-widget">
+            <div class="news-card-image">
+              <img
+                src="{{ n.imagem or '/static/img/placeholder-news.jpg' }}"
+                alt="{{ n.titulo }}"
+                loading="lazy"
+              >
+            </div>
 
-  <!-- ================= NOTÍCIAS ================= -->
-  <div class="widget-box">
-    <h3 class="widget-title">Últimas Notícias</h3>
+            <div class="news-card-body">
+              <span class="news-card-category">{{ n.categoria }}</span>
+              <h3 class="news-card-title">{{ n.titulo }}</h3>
+              <span class="news-card-source">{{ n.fonte }}</span>
+            </div>
 
-    <ul class="widget-news-list">
-      {% for n in ultimas_noticias[:6] %}
-      <li class="widget-news-item">
-        <a href="/noticia/{{ n.slug }}" class="widget-news-link">
-
-          <!-- imagem -->
-          <div class="news-thumb">
-            <img
-              src="{{ n.imagem or '/static/img/placeholder-news.jpg' }}"
-              alt="{{ n.titulo }}"
-              loading="lazy"
-            >
-          </div>
-
-          <!-- conteúdo -->
-          <div class="news-content">
-            <span class="news-category">
-              {{ n.categoria }}
-            </span>
-
-            <strong class="news-title">
-              {{ n.titulo }}
-            </strong>
-
-            <span class="news-source">
-              {{ n.fonte }}
-            </span>
-          </div>
-
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <!-- ================= JOGOS DO DIA ================= -->
-  <div class="widget-box">
-    <h3 class="widget-title">Jogos do dia</h3>
-
-    <ul class="widget-matches">
-      {% for j in jogos_do_dia[:6] %}
-      <li class="match-item">
-
-        <!-- liga + hora -->
-        <div class="match-header">
-          <span class="match-league">{{ j.liga }}</span>
-          <span class="match-time">{{ j.hora }}</span>
+          </a>
+          {% endfor %}
         </div>
+      </div>
 
-        <!-- times -->
-        <div class="match-body">
+      <!-- COLUNA: JOGOS DO DIA -->
+      <aside class="games-column">
+        <h2 class="section-title">Jogos do Dia</h2>
 
-          <div class="match-team">
-            <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-            <span>{{ j.casa }}</span>
+        <div class="games-list">
+          {% for j in jogos_do_dia[:6] %}
+          <div class="game-card">
+
+            <div class="game-meta">
+              <span class="game-league">{{ j.liga }}</span>
+              <span class="game-time">{{ j.hora }}</span>
+            </div>
+
+            <div class="game-teams">
+              <div class="team">
+                <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+                <span>{{ j.casa }}</span>
+              </div>
+
+              <div class="game-score">
+                {{ j.gols_casa }} × {{ j.gols_fora }}
+              </div>
+
+              <div class="team">
+                <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
+                <span>{{ j.fora }}</span>
+              </div>
+            </div>
+
+            <a href="{{ j.link }}" class="game-link">
+              Saiba como foi →
+            </a>
+
           </div>
-
-          <div class="match-score">
-            {{ j.gols_casa }} × {{ j.gols_fora }}
-          </div>
-
-          <div class="match-team">
-            <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-            <span>{{ j.fora }}</span>
-          </div>
-
+          {% endfor %}
         </div>
+      </aside>
 
-        <a href="{{ j.link }}" class="match-link">
-          Saiba como foi →
-        </a>
-
-      </li>
-      {% endfor %}
-    </ul>
-
-    <a href="/jogos" class="more-games">
-      Mais jogos →
-    </a>
+    </div>
   </div>
-
-</aside>
-
+</section>
 
 
 <!-- ================= ÚLTIMA HORA ================= -->
