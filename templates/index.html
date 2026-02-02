@@ -127,19 +127,35 @@
 
 <aside class="right-widget">
 
+ <aside class="side-widgets">
+
   <!-- NOTÍCIAS -->
   <div class="widget-box">
     <h3 class="widget-title">Últimas Notícias</h3>
 
     <ul class="widget-news-list">
       {% for n in ultimas_noticias[:6] %}
-      <li class="widget-news-item">
-        <a href="/noticia/{{ n.slug }}">
-          <span class="news-category">{{ n.categoria }}</span>
-          <strong class="news-title">{{ n.titulo }}</strong>
-          <span class="news-source">{{ n.fonte }}</span>
-        </a>
-      </li>
+        <li class="widget-news-item">
+          <a href="/noticia/{{ n.slug }}">
+
+            {% if n.categoria %}
+              <span class="news-category">
+                {{ n.categoria }}
+              </span>
+            {% endif %}
+
+            <strong class="news-title">
+              {{ n.titulo }}
+            </strong>
+
+            {% if n.fonte %}
+              <span class="news-source">
+                {{ n.fonte }}
+              </span>
+            {% endif %}
+
+          </a>
+        </li>
       {% endfor %}
     </ul>
   </div>
@@ -148,42 +164,56 @@
   <div class="widget-box">
     <h3 class="widget-title">Jogos do dia</h3>
 
-    <ul class="widget-matches">
-      {% for j in jogos_do_dia[:6] %}
-      <li class="match-item">
+    {% if jogos_do_dia %}
+      <ul class="widget-matches">
+        {% for j in jogos_do_dia[:6] %}
+          <li class="match-item">
 
-        <div class="match-league">
-          {{ j.liga }}
-          <span class="match-time">{{ j.hora }}</span>
-        </div>
+            <div class="match-league">
+              <span class="league-name">{{ j.liga }}</span>
+              <span class="match-time">{{ j.hora }}</span>
+            </div>
 
-        <div class="match-teams">
-          <div class="team">
-            <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-            <span>{{ j.casa }}</span>
-          </div>
+            <div class="match-teams">
 
-          <div class="match-score">
-            {{ j.gols_casa }} × {{ j.gols_fora }}
-          </div>
+              <div class="team team-home">
+                <img src="{{ j.casa_logo }}" alt="{{ j.casa }}" loading="lazy">
+                <span>{{ j.casa }}</span>
+              </div>
 
-          <div class="team">
-            <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-            <span>{{ j.fora }}</span>
-          </div>
-        </div>
+              <div class="match-score">
+                {{ j.gols_casa }} × {{ j.gols_fora }}
+              </div>
 
-        <a href="{{ j.link }}" class="match-link">Saiba como foi</a>
-      </li>
-      {% endfor %}
-    </ul>
+              <div class="team team-away">
+                <img src="{{ j.fora_logo }}" alt="{{ j.fora }}" loading="lazy">
+                <span>{{ j.fora }}</span>
+              </div>
 
-    <a href="/jogos" class="more-games">
-      Mais jogos →
-    </a>
+            </div>
+
+            <a href="{{ j.link }}" class="match-link">
+              Saiba como foi →
+            </a>
+
+          </li>
+        {% endfor %}
+      </ul>
+
+      <a href="/jogos" class="more-games">
+        Mais jogos →
+      </a>
+
+    {% else %}
+      <p class="empty-state">
+        Nenhum jogo disponível no momento.
+      </p>
+    {% endif %}
+
   </div>
 
 </aside>
+
 
 <!-- ================= ÚLTIMA HORA ================= -->
 <section class="container content-stack">
