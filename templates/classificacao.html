@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Classificação do Brasileirão 2026 | Giro Desportivo{% endblock %}
+{% block title %}Classificação do Brasileirão 2026{% endblock %}
 
 {% block content %}
 
-<!-- ================= INTRO / CONTEXTO ================= -->
-<section class="page-intro container">
-  <h1 class="page-title">Tabela do Brasileirão Série A 2026</h1>
-
-  <p class="page-description">
-    Confira a classificação atualizada do Campeonato Brasileiro 2026.
-    Veja a pontuação, número de jogos e vitórias de cada equipe,
-    além da disputa pelo título, vagas na Libertadores e luta contra o rebaixamento.
-  </p>
-</section>
-
-<!-- ================= TABELA DE CLASSIFICAÇÃO ================= -->
 <section class="classification container">
 
+  <!-- HERO / INTRO -->
+  <header class="classification-header">
+    <h1>Tabela do Brasileirão Série A 2026</h1>
+
+    <p>
+      Confira a classificação atualizada do Campeonato Brasileiro 2026.
+      Acompanhe a disputa pelo título, vagas na Libertadores, Sul-Americana
+      e a luta contra o rebaixamento.
+    </p>
+  </header>
+
+  <!-- TABELA -->
   <div class="classification-table">
 
     <!-- CABEÇALHO -->
@@ -32,87 +32,93 @@
       <span>GC</span>
     </div>
 
-    <div class="table-legend">
-  <span class="leg lib">Libertadores</span>
-  <span class="leg sul">Sul-Americana</span>
-  <span class="leg reb">Rebaixamento</span>
-</div>
-
     <!-- LINHAS -->
-    <div class="table-row
-  {% if t.posicao <= 6 %} zona-libertadores
-  {% elif t.posicao <= 12 %} zona-sulamericana
-  {% elif t.posicao >= 17 %} zona-rebaixamento
-  {% endif %}
-">
+    {% for t in tabela_brasileirao %}
 
-  <span class="pos">{{ t.posicao }}</span>
+      <div class="table-row
+        {% if t.posicao|default(99) <= 6 %} zona-libertadores
+        {% elif t.posicao|default(99) <= 12 %} zona-sulamericana
+        {% elif t.posicao|default(99) >= 17 %} zona-rebaixamento
+        {% endif %}
+      ">
 
-  <span class="team">
-    <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-    {{ t.nome }}
-  </span>
+        <!-- POSIÇÃO -->
+        <span class="pos">
+          {{ t.posicao | default("-") }}
+        </span>
 
-  <span class="points">{{ t.pontos }}</span>
-  <span>{{ t.jogos }}</span>
-  <span>{{ t.vitorias }}</span>
-  <span>{{ t.saldo_gols }}</span>
-  <span>{{ t.gols_pro }}</span>
-  <span>{{ t.gols_contra }}</span>
-
-</div>
-
-</section>
-
-<!-- ================= INSIGHTS / CONTEÚDO ================= -->
-<section class="classification-insights container">
-  <h2>Destaques do campeonato</h2>
-
-  <ul>
-    <li>🔥 A liderança segue disputada rodada a rodada</li>
-    <li>📈 Times do topo mantêm alto aproveitamento</li>
-    <li>⚠️ A briga por vagas internacionais segue aberta</li>
-  </ul>
-</section>
-
-<!-- ================= ADS ================= -->
-<section class="container">
-  <div class="ads-placeholder horizontal">
-    ADS
-  </div>
-</section>
-
-<!-- ================= ÚLTIMA HORA ================= -->
-<section class="container content-stack">
-  <section>
-    <h2 class="section-title">Última Hora</h2>
-
-    <div class="cards-grid">
-      {% for n in ultima_hora %}
-        <a href="/noticia/{{ n.slug }}" class="card">
-
-          {% if n.imagem %}
-            <div class="card-image">
-              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
-            </div>
+        <!-- EQUIPE -->
+        <span class="team">
+          {% if t.escudo %}
+            <img src="{{ t.escudo }}" alt="{{ t.nome | default('Time') }}">
           {% endif %}
+          {{ t.nome | default("—") }}
+        </span>
 
-          <div class="card-body">
-            <span class="badge">{{ n.categoria }}</span>
+        <!-- PONTOS -->
+        <span class="points">
+          {{ t.pontos | default(0) }}
+        </span>
 
-            <h3 class="card-title">
-              {{ n.titulo }}
-            </h3>
+        <!-- JOGOS -->
+        <span>
+          {{ t.jogos | default(0) }}
+        </span>
 
-            {% if n.fonte %}
-              <p class="card-meta">{{ n.fonte }}</p>
-            {% endif %}
-          </div>
+        <!-- VITÓRIAS -->
+        <span>
+          {{ t.vitorias | default(0) }}
+        </span>
 
-        </a>
-      {% endfor %}
-    </div>
+        <!-- SALDO -->
+        <span>
+          {{ t.saldo_gols | default(0) }}
+        </span>
+
+        <!-- GOLS PRÓ -->
+        <span>
+          {{ t.gols_pro | default(0) }}
+        </span>
+
+        <!-- GOLS CONTRA -->
+        <span>
+          {{ t.gols_contra | default(0) }}
+        </span>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+  <!-- LEGENDA -->
+  <div class="table-legend">
+    <span class="leg lib">Libertadores</span>
+    <span class="leg sul">Sul-Americana</span>
+    <span class="leg reb">Rebaixamento</span>
+  </div>
+
+  <!-- CONTEÚDO EDITORIAL -->
+  <section class="classification-content">
+    <h2>Como funciona a classificação do Brasileirão?</h2>
+
+    <p>
+      O Campeonato Brasileiro Série A é disputado em pontos corridos.
+      Ao final das 38 rodadas, o time com mais pontos é declarado campeão.
+    </p>
+
+    <ul>
+      <li><strong>G4 / G6:</strong> Vagas para a Libertadores</li>
+      <li><strong>Zona intermediária:</strong> Classificação para a Sul-Americana</li>
+      <li><strong>Z4:</strong> Rebaixamento para a Série B</li>
+    </ul>
+
+    <p>
+      Em caso de empate em pontos, os critérios de desempate são:
+      vitórias, saldo de gols, gols marcados e confronto direto.
+    </p>
   </section>
+
 </section>
 
 {% endblock %}
