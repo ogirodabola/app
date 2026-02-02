@@ -1743,3 +1743,11 @@ HOME — BLOCO SECUNDÁRIO
   font-weight: 700;
   color: #ffffff;
 }
+
+.team img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  background: transparent;
+}
+
