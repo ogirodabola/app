@@ -71,126 +71,36 @@ HEADERS = {
 from datetime import datetime, timedelta
 
 def buscar_jogos_do_dia():
-    PAISES_PERMITIDOS = {
-        "Brazil",
-        "Portugal",
-        "France",
-        "Italy",
-        "Germany",
-        "England",
-        "Spain"
+    url = "https://v3.football.api-sports.io/fixtures"
+
+    headers = {
+        "x-apisports-key": os.getenv("API_FOOTBALL_KEY")
     }
 
-    PALAVRAS_PROIBIDAS = [
-        "u17", "u18", "u19", "u20", "u21", "u23",
-        "women", "feminino",
-        "youth", "reserve",
-        "development", "friendly"
-    ]
+    params = {
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "timezone": "America/Sao_Paulo"
+    }
 
-    LIGAS_BRASIL = [
-        "serie a",
-        "serie b",
-        "paulista",
-        "carioca",
-        "mineiro",
-        "gaúcho"
-    ]
+    r = requests.get(url, headers=headers, params=params, timeout=10)
+    r.raise_for_status()
 
-    def liga_valida(nome_liga, pais):
-        nome = nome_liga.lower()
-
-        for palavra in PALAVRAS_PROIBIDAS:
-            if palavra in nome:
-                return False
-
-        if pais == "Brazil":
-            return any(liga in nome for liga in LIGAS_BRASIL)
-
-        return pais in PAISES_PERMITIDOS
-
-    def fetch(params):
-        r = requests.get(
-            f"{BASE_URL}/fixtures",
-            headers=HEADERS,
-            params=params,
-            timeout=10
-        )
-        r.raise_for_status()
-        return r.json().get("response", [])
+    data = r.json().get("response", [])
 
     jogos = []
-    vistos = set()
 
-    # =========================
-    # 1️⃣ AO VIVO
-    # =========================
-    try:
-        jogos_raw = fetch({
-            "live": "all",
-            "timezone": "America/Sao_Paulo"
-        })
-    except Exception:
-        jogos_raw = []
-
-    # =========================
-    # 2️⃣ HOJE
-    # =========================
-    if len(jogos_raw) < 6:
-        try:
-            jogos_raw += fetch({
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "timezone": "America/Sao_Paulo"
-            })
-        except Exception:
-            pass
-
-    # =========================
-    # 3️⃣ PRÓXIMAS 48H (FALLBACK)
-    # =========================
-    if len(jogos_raw) < 6:
-        try:
-            jogos_raw += fetch({
-                "from": datetime.now().strftime("%Y-%m-%d"),
-                "to": (datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d"),
-                "timezone": "America/Sao_Paulo"
-            })
-        except Exception:
-            pass
-
-    # =========================
-    # FILTRAGEM FINAL
-    # =========================
-    for f in jogos_raw:
-        fid = f["fixture"]["id"]
-        if fid in vistos:
-            continue
-        vistos.add(fid)
-
-        league = f["league"]
-        country = league["country"]
-        league_name = league["name"]
-
-        if not liga_valida(league_name, country):
-            continue
-
-        home = f["teams"]["home"]
-        away = f["teams"]["away"]
-
-        if not home["logo"] or not away["logo"]:
-            continue
-
+    for f in data:
         jogos.append({
-            "liga": league_name,
-            "pais": country,
+            "liga": f["league"]["name"],
+            "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
-            "status": f["fixture"]["status"]["short"],
-            "casa": home["name"],
-            "fora": away["name"],
-            "casa_logo": home["logo"],
-            "fora_logo": away["logo"],
+            "casa": f["teams"]["home"]["name"],
+            "fora": f["teams"]["away"]["name"],
+            "casa_logo": f["teams"]["home"]["logo"],
+            "fora_logo": f["teams"]["away"]["logo"],
             "gols_casa": f["goals"]["home"],
             "gols_fora": f["goals"]["away"],
+            "status": f["fixture"]["status"]["short"],
             "link": "#"
         })
 
@@ -198,3 +108,4 @@ def buscar_jogos_do_dia():
             break
 
     return jogos
+
