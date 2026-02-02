@@ -1054,8 +1054,11 @@ HOME – ÚLTIMAS NOTÍCIAS
 }
 
 .team-name {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
 }
+
 
 .team-stats {
   font-size: 12px;
