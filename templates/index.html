@@ -167,7 +167,12 @@
 
             <div class="game-meta">
             <span class="game-league">{{ j.liga }}</span>
-          
+
+              <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+            <p style="font-size:10px; color:#fff;">
+              {{ j.casa_logo }}
+            </p>
+
             {% if j.status == 'FT' %}
               <span class="game-time">Encerrado</span>
             {% elif j.status == 'NS' %}
