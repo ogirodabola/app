@@ -66,6 +66,55 @@ HEADERS = {
 
 def buscar_jogos_do_dia():
     import requests
+    from datetime import datetime
+
+    BASE_URL = "https://v3.football.api-sports.io"
+    HEADERS = {
+        "x-apisports-key": API_FOOTBALL_KEY
+    }
+
+    # 🇧🇷🇪🇺 Países permitidos
+    PAISES_PERMITIDOS = {
+        "Brazil",
+        "Portugal",
+        "France",
+        "Italy",
+        "Germany",
+        "England",
+        "Spain"
+    }
+
+    # ❌ Palavras proibidas (categorias lixo)
+    PALAVRAS_PROIBIDAS = [
+        "U17", "U18", "U19", "U20", "U21", "U23",
+        "Women", "Feminino",
+        "Youth", "Reserve",
+        "Development",
+        "Friendly"
+    ]
+
+    # ✅ Ligas brasileiras permitidas
+    LIGAS_BRASIL = [
+        "Serie A",
+        "Serie B",
+        "Paulista",
+        "Carioca",
+        "Mineiro",
+        "Gaúcho"
+    ]
+
+    def liga_valida(league_name, country):
+        nome = league_name.lower()
+
+        # bloqueios diretos
+        for palavra in PALAVRAS_PROIBIDAS:
+            if palavra.lower() in nome:
+                return False
+
+        if country == "Brazil":
+            return any(l.lower() in nome for l in LIGAS_BRASIL)
+
+        return country in PAISES_PERMITIDOS
 
     def fetch(params):
         r = requests.get(
@@ -77,53 +126,29 @@ def buscar_jogos_do_dia():
         r.raise_for_status()
         return r.json().get("response", [])
 
-    # =========================
-    # PAÍSES PERMITIDOS
-    # =========================
-    PAISES_BRASIL = ["Brazil"]
-
-    PAISES_EUROPA = [
-        "England", "Spain", "Italy", "Germany", "France",
-        "Portugal", "Netherlands", "Belgium", "Scotland",
-        "Turkey", "Greece", "Austria", "Switzerland"
-    ]
-
-    # =========================
-    # PALAVRAS BLOQUEADAS
-    # =========================
-    BLOQUEIOS = [
-        "women", "feminino", "friendly",
-        "youth", "u17", "u20", "u23"
-    ]
-
-    def permitido(f):
-        liga = f["league"]["name"].lower()
-        pais = (f["league"]["country"] or "").lower()
-
-        # bloqueio por palavra
-        for b in BLOQUEIOS:
-            if b in liga:
-                return False
-
-        # permite Brasil
-        if pais in [p.lower() for p in PAISES_BRASIL]:
-            return True
-
-        # permite Europa
-        if pais in [p.lower() for p in PAISES_EUROPA]:
-            return True
-
-        return False
-
-    # =========================
-    # COLETA
-    # =========================
     jogos_raw = []
-    jogos_raw.extend(fetch({"next": 20, "timezone": "America/Sao_Paulo"}))
-    jogos_raw.extend(fetch({"last": 20, "timezone": "America/Sao_Paulo"}))
 
-    vistos = set()
+    # 1️⃣ PRIORIDADE: jogos ao vivo
+    try:
+        jogos_raw.extend(fetch({
+            "live": "all",
+            "timezone": "America/Sao_Paulo"
+        }))
+    except Exception as e:
+        print("ERRO LIVE:", e)
+
+    # 2️⃣ Se não tiver 6, buscar jogos do dia
+    if len(jogos_raw) < 6:
+        try:
+            jogos_raw.extend(fetch({
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "timezone": "America/Sao_Paulo"
+            }))
+        except Exception as e:
+            print("ERRO DATE:", e)
+
     jogos = []
+    vistos = set()
 
     for f in jogos_raw:
         fid = f["fixture"]["id"]
@@ -131,26 +156,30 @@ def buscar_jogos_do_dia():
             continue
         vistos.add(fid)
 
-        if not permitido(f):
+        league = f["league"]
+        country = league["country"]
+        league_name = league["name"]
+
+        if not liga_valida(league_name, country):
             continue
 
         home = f["teams"]["home"]
         away = f["teams"]["away"]
 
-        if not home.get("logo") or not away.get("logo"):
+        if not home["logo"] or not away["logo"]:
             continue
 
         jogos.append({
-            "liga": f["league"]["name"],
-            "data": "Hoje",
+            "liga": league_name,
+            "pais": country,
             "hora": f["fixture"]["date"][11:16],
+            "status": f["fixture"]["status"]["short"],
             "casa": home["name"],
             "fora": away["name"],
             "casa_logo": home["logo"],
             "fora_logo": away["logo"],
             "gols_casa": f["goals"]["home"],
             "gols_fora": f["goals"]["away"],
-            "status": f["fixture"]["status"]["short"],
             "link": "#"
         })
 
@@ -158,3 +187,4 @@ def buscar_jogos_do_dia():
             break
 
     return jogos
+
