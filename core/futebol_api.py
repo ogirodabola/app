@@ -75,26 +75,27 @@ def buscar_jogos_do_dia():
         return r.json().get("response", [])
 
     jogos = []
-
-    # 1️⃣ Ao vivo
     jogos.extend(fetch({"live": "all"}))
-
-    # 2️⃣ Próximos jogos
-    if len(jogos) < 6:
-        jogos.extend(fetch({"next": 6, "timezone": "America/Sao_Paulo"}))
-
-    # 3️⃣ Últimos jogos
-    if len(jogos) < 6:
-        jogos.extend(fetch({"last": 6, "timezone": "America/Sao_Paulo"}))
+    jogos.extend(fetch({"next": 6, "timezone": "America/Sao_Paulo"}))
+    jogos.extend(fetch({"last": 6, "timezone": "America/Sao_Paulo"}))
 
     vistos = set()
     resultado = []
 
     for f in jogos:
-        fixture_id = f["fixture"]["id"]
-        if fixture_id in vistos:
+        fid = f["fixture"]["id"]
+        if fid in vistos:
             continue
-        vistos.add(fixture_id)
+        vistos.add(fid)
+
+        home_logo = f["teams"]["home"].get("logo")
+        away_logo = f["teams"]["away"].get("logo")
+
+        # LOG DE VERDADE (vai aparecer no Render)
+        print("LOGOS:", home_logo, away_logo)
+
+        if not home_logo or not away_logo:
+            continue  # NÃO renderiza jogo sem escudo válido
 
         resultado.append({
             "liga": f["league"]["name"],
@@ -102,8 +103,8 @@ def buscar_jogos_do_dia():
             "hora": f["fixture"]["date"][11:16],
             "casa": f["teams"]["home"]["name"],
             "fora": f["teams"]["away"]["name"],
-            "casa_logo": f["teams"]["home"]["logo"],   # ✅ CAMINHO CORRETO
-            "fora_logo": f["teams"]["away"]["logo"],   # ✅ CAMINHO CORRETO
+            "casa_logo": home_logo,
+            "fora_logo": away_logo,
             "gols_casa": f["goals"]["home"],
             "gols_fora": f["goals"]["away"],
             "status": f["fixture"]["status"]["short"],
