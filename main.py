@@ -48,7 +48,7 @@ def home(request: Request):
             "ultima_hora": listar_ultima_hora(),
             "brasileirao": listar_por_categoria("Brasileirão"),
             # 👇 AQUI O CORTE
-            "tabela_brasileirao": tabela_completa[:8]
+            "tabela_brasileirao": tabela_completa[:8],
             # navegação
             "categorias": listar_categorias(),
             "categoria_ativa": None
