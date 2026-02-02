@@ -64,8 +64,9 @@ HEADERS = {
     "x-apisports-key": API_KEY
 }
 
-
 def buscar_jogos_do_dia():
+    import requests
+
     def fetch(params):
         r = requests.get(
             f"{BASE_URL}/fixtures",
@@ -76,29 +77,61 @@ def buscar_jogos_do_dia():
         r.raise_for_status()
         return r.json().get("response", [])
 
+    # =========================
+    # PRIORIDADE EDITORIAL
+    # =========================
+    PRIORIDADE_LIGAS = [
+        "Brazil",                    # Brasil (geral)
+        "Brasileirao",
+        "Copa do Brasil",
+        "UEFA Champions League",
+        "UEFA Europa League",
+        "Premier League",
+        "La Liga",
+        "Serie A",
+        "Bundesliga",
+        "Ligue 1",
+    ]
+
+    def score_prioridade(fixture):
+        liga = fixture["league"]["name"]
+        pais = fixture["league"]["country"]
+
+        texto = f"{pais} {liga}".lower()
+
+        for idx, nome in enumerate(PRIORIDADE_LIGAS):
+            if nome.lower() in texto:
+                return idx
+        return 999  # joga ligas irrelevantes para o fim
+
+    # =========================
+    # COLETA DOS JOGOS
+    # =========================
     jogos_raw = []
 
-    # 1️⃣ Próximos jogos (PERMITIDO)
+    # 1️⃣ Próximos jogos
     try:
         jogos_raw.extend(fetch({
-            "next": 6,
+            "next": 10,
             "timezone": "America/Sao_Paulo"
         }))
     except Exception as e:
         print("ERRO NEXT:", e)
 
-    # 2️⃣ Últimos jogos (PERMITIDO)
-    if len(jogos_raw) < 6:
-        try:
-            jogos_raw.extend(fetch({
-                "last": 6,
-                "timezone": "America/Sao_Paulo"
-            }))
-        except Exception as e:
-            print("ERRO LAST:", e)
+    # 2️⃣ Últimos jogos (fallback)
+    try:
+        jogos_raw.extend(fetch({
+            "last": 10,
+            "timezone": "America/Sao_Paulo"
+        }))
+    except Exception as e:
+        print("ERRO LAST:", e)
 
+    # =========================
+    # LIMPEZA + ORDENAÇÃO
+    # =========================
     vistos = set()
-    jogos = []
+    jogos_filtrados = []
 
     for f in jogos_raw:
         fid = f["fixture"]["id"]
@@ -106,28 +139,37 @@ def buscar_jogos_do_dia():
             continue
         vistos.add(fid)
 
-        home_logo = f["teams"]["home"]["logo"]
-        away_logo = f["teams"]["away"]["logo"]
+        home = f["teams"]["home"]
+        away = f["teams"]["away"]
 
-        # segurança absoluta: só entra jogo com escudo válido
-        if not home_logo or not away_logo:
+        # garante escudos válidos
+        if not home.get("logo") or not away.get("logo"):
             continue
 
+        jogos_filtrados.append(f)
+
+    # ordena por prioridade editorial
+    jogos_filtrados.sort(key=score_prioridade)
+
+    # =========================
+    # NORMALIZAÇÃO FINAL
+    # =========================
+    jogos = []
+
+    for f in jogos_filtrados[:6]:
         jogos.append({
             "liga": f["league"]["name"],
             "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
             "casa": f["teams"]["home"]["name"],
             "fora": f["teams"]["away"]["name"],
-            "casa_logo": home_logo,
-            "fora_logo": away_logo,
+            "casa_logo": f["teams"]["home"]["logo"],
+            "fora_logo": f["teams"]["away"]["logo"],
             "gols_casa": f["goals"]["home"],
             "gols_fora": f["goals"]["away"],
             "status": f["fixture"]["status"]["short"],
             "link": "#"
         })
 
-        if len(jogos) == 6:
-            break
-
     return jogos
+
