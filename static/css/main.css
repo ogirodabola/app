@@ -1589,8 +1589,10 @@ JOGOS DO DIA — CARD
   font-size: 13px;
   font-weight: 600;
   color: var(--gd-green-500);
-  align-self: flex-end;
+  align-self: flex-start;   /* 👈 aqui está a correção */
+  margin-left: 36px;        /* alinha com o texto do time (ícone + gap) */
 }
+
 .home-secondary .game-time.live {
   color: #22c55e;
   font-weight: 700;
