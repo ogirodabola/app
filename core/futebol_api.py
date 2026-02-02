@@ -78,14 +78,14 @@ def buscar_jogos_do_dia():
         return r.json().get("response", [])
 
     # =========================
-    # PRIORIDADE EDITORIAL
+    # CONFIGURAÇÃO EDITORIAL
     # =========================
+
     PRIORIDADE_LIGAS = [
-        "Brazil",                    # Brasil (geral)
-        "Brasileirao",
+        "Brazil",
+        "Brasileirão",
         "Copa do Brasil",
         "UEFA Champions League",
-        "UEFA Europa League",
         "Premier League",
         "La Liga",
         "Serie A",
@@ -93,43 +93,49 @@ def buscar_jogos_do_dia():
         "Ligue 1",
     ]
 
-    def score_prioridade(fixture):
-        liga = fixture["league"]["name"]
-        pais = fixture["league"]["country"]
+    PALAVRAS_BLOQUEADAS = [
+        "Women",
+        "Feminino",
+        "Friendlies",
+        "Friendly",
+        "Youth",
+        "U17",
+        "U20",
+        "U23",
+    ]
 
+    def bloqueado(f):
+        liga = f["league"]["name"]
+        tipo = f["league"].get("type", "")
+        texto = liga.lower()
+
+        if tipo.lower() == "friendly":
+            return True
+
+        for palavra in PALAVRAS_BLOQUEADAS:
+            if palavra.lower() in texto:
+                return True
+
+        return False
+
+    def score_prioridade(f):
+        liga = f["league"]["name"]
+        pais = f["league"]["country"]
         texto = f"{pais} {liga}".lower()
 
         for idx, nome in enumerate(PRIORIDADE_LIGAS):
             if nome.lower() in texto:
                 return idx
-        return 999  # joga ligas irrelevantes para o fim
+        return 999
 
     # =========================
-    # COLETA DOS JOGOS
+    # COLETA
     # =========================
+
     jogos_raw = []
+    jogos_raw.extend(fetch({"next": 15, "timezone": "America/Sao_Paulo"}))
+    jogos_raw.extend(fetch({"last": 15, "timezone": "America/Sao_Paulo"}))
 
-    # 1️⃣ Próximos jogos
-    try:
-        jogos_raw.extend(fetch({
-            "next": 10,
-            "timezone": "America/Sao_Paulo"
-        }))
-    except Exception as e:
-        print("ERRO NEXT:", e)
-
-    # 2️⃣ Últimos jogos (fallback)
-    try:
-        jogos_raw.extend(fetch({
-            "last": 10,
-            "timezone": "America/Sao_Paulo"
-        }))
-    except Exception as e:
-        print("ERRO LAST:", e)
-
-    # =========================
-    # LIMPEZA + ORDENAÇÃO
-    # =========================
     vistos = set()
     jogos_filtrados = []
 
@@ -139,21 +145,25 @@ def buscar_jogos_do_dia():
             continue
         vistos.add(fid)
 
+        # filtros editoriais
+        if bloqueado(f):
+            continue
+
         home = f["teams"]["home"]
         away = f["teams"]["away"]
 
-        # garante escudos válidos
         if not home.get("logo") or not away.get("logo"):
             continue
 
         jogos_filtrados.append(f)
 
-    # ordena por prioridade editorial
+    # ordena por prioridade
     jogos_filtrados.sort(key=score_prioridade)
 
     # =========================
     # NORMALIZAÇÃO FINAL
     # =========================
+
     jogos = []
 
     for f in jogos_filtrados[:6]:
@@ -172,4 +182,3 @@ def buscar_jogos_do_dia():
         })
 
     return jogos
-
