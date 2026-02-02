@@ -54,59 +54,64 @@ def buscar_classificacao_brasileirao():
 import requests
 from datetime import date
 
-import requests
+def buscar_jogos_do_dia():
+    import requests
 
-API_KEY = "SUA_API_KEY_AQUI"
-BASE_URL = "https://v3.football.api-sports.io"
+    API_KEY = "SUA_API_KEY_AQUI"
+    BASE_URL = "https://v3.football.api-sports.io"
 
-headers = {
-    "x-apisports-key": API_KEY
-}
-
-
-def _parse_fixture(f):
-    return {
-        "liga": f["league"]["name"],
-        "data": "Hoje",
-        "hora": f["fixture"]["date"][11:16],
-        "casa": f["teams"]["home"]["name"],
-        "fora": f["teams"]["away"]["name"],
-        "casa_logo": f["teams"]["home"]["logo"],
-        "fora_logo": f["teams"]["away"]["logo"],
-        "gols_casa": f["goals"]["home"],
-        "gols_fora": f["goals"]["away"],
-        "status": f["fixture"]["status"]["short"],  # FT, NS, LIVE
-        "link": "#"
+    headers = {
+        "x-apisports-key": API_KEY
     }
 
+    def fetch(params):
+        r = requests.get(
+            f"{BASE_URL}/fixtures",
+            headers=headers,
+            params=params,
+            timeout=10
+        )
+        r.raise_for_status()
+        return r.json().get("response", [])
 
-def buscar_jogos_do_dia():
-    # 1️⃣ AO VIVO
-    r = requests.get(
-        f"{BASE_URL}/fixtures",
-        headers=headers,
-        params={"live": "all"}
-    )
-    data = r.json().get("response", [])
-    if data:
-        return [_parse_fixture(f) for f in data[:6]]
+    jogos = []
 
-    # 2️⃣ PRÓXIMOS JOGOS
-    r = requests.get(
-        f"{BASE_URL}/fixtures",
-        headers=headers,
-        params={"next": 6, "timezone": "America/Sao_Paulo"}
-    )
-    data = r.json().get("response", [])
-    if data:
-        return [_parse_fixture(f) for f in data]
+    # 1️⃣ Ao vivo
+    jogos.extend(fetch({"live": "all"}))
 
-    # 3️⃣ ÚLTIMOS JOGOS
-    r = requests.get(
-        f"{BASE_URL}/fixtures",
-        headers=headers,
-        params={"last": 6, "timezone": "America/Sao_Paulo"}
-    )
-    data = r.json().get("response", [])
-    return [_parse_fixture(f) for f in data]
+    # 2️⃣ Próximos jogos
+    if len(jogos) < 6:
+        jogos.extend(fetch({"next": 6, "timezone": "America/Sao_Paulo"}))
+
+    # 3️⃣ Últimos jogos
+    if len(jogos) < 6:
+        jogos.extend(fetch({"last": 6, "timezone": "America/Sao_Paulo"}))
+
+    vistos = set()
+    resultado = []
+
+    for f in jogos:
+        fixture_id = f["fixture"]["id"]
+        if fixture_id in vistos:
+            continue
+        vistos.add(fixture_id)
+
+        resultado.append({
+            "liga": f["league"]["name"],
+            "data": "Hoje",
+            "hora": f["fixture"]["date"][11:16],
+            "casa": f["teams"]["home"]["name"],
+            "fora": f["teams"]["away"]["name"],
+            "casa_logo": f["teams"]["home"]["logo"],   # ✅ CAMINHO CORRETO
+            "fora_logo": f["teams"]["away"]["logo"],   # ✅ CAMINHO CORRETO
+            "gols_casa": f["goals"]["home"],
+            "gols_fora": f["goals"]["away"],
+            "status": f["fixture"]["status"]["short"],
+            "link": "#"
+        })
+
+        if len(resultado) == 6:
+            break
+
+    return resultado
 
