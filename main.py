@@ -130,7 +130,7 @@ def home(request: Request):
 
             # widget lateral
             "tabela_brasileirao": tabela_completa[:8],
-            "jogos_do_dia": jogos_do_dia,
+            "jogos_do_dia": buscar_jogos_do_dia(),
 
             # navegação
             "categorias": listar_categorias(),
