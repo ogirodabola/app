@@ -1549,7 +1549,7 @@ HOME — JOGOS DO DIA (ÚNICO BLOCO)
   font-size: 13px;
 }
 
-..home-secondary .game-teams .team img {
+.home-secondary .game-teams .team img {
   width: 26px;
   height: 26px;
   max-width: 26px;
