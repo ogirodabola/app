@@ -1510,149 +1510,87 @@ HOME — BLOCO SECUNDÁRIO
 }
 
 /* ===============================
-HOME — JOGOS DO DIA (ÚNICO BLOCO)
+JOGOS DO DIA — CARD
 =============================== */
 
-.home-secondary .games-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.home-secondary .game-card {
+.games-column .game-card {
   background: rgba(255,255,255,0.03);
   border-radius: 14px;
   padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.home-secondary .game-meta {
+/* topo */
+.games-column .game-meta {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   font-size: 12px;
   color: var(--gd-gray-300);
-  margin-bottom: 10px;
 }
 
-/* =========================================
-JOGOS DO DIA — TIMES + PLACAR
-========================================= */
-
-.home-secondary .game-teams {
+/* times + placar */
+.games-column .game-teams {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: 1fr 72px 1fr;
   align-items: center;
-  gap: 16px;
-  margin: 14px 0;
 }
 
-.home-secondary .game-teams .team {
+/* times */
+.games-column .team {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: 600;
 }
 
-
-/* casa */
-.home-secondary .game-teams .team.home {
+.games-column .team.home {
   justify-content: flex-start;
 }
 
-/* fora */
-.home-secondary .game-teams .team.away {
+.games-column .team.away {
   justify-content: flex-end;
   text-align: right;
 }
 
 /* escudos */
-.home-secondary .game-teams .team img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-/* nome do time */
-.home-secondary .team-name {
-  max-width: 90px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ===============================
-   JOGOS DO DIA — LAYOUT FINAL
-================================ */
-
-.games-column .game-teams {
-  display: grid;
-  grid-template-columns: 1fr 78px 1fr;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-
-/* TIME (escudo + sigla) */
-.games-column .game-teams .team {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-/* ESCUDO */
-.games-column .game-teams .team img {
+.games-column .team img {
   width: 28px;
   height: 28px;
   object-fit: contain;
-  flex-shrink: 0;
 }
 
-/* SIGLA DO TIME */
+/* sigla */
 .games-column .team-name {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  white-space: nowrap;
 }
 
-/* SCORE / HORÁRIO (CENTRO FIXO) */
+/* placar / hora */
 .games-column .game-score {
-  width: 78px;
-  min-width: 78px;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/* placar */
 .games-column .game-score .score {
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
 }
 
-/* horário */
 .games-column .game-score .time {
   font-size: 15px;
   font-weight: 600;
-  color: var(--gd-gray-200);
+  color: var(--gd-gray-300);
 }
 
+/* link */
 .games-column .game-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
   font-size: 13px;
   font-weight: 600;
   color: var(--gd-green-500);
+  align-self: flex-end;
 }
-
 .home-secondary .game-time.live {
   color: #22c55e;
   font-weight: 700;
@@ -1668,10 +1606,6 @@ JOGOS DO DIA — TIMES + PLACAR
   flex-shrink: 0;
 }
 
-/* REMOVER LOGO DA LIGA NOS JOGOS DO DIA */
-.home-secondary .game-meta img {
-  display: none !important;
-}
 
 /* ================= HEADER JOGOS DO DIA ================= */
 
