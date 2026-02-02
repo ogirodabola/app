@@ -1717,3 +1717,29 @@ HOME — BLOCO SECUNDÁRIO
     grid-template-columns: 1fr;
   }
 }
+
+.game-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.team img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.game-score {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
