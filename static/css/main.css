@@ -1751,3 +1751,92 @@ HOME — BLOCO SECUNDÁRIO
   object-fit: contain;
   display: block;
 }
+
+/* ===============================
+DESATIVA SISTEMAS ANTIGOS DE JOGOS
+=============================== */
+
+.widget-matches,
+.match-item,
+.match-teams,
+.match-team,
+.side-widgets-grid,
+.home-side-widgets {
+  all: unset;
+}
+
+/* ===============================
+HOME — JOGOS DO DIA (FINAL)
+=============================== */
+
+.home-secondary .games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.home-secondary .game-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+/* liga + status */
+.home-secondary .game-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gd-gray-300);
+  margin-bottom: 10px;
+}
+
+/* times */
+.home-secondary .game-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+/* time */
+.home-secondary .game-teams .team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+/* 🔥 ESCUDOS DEFINITIVOS */
+.home-secondary .game-teams .team img {
+  width: 22px;
+  height: 22px;
+  max-width: 22px;
+  max-height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* placar */
+.home-secondary .game-score {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* link */
+.home-secondary .game-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gd-green-500);
+}
+
+/* status */
+.home-secondary .game-time {
+  font-size: 12px;
+}
+
+.home-secondary .game-time.live {
+  color: #22c55e;
+  font-weight: 700;
+}
