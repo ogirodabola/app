@@ -1333,21 +1333,6 @@ HOME – ÚLTIMAS NOTÍCIAS
   color: #9bb3c9;
 }
 
-/* JOGOS */
-
-.match-teams .team {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.side-widgets-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 32px;
-}
-
 /* NOTÍCIAS */
 .news-link {
   display: flex;
@@ -1472,55 +1457,6 @@ HOME – ÚLTIMAS NOTÍCIAS
   color: #9bb3c9;
 }
 
-/* JOGOS */
-.widget-matches {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.match-item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.match-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #9bb3c9;
-}
-
-.match-teams {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-}
-
-.team {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.team img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.match-score {
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.match-link,
-.more-games {
-  color: #32d26f;
-  font-weight: 600;
-  font-size: 13px;
-}
 
 /* ======================================================
 HOME — BLOCO SECUNDÁRIO
@@ -1629,15 +1565,6 @@ HOME — BLOCO SECUNDÁRIO
 }
 
 /* 🔒 ESCUDOS DOMADOS (ANTI-OVERRIDE) */
-.games-list .game-card .team img {
-  width: 22px !important;
-  height: 22px !important;
-  max-width: 22px !important;
-  max-height: 22px !important;
-  object-fit: contain;
-  flex-shrink: 0;
-  background: transparent;
-}
 
 /* placar */
 .game-score {
@@ -1663,15 +1590,6 @@ HOME — BLOCO SECUNDÁRIO
   font-weight: 700;
 }
 
-/* desktop: ligeiramente maior */
-@media (min-width: 1024px) {
-  .games-list .game-card .team img {
-    width: 24px !important;
-    height: 24px !important;
-    max-width: 24px !important;
-    max-height: 24px !important;
-  }
-}
 
 /* BLINDA ESCUDOS DOS JOGOS DO DIA */
 .games-list .game-card .team img {
