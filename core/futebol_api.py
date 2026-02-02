@@ -34,6 +34,5 @@ def buscar_classificacao_brasileirao():
                 return tabela
             ]
 
-
     # fallback absoluto (não quebra a home)
     return []
