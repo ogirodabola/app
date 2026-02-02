@@ -1180,3 +1180,85 @@ HOME – ÚLTIMAS NOTÍCIAS
   border-radius: 16px;
   padding: 20px;
 }
+
+.table-header {
+  display: grid;
+  grid-template-columns: 40px 1fr repeat(6, 60px);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9bb0c9;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 40px 1fr repeat(6, 60px);
+  align-items: center;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #e6edf5;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.25s ease;
+}
+
+.table-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.team img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.points {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.zona-libertadores {
+  border-left: 4px solid #1e90ff;
+}
+
+.zona-sulamericana {
+  border-left: 4px solid #ff9800;
+}
+
+.zona-rebaixamento {
+  border-left: 4px solid #e53935;
+  background: rgba(229,57,53,0.08);
+}
+
+.table-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #cbd6e2;
+}
+
+.leg::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.leg.lib::before { background: #1e90ff; }
+.leg.sul::before { background: #ff9800; }
+.leg.reb::before { background: #e53935; }
+
