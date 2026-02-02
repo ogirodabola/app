@@ -1637,3 +1637,15 @@ LINHA LATERAL — VERDE
 .home-secondary::after {
   border-color: var(--gd-green-500) !important;
 }
+
+@keyframes live-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
