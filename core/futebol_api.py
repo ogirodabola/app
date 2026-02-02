@@ -1,7 +1,11 @@
-import requests
 import os
+import requests
 
 API_KEY = os.getenv("API_FOOTBALL_KEY")
+BASE_URL = "https://v3.football.api-sports.io"
+
+if not API_KEY:
+    raise RuntimeError("API_FOOTBALL_KEY não definida no ambiente")
 
 HEADERS = {
     "x-apisports-key": API_KEY
@@ -64,15 +68,9 @@ HEADERS = {
     "x-apisports-key": API_KEY
 }
 
+from datetime import datetime
+
 def buscar_jogos_do_dia():
-    import requests
-    from datetime import datetime
-
-    BASE_URL = "https://v3.football.api-sports.io"
-    HEADERS = {
-        "x-apisports-key": API_FOOTBALL_KEY
-    }
-
     # 🇧🇷🇪🇺 Países permitidos
     PAISES_PERMITIDOS = {
         "Brazil",
@@ -84,37 +82,35 @@ def buscar_jogos_do_dia():
         "Spain"
     }
 
-    # ❌ Palavras proibidas (categorias lixo)
+    # ❌ Categorias proibidas
     PALAVRAS_PROIBIDAS = [
-        "U17", "U18", "U19", "U20", "U21", "U23",
-        "Women", "Feminino",
-        "Youth", "Reserve",
-        "Development",
-        "Friendly"
+        "u17", "u18", "u19", "u20", "u21", "u23",
+        "women", "feminino",
+        "youth", "reserve",
+        "development", "friendly"
     ]
 
-    # ✅ Ligas brasileiras permitidas
+    # 🇧🇷 Ligas brasileiras permitidas
     LIGAS_BRASIL = [
-        "Serie A",
-        "Serie B",
-        "Paulista",
-        "Carioca",
-        "Mineiro",
-        "Gaúcho"
+        "serie a",
+        "serie b",
+        "paulista",
+        "carioca",
+        "mineiro",
+        "gaúcho"
     ]
 
-    def liga_valida(league_name, country):
-        nome = league_name.lower()
+    def liga_valida(nome_liga, pais):
+        nome = nome_liga.lower()
 
-        # bloqueios diretos
         for palavra in PALAVRAS_PROIBIDAS:
-            if palavra.lower() in nome:
+            if palavra in nome:
                 return False
 
-        if country == "Brazil":
-            return any(l.lower() in nome for l in LIGAS_BRASIL)
+        if pais == "Brazil":
+            return any(liga in nome for liga in LIGAS_BRASIL)
 
-        return country in PAISES_PERMITIDOS
+        return pais in PAISES_PERMITIDOS
 
     def fetch(params):
         r = requests.get(
@@ -128,7 +124,7 @@ def buscar_jogos_do_dia():
 
     jogos_raw = []
 
-    # 1️⃣ PRIORIDADE: jogos ao vivo
+    # 1️⃣ Jogos ao vivo
     try:
         jogos_raw.extend(fetch({
             "live": "all",
@@ -137,7 +133,7 @@ def buscar_jogos_do_dia():
     except Exception as e:
         print("ERRO LIVE:", e)
 
-    # 2️⃣ Se não tiver 6, buscar jogos do dia
+    # 2️⃣ Jogos do dia
     if len(jogos_raw) < 6:
         try:
             jogos_raw.extend(fetch({
@@ -187,4 +183,5 @@ def buscar_jogos_do_dia():
             break
 
     return jogos
+
 
