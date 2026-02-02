@@ -1585,3 +1585,8 @@ HOME — JOGOS DO DIA (ÚNICO BLOCO)
   object-fit: contain;
   flex-shrink: 0;
 }
+
+/* REMOVER LOGO DA LIGA NOS JOGOS DO DIA */
+.home-secondary .game-meta img {
+  display: none !important;
+}
