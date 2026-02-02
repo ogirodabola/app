@@ -46,7 +46,7 @@ def home(request: Request):
             "request": request,
             "ultimas_noticias": listar_ultimas_editoriais(),
             "ultima_hora": listar_ultima_hora(),
-            "brasileirao": listar_por_categoria("Brasileirão"),
+            "brasileirao": listar_por_categoria("Brasileirão")[:4],
             # 👇 AQUI O CORTE
             "tabela_brasileirao": tabela_completa[:8],
             # navegação
