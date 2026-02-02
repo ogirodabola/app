@@ -1583,9 +1583,12 @@ JOGOS DO DIA — TIMES + PLACAR
   text-overflow: ellipsis;
 }
 
-/* placar / horário */
-.home-secondary .game-score {
-  width: 78px;              /* 🔒 largura fixa */
+/* ===============================
+   JOGOS DO DIA — SCORE FIXO
+================================ */
+
+.games-column .game-score {
+  width: 78px;
   min-width: 78px;
   text-align: center;
   display: flex;
@@ -1593,19 +1596,21 @@ JOGOS DO DIA — TIMES + PLACAR
   align-items: center;
 }
 
-/* placar */
-.home-secondary .game-score .score {
+/* placar (2 × 1) */
+.games-column .game-score .score {
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.04em;
 }
 
-.home-secondary .game-score .time {
+/* horário (14:00) */
+.games-column .game-score .time {
   font-size: 15px;
   font-weight: 600;
   color: var(--gd-gray-200);
 }
+
 
 .home-secondary .game-link {
   font-size: 13px;
@@ -1613,8 +1618,8 @@ JOGOS DO DIA — TIMES + PLACAR
   color: var(--gd-green-500);
 }
 
-.home-secondary .game-time {
-  font-size: 12px;
+.games-column .game-teams {
+  grid-template-columns: 1fr 78px 1fr;
 }
 
 .home-secondary .game-time.live {
