@@ -1361,28 +1361,10 @@ HOME – ÚLTIMAS NOTÍCIAS
   border-radius: 6px;
 }
 
-.match-team img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
 .news-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-/* JOGOS */
-.match-teams {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 8px;
-}
-
-.match-score {
-  font-weight: 700;
 }
 
 /* ===== HOME SIDE WIDGETS ===== */
@@ -1599,19 +1581,6 @@ HOME — BLOCO SECUNDÁRIO
   max-height: 22px !important;
   object-fit: contain;
   display: block;
-}
-
-/* ===============================
-DESATIVA SISTEMAS ANTIGOS DE JOGOS
-=============================== */
-
-.widget-matches,
-.match-item,
-.match-teams,
-.match-team,
-.side-widgets-grid,
-.home-side-widgets {
-  all: unset;
 }
 
 /* ===============================
