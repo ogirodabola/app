@@ -1524,6 +1524,7 @@ HOME — JOGOS DO DIA (ÚNICO BLOCO)
 
 .home-secondary .game-meta {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   font-size: 12px;
   color: var(--gd-gray-300);
@@ -1573,4 +1574,14 @@ HOME — JOGOS DO DIA (ÚNICO BLOCO)
 .home-secondary .game-time.live {
   color: #22c55e;
   font-weight: 700;
+}
+
+/* LOGO DA LIGA (topo do card) */
+.home-secondary .game-meta img {
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
