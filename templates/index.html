@@ -166,18 +166,16 @@
           <div class="game-card">
 
             <div class="game-meta">
-            <span class="game-league">{{ j.liga }}</span>
+              <span class="game-league">{{ j.liga }}</span>
 
-            </p>
-
-            {% if j.status == 'FT' %}
-              <span class="game-time">Encerrado</span>
-            {% elif j.status == 'NS' %}
-              <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
-            {% else %}
-              <span class="game-time">Ao vivo</span>
-            {% endif %}
-          </div>
+              {% if j.status == 'FT' %}
+                <span class="game-time">Encerrado</span>
+              {% elif j.status == 'NS' %}
+                <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
+              {% else %}
+                <span class="game-time">Ao vivo</span>
+              {% endif %}
+            </div>
 
             <div class="game-teams">
               <div class="team">
@@ -207,6 +205,7 @@
     </div>
   </div>
 </section>
+
 
 
 <!-- ================= ÚLTIMA HORA ================= -->
