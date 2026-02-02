@@ -1742,3 +1742,12 @@ HOME — BLOCO SECUNDÁRIO
   }
 }
 
+/* BLINDA ESCUDOS DOS JOGOS DO DIA */
+.games-list .game-card .team img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
+  display: block;
+}
