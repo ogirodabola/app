@@ -1649,3 +1649,9 @@ LINHA LATERAL — VERDE
     opacity: 1;
   }
 }
+
+.games-column .game-time.live {
+  color: var(--gd-green-500);
+  font-weight: 700;
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
