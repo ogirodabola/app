@@ -3,8 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pathlib import Path
-from core.futebol_api import buscar_jogos_do_dia
 
+from core.futebol_api import buscar_jogos_do_dia
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -40,81 +40,43 @@ def home(request: Request):
 
     tabela_completa = buscar_classificacao_brasileirao()
 
-    jogos_do_dia = [
-    {
-        "liga": "Supercopa do Brasil",
-        "data": "Hoje",
-        "hora": "16:00",
-        "casa": "Flamengo",
-        "fora": "Corinthians",
-        "casa_logo": "/static/img/flamengo.png",
-        "fora_logo": "/static/img/corinthians.png",
-        "gols_casa": 0,
-        "gols_fora": 2,
-        "link": "#"
-    },
-    {
-        "liga": "La Liga",
-        "data": "Hoje",
-        "hora": "10:00",
-        "casa": "Real Madrid",
-        "fora": "Rayo Vallecano",
-        "casa_logo": "/static/img/real.png",
-        "fora_logo": "/static/img/rayo.png",
-        "gols_casa": 2,
-        "gols_fora": 1,
-        "link": "#"
-    },
-    {
-        "liga": "Premier League",
-        "data": "Hoje",
-        "hora": "12:30",
-        "casa": "Arsenal",
-        "fora": "Chelsea",
-        "casa_logo": "/static/img/arsenal.png",
-        "fora_logo": "/static/img/chelsea.png",
-        "gols_casa": 3,
-        "gols_fora": 2,
-        "link": "#"
-    },
-    {
-        "liga": "Serie A",
-        "data": "Hoje",
-        "hora": "14:00",
-        "casa": "Juventus",
-        "fora": "Inter",
-        "casa_logo": "/static/img/juventus.png",
-        "fora_logo": "/static/img/inter.png",
-        "gols_casa": 1,
-        "gols_fora": 1,
-        "link": "#"
-    },
-    {
-        "liga": "Bundesliga",
-        "data": "Hoje",
-        "hora": "11:30",
-        "casa": "Bayern",
-        "fora": "Dortmund",
-        "casa_logo": "/static/img/bayern.png",
-        "fora_logo": "/static/img/dortmund.png",
-        "gols_casa": 4,
-        "gols_fora": 2,
-        "link": "#"
-    },
-    {
-        "liga": "Ligue 1",
-        "data": "Hoje",
-        "hora": "17:00",
-        "casa": "PSG",
-        "fora": "Marseille",
-        "casa_logo": "/static/img/psg.png",
-        "fora_logo": "/static/img/marseille.png",
-        "gols_casa": 2,
-        "gols_fora": 0,
-        "link": "#"
-    }
-]
+    # Fallback seguro (nunca deixa vazio)
+    jogos_mock = [
+        {
+            "liga": "Supercopa do Brasil",
+            "data": "Hoje",
+            "hora": "16:00",
+            "casa": "Flamengo",
+            "fora": "Corinthians",
+            "casa_logo": "/static/img/flamengo.png",
+            "fora_logo": "/static/img/corinthians.png",
+            "gols_casa": 0,
+            "gols_fora": 2,
+            "status": "FT",
+            "link": "#"
+        },
+        {
+            "liga": "La Liga",
+            "data": "Hoje",
+            "hora": "10:00",
+            "casa": "Real Madrid",
+            "fora": "Rayo Vallecano",
+            "casa_logo": "/static/img/real.png",
+            "fora_logo": "/static/img/rayo.png",
+            "gols_casa": 2,
+            "gols_fora": 1,
+            "status": "FT",
+            "link": "#"
+        }
+    ]
 
+    try:
+        jogos_do_dia = buscar_jogos_do_dia()
+        if not jogos_do_dia:
+            jogos_do_dia = jogos_mock
+    except Exception as e:
+        print("ERRO AO BUSCAR JOGOS DO DIA:", e)
+        jogos_do_dia = jogos_mock
 
     return templates.TemplateResponse(
         "index.html",
@@ -128,9 +90,9 @@ def home(request: Request):
             # bloco brasileirão
             "brasileirao": listar_por_categoria("Brasileirão", limit=4),
 
-            # widget lateral
+            # widgets
             "tabela_brasileirao": tabela_completa[:8],
-            "jogos_do_dia": buscar_jogos_do_dia(),
+            "jogos_do_dia": jogos_do_dia,
 
             # navegação
             "categorias": listar_categorias(),
