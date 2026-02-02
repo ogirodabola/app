@@ -1,15 +1,112 @@
 import os
 import requests
+from datetime import datetime
 
-API_KEY = os.getenv("API_FOOTBALL_KEY")
 BASE_URL = "https://v3.football.api-sports.io"
 
-if not API_KEY:
+API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY")
+if not API_FOOTBALL_KEY:
     raise RuntimeError("API_FOOTBALL_KEY não definida no ambiente")
 
 HEADERS = {
-    "x-apisports-key": API_KEY
+    "x-apisports-key": API_FOOTBALL_KEY
 }
+
+
+COUNTRIES_ALLOWED = {
+    "Brazil", "England", "Spain", "Italy", "Germany", "France", "Portugal"
+}
+
+BRAZIL_LEAGUES = {
+    "Serie A", "Serie B", "Paulista", "Carioca", "Mineiro", "Gaúcho"
+}
+
+BLACKLIST_KEYWORDS = [
+    "U20", "U21", "U23", "U17",
+    "Women", "Feminino",
+    "Youth", "Primavera",
+    "Friendly", "Friendlies",
+    "Reserve"
+]
+
+
+def is_blacklisted(text: str) -> bool:
+    return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
+
+
+def buscar_jogos_do_dia():
+    params = {
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "timezone": "America/Sao_Paulo"
+    }
+
+    r = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=HEADERS,
+        params=params,
+        timeout=10
+    )
+    r.raise_for_status()
+
+    fixtures = r.json().get("response", [])
+    jogos = []
+
+    for f in fixtures:
+        league = f["league"]["name"]
+        country = f["league"]["country"]
+
+        # ❌ elimina lixo
+        if is_blacklisted(league):
+            continue
+
+        # 🇧🇷 Brasil
+        if country == "Brazil":
+            if not any(l in league for l in BRAZIL_LEAGUES):
+                continue
+
+        # 🇪🇺 Europa
+        elif country not in COUNTRIES_ALLOWED:
+            continue
+
+        jogos.append({
+            "liga": league,
+            "data": "Hoje",
+            "hora": f["fixture"]["date"][11:16],
+            "casa": f["teams"]["home"]["name"],
+            "fora": f["teams"]["away"]["name"],
+            "casa_logo": f["teams"]["home"]["logo"],
+            "fora_logo": f["teams"]["away"]["logo"],
+            "gols_casa": f["goals"]["home"],
+            "gols_fora": f["goals"]["away"],
+            "status": f["fixture"]["status"]["short"],
+            "link": "#"
+        })
+
+        if len(jogos) == 6:
+            break
+
+    # 🔁 FALLBACK: se filtro foi agressivo demais
+    if len(jogos) < 6:
+        for f in fixtures:
+            jogos.append({
+                "liga": f["league"]["name"],
+                "data": "Hoje",
+                "hora": f["fixture"]["date"][11:16],
+                "casa": f["teams"]["home"]["name"],
+                "fora": f["teams"]["away"]["name"],
+                "casa_logo": f["teams"]["home"]["logo"],
+                "fora_logo": f["teams"]["away"]["logo"],
+                "gols_casa": f["goals"]["home"],
+                "gols_fora": f["goals"]["away"],
+                "status": f["fixture"]["status"]["short"],
+                "link": "#"
+            })
+
+            if len(jogos) == 6:
+                break
+
+    return jogos
+
 
 def buscar_classificacao_brasileirao():
     url = "https://v3.football.api-sports.io/standings"
@@ -55,57 +152,3 @@ def buscar_classificacao_brasileirao():
 
     # fallback absoluto (não quebra a home nem a classificação)
     return []
-import requests
-from datetime import date
-
-import requests
-import os
-
-API_KEY = os.getenv("API_FOOTBALL_KEY")  # use variável de ambiente
-BASE_URL = "https://v3.football.api-sports.io"
-
-HEADERS = {
-    "x-apisports-key": API_KEY
-}
-
-from datetime import datetime, timedelta
-
-def buscar_jogos_do_dia():
-    url = "https://v3.football.api-sports.io/fixtures"
-
-    headers = {
-        "x-apisports-key": os.getenv("API_FOOTBALL_KEY")
-    }
-
-    params = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "timezone": "America/Sao_Paulo"
-    }
-
-    r = requests.get(url, headers=headers, params=params, timeout=10)
-    r.raise_for_status()
-
-    data = r.json().get("response", [])
-
-    jogos = []
-
-    for f in data:
-        jogos.append({
-            "liga": f["league"]["name"],
-            "data": "Hoje",
-            "hora": f["fixture"]["date"][11:16],
-            "casa": f["teams"]["home"]["name"],
-            "fora": f["teams"]["away"]["name"],
-            "casa_logo": f["teams"]["home"]["logo"],
-            "fora_logo": f["teams"]["away"]["logo"],
-            "gols_casa": f["goals"]["home"],
-            "gols_fora": f["goals"]["away"],
-            "status": f["fixture"]["status"]["short"],
-            "link": "#"
-        })
-
-        if len(jogos) == 6:
-            break
-
-    return jogos
-
