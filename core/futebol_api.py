@@ -54,6 +54,8 @@ def buscar_classificacao_brasileirao():
 import requests
 from datetime import date
 
+import requests
+
 API_KEY = "SUA_API_KEY_AQUI"
 BASE_URL = "https://v3.football.api-sports.io"
 
@@ -62,34 +64,49 @@ headers = {
 }
 
 
-def buscar_jogos_do_dia():
-    hoje = date.today().isoformat()
+def _parse_fixture(f):
+    return {
+        "liga": f["league"]["name"],
+        "data": "Hoje",
+        "hora": f["fixture"]["date"][11:16],
+        "casa": f["teams"]["home"]["name"],
+        "fora": f["teams"]["away"]["name"],
+        "casa_logo": f["teams"]["home"]["logo"],
+        "fora_logo": f["teams"]["away"]["logo"],
+        "gols_casa": f["goals"]["home"],
+        "gols_fora": f["goals"]["away"],
+        "status": f["fixture"]["status"]["short"],  # FT, NS, LIVE
+        "link": "#"
+    }
 
-    response = requests.get(
+
+def buscar_jogos_do_dia():
+    # 1️⃣ AO VIVO
+    r = requests.get(
         f"{BASE_URL}/fixtures",
         headers=headers,
-        params={
-            "date": hoje,
-            "timezone": "America/Sao_Paulo"
-        }
+        params={"live": "all"}
     )
+    data = r.json().get("response", [])
+    if data:
+        return [_parse_fixture(f) for f in data[:6]]
 
-    data = response.json()
+    # 2️⃣ PRÓXIMOS JOGOS
+    r = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=headers,
+        params={"next": 6, "timezone": "America/Sao_Paulo"}
+    )
+    data = r.json().get("response", [])
+    if data:
+        return [_parse_fixture(f) for f in data]
 
-    jogos = []
+    # 3️⃣ ÚLTIMOS JOGOS
+    r = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=headers,
+        params={"last": 6, "timezone": "America/Sao_Paulo"}
+    )
+    data = r.json().get("response", [])
+    return [_parse_fixture(f) for f in data]
 
-    for f in data.get("response", [])[:6]:
-        jogos.append({
-            "liga": f["league"]["name"],
-            "data": "Hoje",
-            "hora": f["fixture"]["date"][11:16],
-            "casa": f["teams"]["home"]["name"],
-            "fora": f["teams"]["away"]["name"],
-            "casa_logo": f["teams"]["home"]["logo"],
-            "fora_logo": f["teams"]["away"]["logo"],
-            "gols_casa": f["goals"]["home"],
-            "gols_fora": f["goals"]["away"],
-            "link": "#"
-        })
-
-    return jogos
