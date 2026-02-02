@@ -1657,7 +1657,7 @@ HOME — BLOCO SECUNDÁRIO
   color: var(--gd-gray-300);
 }
 
-/* ================= JOGOS ================= */
+/* ================= JOGOS DO DIA ================= */
 
 .games-list {
   display: flex;
@@ -1671,6 +1671,7 @@ HOME — BLOCO SECUNDÁRIO
   padding: 14px;
 }
 
+/* topo: liga + status/hora */
 .game-meta {
   display: flex;
   justify-content: space-between;
@@ -1679,13 +1680,16 @@ HOME — BLOCO SECUNDÁRIO
   margin-bottom: 10px;
 }
 
+/* times + placar */
 .game-teams {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  gap: 12px;
   margin-bottom: 10px;
 }
 
+/* time */
 .team {
   display: flex;
   align-items: center;
@@ -1693,21 +1697,39 @@ HOME — BLOCO SECUNDÁRIO
   font-size: 13px;
 }
 
+/* escudos (DOMADOS) */
 .team img {
   width: 22px;
   height: 22px;
+  max-width: 22px;
+  max-height: 22px;
   object-fit: contain;
+  flex-shrink: 0;
+  background: transparent;
 }
 
+/* placar */
 .game-score {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
+  color: #ffffff;
 }
 
+/* link */
 .game-link {
   font-size: 13px;
   font-weight: 600;
   color: var(--gd-green-500);
+}
+
+/* status/hora */
+.game-time {
+  font-size: 12px;
+}
+
+.game-time.live {
+  color: #22c55e;
+  font-weight: 700;
 }
 
 /* ================= RESPONSIVO ================= */
@@ -1718,44 +1740,12 @@ HOME — BLOCO SECUNDÁRIO
   }
 }
 
-.game-teams {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-}
-
-.team {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.team img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.game-score {
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.team img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  background: transparent;
-}
-
-.game-time {
-  font-size: 12px;
-}
-
-.game-time.live {
-  color: #22c55e;
-  font-weight: 700;
+/* desktop: escudo levemente maior */
+@media (min-width: 1024px) {
+  .team img {
+    width: 24px;
+    height: 24px;
+    max-width: 24px;
+    max-height: 24px;
+  }
 }
