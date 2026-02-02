@@ -51,20 +51,19 @@ def buscar_jogos_do_dia():
     fixtures = r.json().get("response", [])
     jogos = []
 
+    # =========================
+    # FILTRO PRINCIPAL
+    # =========================
     for f in fixtures:
         league = f["league"]["name"]
         country = f["league"]["country"]
 
-        # ❌ elimina lixo
         if is_blacklisted(league):
             continue
 
-        # 🇧🇷 Brasil
         if country == "Brazil":
             if not any(l in league for l in BRAZIL_LEAGUES):
                 continue
-
-        # 🇪🇺 Europa permitida
         elif country not in COUNTRIES_ALLOWED:
             continue
 
@@ -91,7 +90,9 @@ def buscar_jogos_do_dia():
         if len(jogos) == 6:
             break
 
-    # 🔁 FALLBACK se o filtro foi agressivo demais
+    # =========================
+    # FALLBACK (SEM FILTRO)
+    # =========================
     if len(jogos) < 6:
         for f in fixtures:
             gols_casa = f["goals"]["home"]
