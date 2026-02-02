@@ -121,3 +121,5 @@ def noticia(slug: str, request: Request):
             "categoria_ativa": noticia.get("categoria")
         }
     )
+
+print("JOGOS DO DIA:", len(jogos_do_dia))
