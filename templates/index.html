@@ -111,8 +111,6 @@
   </a>
 </div>
 </aside>
-
-
   </div>
 </section>
 
@@ -164,7 +162,6 @@
           <span class="games-subtitle">Hoje</span>
         </div>
 
-
         <div class="games-list">
           {% for j in jogos_do_dia[:6] %}
           <div class="game-card">
@@ -195,7 +192,6 @@
                 {% endif %}
               </div>
 
-
               <div class="team">
                 <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
                 <span class="team-name">{{ j.fora[:3]|upper }}</span>
@@ -214,8 +210,6 @@
     </div>
   </div>
 </section>
-
-
 
 <!-- ================= ÚLTIMA HORA ================= -->
 <section class="container content-stack">
@@ -245,7 +239,6 @@
               </p>
             {% endif %}
           </div>
-
         </a>
       {% endfor %}
     </div>
