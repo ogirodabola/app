@@ -178,25 +178,26 @@
               {% endif %}
             </div>
 
-            <div class="game-teams">
-              <div class="team">
-                <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-                <span class="team-name">{{ j.casa[:3]|upper }}</span>
-              </div>
-
-              <div class="game-score">
-                {% if j.placar %}
-                  {{ j.placar }}
-                {% else %}
-                  {{ j.hora }}
-                {% endif %}
-              </div>
-
-              <div class="team">
-                <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-                <span class="team-name">{{ j.fora[:3]|upper }}</span>
-              </div>
+                      <div class="game-teams">
+                     <div class="game-teams">
+            <div class="team home">
+              <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+              <span class="team-name">{{ j.casa[:3]|upper }}</span>
             </div>
+          
+            <div class="game-score">
+              {% if j.placar %}
+                {{ j.placar }}
+              {% else %}
+                {{ j.hora }}
+              {% endif %}
+            </div>
+          
+            <div class="team away">
+              <span class="team-name">{{ j.fora[:3]|upper }}</span>
+              <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
+            </div>
+          </div>
 
             <a href="{{ j.link }}" class="game-link">
               Saiba como foi →
