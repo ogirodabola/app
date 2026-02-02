@@ -131,88 +131,95 @@
 
   <div class="side-widgets-grid">
 
-    <!-- NOTÍCIAS -->
-    <div class="widget-box">
-      <h3 class="widget-title">Últimas Notícias</h3>
+    <aside class="right-widget">
 
-      <ul class="widget-news-list">
-        {% for n in ultimas_noticias[:6] %}
-        <li class="widget-news-item">
-          <a href="/noticia/{{ n.slug }}" class="news-link">
+  <!-- ================= NOTÍCIAS ================= -->
+  <div class="widget-box">
+    <h3 class="widget-title">Últimas Notícias</h3>
 
-            <div class="news-thumb">
-              {% if n.imagem %}
-                <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
-              {% endif %}
-            </div>
+    <ul class="widget-news-list">
+      {% for n in ultimas_noticias[:6] %}
+      <li class="widget-news-item">
+        <a href="/noticia/{{ n.slug }}" class="widget-news-link">
 
-            <div class="news-info">
-              <span class="news-category">
-                {{ n.categoria or "Notícias" }}
-              </span>
-
-              <span class="news-title">
-                {{ n.titulo }}
-              </span>
-
-              <span class="news-source">
-                {{ n.fonte }}
-              </span>
-            </div>
-
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <!-- JOGOS DO DIA -->
-    <div class="widget-box">
-      <h3 class="widget-title">Jogos do dia</h3>
-
-      <ul class="widget-matches">
-        {% for j in jogos_do_dia[:6] %}
-        <li class="match-item">
-
-          <div class="match-meta">
-            <span class="match-league">{{ j.liga }}</span>
-            <span class="match-time">{{ j.hora }}</span>
+          <!-- imagem -->
+          <div class="news-thumb">
+            <img
+              src="{{ n.imagem or '/static/img/placeholder-news.jpg' }}"
+              alt="{{ n.titulo }}"
+              loading="lazy"
+            >
           </div>
 
-          <div class="match-teams">
+          <!-- conteúdo -->
+          <div class="news-content">
+            <span class="news-category">
+              {{ n.categoria }}
+            </span>
 
-            <div class="team">
-              <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-              <span>{{ j.casa }}</span>
-            </div>
+            <strong class="news-title">
+              {{ n.titulo }}
+            </strong>
 
-            <div class="match-score">
-              {{ j.gols_casa }} × {{ j.gols_fora }}
-            </div>
-
-            <div class="team">
-              <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-              <span>{{ j.fora }}</span>
-            </div>
-
+            <span class="news-source">
+              {{ n.fonte }}
+            </span>
           </div>
 
-          <a href="{{ j.link }}" class="match-link">
-            Saiba como foi →
-          </a>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 
-        </li>
-        {% endfor %}
-      </ul>
+  <!-- ================= JOGOS DO DIA ================= -->
+  <div class="widget-box">
+    <h3 class="widget-title">Jogos do dia</h3>
 
-      <a href="/jogos" class="more-games">
-        Mais jogos →
-      </a>
-    </div>
+    <ul class="widget-matches">
+      {% for j in jogos_do_dia[:6] %}
+      <li class="match-item">
 
+        <!-- liga + hora -->
+        <div class="match-header">
+          <span class="match-league">{{ j.liga }}</span>
+          <span class="match-time">{{ j.hora }}</span>
+        </div>
+
+        <!-- times -->
+        <div class="match-body">
+
+          <div class="match-team">
+            <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+            <span>{{ j.casa }}</span>
+          </div>
+
+          <div class="match-score">
+            {{ j.gols_casa }} × {{ j.gols_fora }}
+          </div>
+
+          <div class="match-team">
+            <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
+            <span>{{ j.fora }}</span>
+          </div>
+
+        </div>
+
+        <a href="{{ j.link }}" class="match-link">
+          Saiba como foi →
+        </a>
+
+      </li>
+      {% endfor %}
+    </ul>
+
+    <a href="/jogos" class="more-games">
+      Mais jogos →
+    </a>
   </div>
 
 </aside>
+
 
 
 <!-- ================= ÚLTIMA HORA ================= -->
