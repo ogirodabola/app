@@ -1283,3 +1283,110 @@ HOME – ÚLTIMAS NOTÍCIAS
 .leg.sul::before { background: #ff9800; }
 .leg.reb::before { background: #e53935; }
 
+.right-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.widget-box {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.widget-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+/* NOTÍCIAS */
+.widget-news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.widget-news-item a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.news-category {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #5eead4;
+  letter-spacing: 0.05em;
+}
+
+.news-title {
+  font-size: 14px;
+  color: #e6eef6;
+}
+
+.news-source {
+  font-size: 12px;
+  color: #9bb3c9;
+}
+
+/* JOGOS */
+.widget-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.match-item {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 12px;
+}
+
+.match-league {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #9bb3c9;
+}
+
+.match-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.match-teams .team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-teams img {
+  width: 20px;
+  height: 20px;
+}
+
+.match-score {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.match-link {
+  font-size: 13px;
+  color: #22c55e;
+  text-decoration: none;
+}
+
+.more-games {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  color: #22c55e;
+  font-weight: 600;
+  text-decoration: none;
+}
