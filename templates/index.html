@@ -180,7 +180,7 @@
             <div class="game-teams">
               <div class="team">
                 <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-                <span>{{ j.casa }}</span>
+                <span class="team-name">{{ j.casa[:3]|upper }}</span>
               </div>
 
               <div class="game-score">
@@ -189,7 +189,7 @@
 
               <div class="team">
                 <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-                <span>{{ j.fora }}</span>
+                <span class="team-name">{{ j.fora[:3]|upper }}</span>
               </div>
             </div>
 
