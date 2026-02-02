@@ -187,11 +187,12 @@
           
             <div class="game-score">
               {% if j.placar %}
-                {{ j.placar }}
+                <span class="score">{{ j.placar }}</span>
               {% else %}
-                {{ j.hora }}
+                <span class="time">{{ j.hora }}</span>
               {% endif %}
             </div>
+
           
             <div class="team away">
               <span class="team-name">{{ j.fora[:3]|upper }}</span>
