@@ -31,7 +31,7 @@ def buscar_classificacao_brasileirao():
                     "jogos": time["all"]["played"],
                     "vitorias": time["all"]["win"],
                 }
-                for time in standings[:8]
+                return tabela
             ]
 
 
