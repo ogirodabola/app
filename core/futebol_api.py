@@ -54,50 +54,66 @@ def buscar_classificacao_brasileirao():
 import requests
 from datetime import date
 
+import requests
+import os
+
+API_KEY = os.getenv("API_FOOTBALL_KEY")  # use variável de ambiente
+BASE_URL = "https://v3.football.api-sports.io"
+
+HEADERS = {
+    "x-apisports-key": API_KEY
+}
+
+
 def buscar_jogos_do_dia():
-    import requests
-
-    API_KEY = "SUA_API_KEY_AQUI"
-    BASE_URL = "https://v3.football.api-sports.io"
-
-    headers = {
-        "x-apisports-key": API_KEY
-    }
-
     def fetch(params):
         r = requests.get(
             f"{BASE_URL}/fixtures",
-            headers=headers,
+            headers=HEADERS,
             params=params,
             timeout=10
         )
         r.raise_for_status()
         return r.json().get("response", [])
 
-    jogos = []
-    jogos.extend(fetch({"live": "all"}))
-    jogos.extend(fetch({"next": 6, "timezone": "America/Sao_Paulo"}))
-    jogos.extend(fetch({"last": 6, "timezone": "America/Sao_Paulo"}))
+    jogos_raw = []
+
+    # 1️⃣ Próximos jogos (PERMITIDO)
+    try:
+        jogos_raw.extend(fetch({
+            "next": 6,
+            "timezone": "America/Sao_Paulo"
+        }))
+    except Exception as e:
+        print("ERRO NEXT:", e)
+
+    # 2️⃣ Últimos jogos (PERMITIDO)
+    if len(jogos_raw) < 6:
+        try:
+            jogos_raw.extend(fetch({
+                "last": 6,
+                "timezone": "America/Sao_Paulo"
+            }))
+        except Exception as e:
+            print("ERRO LAST:", e)
 
     vistos = set()
-    resultado = []
+    jogos = []
 
-    for f in jogos:
+    for f in jogos_raw:
         fid = f["fixture"]["id"]
         if fid in vistos:
             continue
         vistos.add(fid)
 
-        home_logo = f["teams"]["home"].get("logo")
-        away_logo = f["teams"]["away"].get("logo")
+        home_logo = f["teams"]["home"]["logo"]
+        away_logo = f["teams"]["away"]["logo"]
 
-        # LOG DE VERDADE (vai aparecer no Render)
-        print("LOGOS:", home_logo, away_logo)
-
+        # segurança absoluta: só entra jogo com escudo válido
         if not home_logo or not away_logo:
-            continue  # NÃO renderiza jogo sem escudo válido
+            continue
 
-        resultado.append({
+        jogos.append({
             "liga": f["league"]["name"],
             "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
@@ -111,8 +127,7 @@ def buscar_jogos_do_dia():
             "link": "#"
         })
 
-        if len(resultado) == 6:
+        if len(jogos) == 6:
             break
 
-    return resultado
-
+    return jogos
