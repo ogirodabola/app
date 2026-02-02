@@ -1,123 +1,91 @@
 {% extends "base.html" %}
 
-{% block title %}Classificação do Brasileirão 2026{% endblock %}
+{% block title %}Classificação do Brasileirão Série A{% endblock %}
 
 {% block content %}
 
-<section class="classification container">
+<section class="container content-stack">
 
-  <!-- HERO / INTRO -->
-  <header class="classification-header">
+  <!-- TÍTULO E CONTEXTO -->
+  <header class="page-header">
     <h1>Tabela do Brasileirão Série A 2026</h1>
-
     <p>
-      Confira a classificação atualizada do Campeonato Brasileiro 2026.
-      Acompanhe a disputa pelo título, vagas na Libertadores, Sul-Americana
-      e a luta contra o rebaixamento.
+      Confira a classificação atualizada do Campeonato Brasileiro.
+      Veja pontuação, jogos, vitórias e desempenho geral das equipes,
+      além das zonas de Libertadores, Sul-Americana e Rebaixamento.
     </p>
   </header>
 
   <!-- TABELA -->
-  <div class="classification-table">
+  <div class="table-wrapper">
 
-    <!-- CABEÇALHO -->
+    <!-- HEADER -->
     <div class="table-header">
-  <div>#</div>
-  <div class="team">Equipe</div>
-  <div>P</div>
-  <div>J</div>
-  <div>V</div>
-  <div>SG</div>
-  <div>GP</div>
-  <div>GC</div>
-</div>
-
+      <div>#</div>
+      <div class="team">Equipe</div>
+      <div>P</div>
+      <div>J</div>
+      <div>V</div>
+      <div>SG</div>
+      <div>GP</div>
+      <div>GC</div>
+    </div>
 
     <!-- LINHAS -->
     {% for t in tabela_brasileirao %}
-
-      <div class="table-row
-        {% if t.posicao|default(99) <= 6 %} zona-libertadores
-        {% elif t.posicao|default(99) <= 12 %} zona-sulamericana
-        {% elif t.posicao|default(99) >= 17 %} zona-rebaixamento
+      <div class="
+        table-row
+        {% if t.posicao <= 6 %}zona-libertadores
+        {% elif t.posicao <= 12 %}zona-sulamericana
+        {% elif t.posicao >= 17 %}zona-rebaixamento
         {% endif %}
       ">
 
         <!-- POSIÇÃO -->
-        <span class="pos">
-          {{ t.posicao | default("-") }}
-        </span>
+        <div>{{ t.posicao }}</div>
 
         <!-- EQUIPE -->
-        <span class="team">
-          {% if t.escudo %}
-            <img src="{{ t.escudo }}" alt="{{ t.nome | default('Time') }}">
-          {% endif %}
-          {{ t.nome | default("—") }}
-        </span>
+        <div class="team">
+          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+          <span>{{ t.nome }}</span>
+        </div>
 
-        <!-- PONTOS -->
-        <span class="points">
-          {{ t.pontos | default(0) }}
-        </span>
-
-        <!-- JOGOS -->
-        <span>
-          {{ t.jogos | default(0) }}
-        </span>
-
-        <!-- VITÓRIAS -->
-        <span>
-          {{ t.vitorias | default(0) }}
-        </span>
-
-        <!-- SALDO -->
-        <span>
-          {{ t.saldo_gols | default(0) }}
-        </span>
-
-        <!-- GOLS PRÓ -->
-        <span>
-          {{ t.gols_pro | default(0) }}
-        </span>
-
-        <!-- GOLS CONTRA -->
-        <span>
-          {{ t.gols_contra | default(0) }}
-        </span>
+        <!-- INDICADORES -->
+        <div class="points">{{ t.pontos }}</div>
+        <div>{{ t.jogos }}</div>
+        <div>{{ t.vitorias }}</div>
+        <div>{{ t.saldo_gols }}</div>
+        <div>{{ t.gols_pro }}</div>
+        <div>{{ t.gols_contra }}</div>
 
       </div>
-
     {% endfor %}
 
   </div>
 
   <!-- LEGENDA -->
   <div class="table-legend">
-    <span class="leg lib">Libertadores</span>
-    <span class="leg sul">Sul-Americana</span>
-    <span class="leg reb">Rebaixamento</span>
+    <div class="leg lib">Libertadores</div>
+    <div class="leg sul">Sul-Americana</div>
+    <div class="leg reb">Rebaixamento</div>
   </div>
 
-  <!-- CONTEÚDO EDITORIAL -->
-  <section class="classification-content">
+  <!-- CONTEÚDO EDITORIAL (EVITA PÁGINA “SECA”) -->
+  <section class="editorial-box">
     <h2>Como funciona a classificação do Brasileirão?</h2>
-
     <p>
-      O Campeonato Brasileiro Série A é disputado em pontos corridos.
-      Ao final das 38 rodadas, o time com mais pontos é declarado campeão.
+      O Campeonato Brasileiro Série A é disputado por 20 clubes em sistema
+      de pontos corridos. Cada equipe joga 38 partidas, enfrentando todos
+      os adversários em turno e returno.
     </p>
-
+    <p>
+      Ao final do campeonato:
+    </p>
     <ul>
-      <li><strong>G4 / G6:</strong> Vagas para a Libertadores</li>
-      <li><strong>Zona intermediária:</strong> Classificação para a Sul-Americana</li>
-      <li><strong>Z4:</strong> Rebaixamento para a Série B</li>
+      <li>Os <strong>6 primeiros</strong> se classificam para a Libertadores</li>
+      <li>Do <strong>7º ao 12º</strong> vão para a Sul-Americana</li>
+      <li>Os <strong>4 últimos</strong> são rebaixados para a Série B</li>
     </ul>
-
-    <p>
-      Em caso de empate em pontos, os critérios de desempate são:
-      vitórias, saldo de gols, gols marcados e confronto direto.
-    </p>
   </section>
 
 </section>
