@@ -10,29 +10,44 @@ HEADERS = {
 def buscar_classificacao_brasileirao():
     url = "https://v3.football.api-sports.io/standings"
 
-    for season in [2025, 2024, 2023]:
+    # tenta temporadas mais recentes primeiro
+    for season in [2026, 2025, 2024, 2023]:
         params = {
-            "league": 71,
+            "league": 71,  # Brasileirão Série A
             "season": season
         }
 
-        response = requests.get(url, headers=HEADERS, params=params)
-        data = response.json()
+        try:
+            response = requests.get(url, headers=HEADERS, params=params, timeout=10)
+            data = response.json()
+        except Exception:
+            continue
 
-        if data.get("response"):
+        if not data.get("response"):
+            continue
+
+        try:
             standings = data["response"][0]["league"]["standings"][0]
+        except (IndexError, KeyError, TypeError):
+            continue
 
-            return [
-                {
-                    "posicao": time["rank"],
-                    "nome": time["team"]["name"],
-                    "escudo": time["team"]["logo"],
-                    "pontos": time["points"],
-                    "jogos": time["all"]["played"],
-                    "vitorias": time["all"]["win"],
-                }
-                return tabela
-            ]
+        tabela = []
 
-    # fallback absoluto (não quebra a home)
+        for time in standings:
+            tabela.append({
+                "posicao": time["rank"],
+                "nome": time["team"]["name"],
+                "escudo": time["team"]["logo"],
+                "pontos": time["points"],
+                "jogos": time["all"]["played"],
+                "vitorias": time["all"]["win"],
+                "saldo_gols": time["goalsDiff"],
+                "gols_pro": time["all"]["goals"]["for"],
+                "gols_contra": time["all"]["goals"]["against"],
+            })
+
+        # retorna a tabela COMPLETA (20 times)
+        return tabela
+
+    # fallback absoluto (não quebra a home nem a classificação)
     return []
