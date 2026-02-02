@@ -40,43 +40,7 @@ def home(request: Request):
 
     tabela_completa = buscar_classificacao_brasileirao()
 
-    # Fallback seguro (nunca deixa vazio)
-    jogos_mock = [
-        {
-            "liga": "Supercopa do Brasil",
-            "data": "Hoje",
-            "hora": "16:00",
-            "casa": "Flamengo",
-            "fora": "Corinthians",
-            "casa_logo": "/static/img/flamengo.png",
-            "fora_logo": "/static/img/corinthians.png",
-            "gols_casa": 0,
-            "gols_fora": 2,
-            "status": "FT",
-            "link": "#"
-        },
-        {
-            "liga": "La Liga",
-            "data": "Hoje",
-            "hora": "10:00",
-            "casa": "Real Madrid",
-            "fora": "Rayo Vallecano",
-            "casa_logo": "/static/img/real.png",
-            "fora_logo": "/static/img/rayo.png",
-            "gols_casa": 2,
-            "gols_fora": 1,
-            "status": "FT",
-            "link": "#"
-        }
-    ]
-
-    try:
-        jogos_do_dia = buscar_jogos_do_dia()
-        if not jogos_do_dia:
-            jogos_do_dia = jogos_mock
-    except Exception as e:
-        print("ERRO AO BUSCAR JOGOS DO DIA:", e)
-        jogos_do_dia = jogos_mock
+    jogos_do_dia = buscar_jogos_do_dia()  # SOMENTE API, SEM MOCK
 
     return templates.TemplateResponse(
         "index.html",
@@ -99,6 +63,7 @@ def home(request: Request):
             "categoria_ativa": None
         }
     )
+
 
 # ======================================================
 # CLASSIFICAÇÃO COMPLETA
