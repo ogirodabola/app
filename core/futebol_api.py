@@ -68,10 +68,9 @@ HEADERS = {
     "x-apisports-key": API_KEY
 }
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def buscar_jogos_do_dia():
-    # 🇧🇷🇪🇺 Países permitidos
     PAISES_PERMITIDOS = {
         "Brazil",
         "Portugal",
@@ -82,7 +81,6 @@ def buscar_jogos_do_dia():
         "Spain"
     }
 
-    # ❌ Categorias proibidas
     PALAVRAS_PROIBIDAS = [
         "u17", "u18", "u19", "u20", "u21", "u23",
         "women", "feminino",
@@ -90,7 +88,6 @@ def buscar_jogos_do_dia():
         "development", "friendly"
     ]
 
-    # 🇧🇷 Ligas brasileiras permitidas
     LIGAS_BRASIL = [
         "serie a",
         "serie b",
@@ -122,30 +119,48 @@ def buscar_jogos_do_dia():
         r.raise_for_status()
         return r.json().get("response", [])
 
-    jogos_raw = []
-
-    # 1️⃣ Jogos ao vivo
-    try:
-        jogos_raw.extend(fetch({
-            "live": "all",
-            "timezone": "America/Sao_Paulo"
-        }))
-    except Exception as e:
-        print("ERRO LIVE:", e)
-
-    # 2️⃣ Jogos do dia
-    if len(jogos_raw) < 6:
-        try:
-            jogos_raw.extend(fetch({
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "timezone": "America/Sao_Paulo"
-            }))
-        except Exception as e:
-            print("ERRO DATE:", e)
-
     jogos = []
     vistos = set()
 
+    # =========================
+    # 1️⃣ AO VIVO
+    # =========================
+    try:
+        jogos_raw = fetch({
+            "live": "all",
+            "timezone": "America/Sao_Paulo"
+        })
+    except Exception:
+        jogos_raw = []
+
+    # =========================
+    # 2️⃣ HOJE
+    # =========================
+    if len(jogos_raw) < 6:
+        try:
+            jogos_raw += fetch({
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "timezone": "America/Sao_Paulo"
+            })
+        except Exception:
+            pass
+
+    # =========================
+    # 3️⃣ PRÓXIMAS 48H (FALLBACK)
+    # =========================
+    if len(jogos_raw) < 6:
+        try:
+            jogos_raw += fetch({
+                "from": datetime.now().strftime("%Y-%m-%d"),
+                "to": (datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d"),
+                "timezone": "America/Sao_Paulo"
+            })
+        except Exception:
+            pass
+
+    # =========================
+    # FILTRAGEM FINAL
+    # =========================
     for f in jogos_raw:
         fid = f["fixture"]["id"]
         if fid in vistos:
@@ -183,5 +198,3 @@ def buscar_jogos_do_dia():
             break
 
     return jogos
-
-
