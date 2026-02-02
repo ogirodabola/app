@@ -122,4 +122,3 @@ def noticia(slug: str, request: Request):
         }
     )
 
-print("JOGOS DO DIA:", len(jogos_do_dia))
