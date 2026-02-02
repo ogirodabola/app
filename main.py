@@ -137,3 +137,16 @@ def classificacao(request: Request):
         }
     )
 
+context["jogos_do_dia"] = [
+    {
+        "liga": "Supercopa do Brasil",
+        "hora": "16:00",
+        "casa": "Flamengo",
+        "fora": "Corinthians",
+        "casa_logo": "...",
+        "fora_logo": "...",
+        "gols_casa": 0,
+        "gols_fora": 2,
+        "link": "#"
+    }
+]
