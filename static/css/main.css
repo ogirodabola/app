@@ -1655,3 +1655,13 @@ LINHA LATERAL — VERDE
   font-weight: 700;
   animation: live-pulse 1.4s ease-in-out infinite;
 }
+
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--gd-green-500);
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
