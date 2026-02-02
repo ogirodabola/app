@@ -64,37 +64,10 @@ def buscar_jogos_do_dia():
             if not any(l in league for l in BRAZIL_LEAGUES):
                 continue
 
-        # 🇪🇺 Europa
+        # 🇪🇺 Europa permitida
         elif country not in COUNTRIES_ALLOWED:
             continue
 
-        gols_casa = f["goals"]["home"]
-gols_fora = f["goals"]["away"]
-
-placar = None
-if gols_casa is not None and gols_fora is not None:
-    placar = f"{gols_casa} × {gols_fora}"
-
-jogos.append({
-    "liga": league,
-    "data": "Hoje",
-    "hora": f["fixture"]["date"][11:16],
-    "casa": f["teams"]["home"]["name"],
-    "fora": f["teams"]["away"]["name"],
-    "casa_logo": f["teams"]["home"]["logo"],
-    "fora_logo": f["teams"]["away"]["logo"],
-    "placar": placar,
-    "status": f["fixture"]["status"]["short"],
-    "link": "#"
-})
-
-if len(jogos) == 6:
-    break
-
-
-# 🔁 FALLBACK: se o filtro foi agressivo demais
-if len(jogos) < 6:
-    for f in fixtures:
         gols_casa = f["goals"]["home"]
         gols_fora = f["goals"]["away"]
 
@@ -103,7 +76,7 @@ if len(jogos) < 6:
             placar = f"{gols_casa} × {gols_fora}"
 
         jogos.append({
-            "liga": f["league"]["name"],
+            "liga": league,
             "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
             "casa": f["teams"]["home"]["name"],
@@ -118,9 +91,33 @@ if len(jogos) < 6:
         if len(jogos) == 6:
             break
 
-return jogos
+    # 🔁 FALLBACK se o filtro foi agressivo demais
+    if len(jogos) < 6:
+        for f in fixtures:
+            gols_casa = f["goals"]["home"]
+            gols_fora = f["goals"]["away"]
 
+            placar = None
+            if gols_casa is not None and gols_fora is not None:
+                placar = f"{gols_casa} × {gols_fora}"
 
+            jogos.append({
+                "liga": f["league"]["name"],
+                "data": "Hoje",
+                "hora": f["fixture"]["date"][11:16],
+                "casa": f["teams"]["home"]["name"],
+                "fora": f["teams"]["away"]["name"],
+                "casa_logo": f["teams"]["home"]["logo"],
+                "fora_logo": f["teams"]["away"]["logo"],
+                "placar": placar,
+                "status": f["fixture"]["status"]["short"],
+                "link": "#"
+            })
+
+            if len(jogos) == 6:
+                break
+
+    return jogos
 
 def buscar_classificacao_brasileirao():
     url = "https://v3.football.api-sports.io/standings"
