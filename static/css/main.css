@@ -1626,3 +1626,12 @@ HOME — JOGOS DO DIA (ÚNICO BLOCO)
   color: var(--gd-green-500);
   text-transform: uppercase;
 }
+
+/* ===============================
+LINHA LATERAL — VERDE
+=============================== */
+
+.home-secondary::before,
+.home-secondary::after {
+  border-color: var(--gd-green-500) !important;
+}
