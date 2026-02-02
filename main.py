@@ -37,22 +37,32 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 # ======================================================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+
+    tabela_completa = buscar_classificacao_brasileirao()
+
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-
-            # notícias
-            "ultimas_noticias": listar_ultimas_editoriais(4),
-            "ultima_hora": listar_ultima_hora(6),
-
-            # brasileirao
-            "brasileirao": listar_por_categoria("Brasileirão", 4),
-            "tabela_brasileirao": buscar_classificacao_brasileirao(),
-
+            "ultimas_noticias": listar_ultimas_editoriais(),
+            "ultima_hora": listar_ultima_hora(),
+            "brasileirao": listar_por_categoria("Brasileirão"),
+            # 👇 AQUI O CORTE
+            "tabela_brasileirao": tabela_completa[:8]
             # navegação
             "categorias": listar_categorias(),
             "categoria_ativa": None
+        }
+    )
+
+@app.get("/classificacao", response_class=HTMLResponse)
+def classificacao(request: Request):
+
+    return templates.TemplateResponse(
+        "classificacao.html",
+        {
+            "request": request,
+            "tabela_brasileirao": buscar_classificacao_brasileirao()
         }
     )
 
