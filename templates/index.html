@@ -155,62 +155,65 @@
         </div>
       </div>
 
-      <!-- COLUNA: JOGOS DO DIA -->
-      <aside class="games-column">
-        <div class="games-header">
-          <h2>Jogos do Dia </h2>
-          <span class="games-subtitle"> Hoje</span>
+     <!-- COLUNA: JOGOS DO DIA -->
+<aside class="games-column">
+  <div class="games-header">
+    <h2>Jogos do Dia</h2>
+    <span class="games-subtitle">Hoje</span>
+  </div>
+
+  <div class="games-list">
+    {% for j in jogos_do_dia[:6] %}
+    <div class="game-card">
+
+      <!-- META (LIGA + STATUS) -->
+      <div class="game-meta">
+        <span class="game-league">{{ j.liga }}</span>
+
+        {% if j.status == 'FT' %}
+          <span class="game-time">Encerrado</span>
+        {% elif j.status == 'NS' %}
+          <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
+        {% else %}
+          <span class="game-time live">Ao vivo</span>
+        {% endif %}
+      </div>
+
+      <!-- TIMES + PLACAR -->
+      <div class="game-teams">
+        <div class="team home">
+          <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+          <span class="team-name">{{ j.casa[:3]|upper }}</span>
         </div>
 
-        <div class="games-list">
-          {% for j in jogos_do_dia[:6] %}
-          <div class="game-card">
-
-            <div class="game-meta">
-              <span class="game-league">{{ j.liga }}</span>
-
-              {% if j.status == 'FT' %}
-                <span class="game-time">Encerrado</span>
-              {% elif j.status == 'NS' %}
-                <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
-              {% else %}
-                <span class="game-time">Ao vivo</span>
-              {% endif %}
-            </div>
-
-                      <div class="game-teams">
-                     <div class="game-teams">
-            <div class="team home">
-              <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-              <span class="team-name">{{ j.casa[:3]|upper }}</span>
-            </div>
-          
-            <div class="game-score">
-              {% if j.placar %}
-                <span class="score">{{ j.placar }}</span>
-              {% else %}
-                <span class="time">{{ j.hora }}</span>
-              {% endif %}
-            </div>
-
-          
-            <div class="team away">
-              <span class="team-name">{{ j.fora[:3]|upper }}</span>
-              <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-            </div>
-          </div>
-
-            <a href="{{ j.link }}" class="game-link">
-            {% if j.placar %}
-              Saiba como foi →
-            {% else %}
-              O que esperar →
-            {% endif %}
-          </a>
-          </div>
-          {% endfor %}
+        <div class="game-score">
+          {% if j.placar %}
+            <span class="score">{{ j.placar }}</span>
+          {% else %}
+            <span class="time">{{ j.hora }}</span>
+          {% endif %}
         </div>
-      </aside>
+
+        <div class="team away">
+          <span class="team-name">{{ j.fora[:3]|upper }}</span>
+          <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
+        </div>
+      </div>
+
+      <!-- LINK -->
+      <a href="{{ j.link }}" class="game-link">
+        {% if j.placar %}
+          Saiba como foi →
+        {% else %}
+          O que esperar →
+        {% endif %}
+      </a>
+
+    </div>
+    {% endfor %}
+  </div>
+</aside>
+
 
     </div>
   </div>
