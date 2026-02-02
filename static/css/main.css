@@ -1681,7 +1681,7 @@ HOME — BLOCO SECUNDÁRIO
 }
 
 /* times + placar */
-.game-teams {
+.games-list .game-card .game-teams {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -1690,19 +1690,19 @@ HOME — BLOCO SECUNDÁRIO
 }
 
 /* time */
-.team {
+.games-list .game-card .team {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
 }
 
-/* escudos (DOMADOS) */
-.team img {
-  width: 22px;
-  height: 22px;
-  max-width: 22px;
-  max-height: 22px;
+/* 🔒 ESCUDOS DOMADOS (ANTI-OVERRIDE) */
+.games-list .game-card .team img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
   object-fit: contain;
   flex-shrink: 0;
   background: transparent;
@@ -1732,20 +1732,13 @@ HOME — BLOCO SECUNDÁRIO
   font-weight: 700;
 }
 
-/* ================= RESPONSIVO ================= */
-
-@media (max-width: 1024px) {
-  .home-secondary-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* desktop: escudo levemente maior */
+/* desktop: ligeiramente maior */
 @media (min-width: 1024px) {
-  .team img {
-    width: 24px;
-    height: 24px;
-    max-width: 24px;
-    max-height: 24px;
+  .games-list .game-card .team img {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
   }
 }
+
