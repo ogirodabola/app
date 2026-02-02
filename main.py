@@ -15,7 +15,6 @@ from core.database import (
     buscar_classificacao_brasileirao
 )
 
-
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
@@ -38,23 +37,50 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
-    tabela_completa = buscar_classificacao_brasileirao()
+    tabela_completa = buscar_classificacao_brasileirao() or []
+
+    # mock temporário de jogos (até plugar API)
+    jogos_do_dia = [
+        {
+            "liga": "Supercopa do Brasil",
+            "hora": "16:00",
+            "casa": "Flamengo",
+            "fora": "Corinthians",
+            "casa_logo": "/static/img/times/flamengo.png",
+            "fora_logo": "/static/img/times/corinthians.png",
+            "gols_casa": 0,
+            "gols_fora": 2,
+            "link": "#"
+        }
+    ]
 
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "ultimas_noticias": listar_ultimas_editoriais(),
-            "ultima_hora": listar_ultima_hora(),
+
+            # notícias
+            "ultimas_noticias": listar_ultimas_editoriais()[:6],
+            "ultima_hora": listar_ultima_hora()[:6],
+
+            # bloco brasileirão
             "brasileirao": listar_por_categoria("Brasileirão")[:4],
-            # 👇 AQUI O CORTE
+
+            # tabela resumida (HOME)
             "tabela_brasileirao": tabela_completa[:8],
+
+            # widget lateral
+            "jogos_do_dia": jogos_do_dia,
+
             # navegação
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
     )
 
+# ======================================================
+# CLASSIFICAÇÃO COMPLETA
+# ======================================================
 @app.get("/classificacao", response_class=HTMLResponse)
 def classificacao(request: Request):
 
@@ -62,7 +88,9 @@ def classificacao(request: Request):
         "classificacao.html",
         {
             "request": request,
-            "tabela_brasileirao": buscar_classificacao_brasileirao()
+            "tabela_brasileirao": buscar_classificacao_brasileirao(),
+            "categorias": listar_categorias(),
+            "categoria_ativa": "Classificação"
         }
     )
 
@@ -71,6 +99,7 @@ def classificacao(request: Request):
 # ======================================================
 @app.get("/categoria/{categoria}", response_class=HTMLResponse)
 def pagina_categoria(request: Request, categoria: str):
+
     return templates.TemplateResponse(
         "categoria.html",
         {
@@ -82,12 +111,12 @@ def pagina_categoria(request: Request, categoria: str):
         }
     )
 
-
 # ======================================================
 # NOTÍCIA INDIVIDUAL
 # ======================================================
 @app.get("/noticia/{slug}", response_class=HTMLResponse)
 def noticia(slug: str, request: Request):
+
     noticia = buscar_noticia_por_slug(slug)
 
     if not noticia:
@@ -100,53 +129,8 @@ def noticia(slug: str, request: Request):
         {
             "request": request,
             "noticia": noticia,
-            "recomendadas": recomendadas
-        }
-    )
-
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    brasileirao = listar_por_categoria("Brasileirão", 4) or []
-
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-
-            # blocos existentes
-            "ultima_hora": listar_ultima_hora(6),
-            "ultimas_noticias": listar_ultimas_editoriais(5) or [],
-
-            # NOVO BLOCO
-            "brasileirao": brasileirao,
-            "tabela_brasileirao": tabela_brasileirao_mock(),
-
+            "recomendadas": recomendadas,
             "categorias": listar_categorias(),
-            "categoria_ativa": None
+            "categoria_ativa": noticia.get("categoria")
         }
     )
-
-@app.get("/classificacao", response_class=HTMLResponse)
-def classificacao(request: Request):
-    return templates.TemplateResponse(
-        "classificacao.html",
-        {
-            "request": request,
-            "tabela_brasileirao": buscar_classificacao_brasileirao(),
-            "ultima_hora": listar_ultima_hora()
-        }
-    )
-
-context["jogos_do_dia"] = [
-    {
-        "liga": "Supercopa do Brasil",
-        "hora": "16:00",
-        "casa": "Flamengo",
-        "fora": "Corinthians",
-        "casa_logo": "...",
-        "fora_logo": "...",
-        "gols_casa": 0,
-        "gols_fora": 2,
-        "link": "#"
-    }
-]
