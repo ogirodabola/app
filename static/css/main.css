@@ -1542,11 +1542,10 @@ JOGOS DO DIA — TIMES + PLACAR
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   margin: 14px 0;
 }
 
-/* time */
 .home-secondary .game-teams .team {
   display: flex;
   align-items: center;
@@ -1555,6 +1554,7 @@ JOGOS DO DIA — TIMES + PLACAR
   font-size: 13px;
   font-weight: 600;
 }
+
 
 /* casa */
 .home-secondary .game-teams .team.home {
@@ -1573,24 +1573,23 @@ JOGOS DO DIA — TIMES + PLACAR
   height: 32px;
   object-fit: contain;
   flex-shrink: 0;
-  display: block;
 }
 
 /* nome do time */
-.home-secondary .game-teams .team span {
+.home-secondary .team-name {
+  max-width: 90px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 110px;
 }
 
 /* placar / horário */
 .home-secondary .game-score {
+  min-width: 72px;
+  text-align: center;
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
-  min-width: 72px;
-  text-align: center;
   letter-spacing: 0.04em;
 }
 
