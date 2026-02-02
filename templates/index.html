@@ -200,9 +200,12 @@
           </div>
 
             <a href="{{ j.link }}" class="game-link">
+            {% if j.placar %}
               Saiba como foi →
-            </a>
-
+            {% else %}
+              O que esperar →
+            {% endif %}
+          </a>
           </div>
           {% endfor %}
         </div>
