@@ -175,7 +175,10 @@
         {% elif j.status == 'NS' %}
           <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
         {% else %}
-          <span class="game-time live">Ao vivo</span>
+          <span class="game-time live">
+          <span class="live-dot"></span> Ao vivo
+        </span>
+
         {% endif %}
       </div>
 
