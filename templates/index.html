@@ -129,6 +129,8 @@
 
  <aside class="side-widgets">
 
+ <aside class="side-widgets-grid">
+
   <!-- NOTÍCIAS -->
   <div class="widget-box">
     <h3 class="widget-title">Últimas Notícias</h3>
@@ -136,23 +138,30 @@
     <ul class="widget-news-list">
       {% for n in ultimas_noticias[:6] %}
         <li class="widget-news-item">
-          <a href="/noticia/{{ n.slug }}">
+          <a href="/noticia/{{ n.slug }}" class="news-link">
 
-            {% if n.categoria %}
-              <span class="news-category">
-                {{ n.categoria }}
-              </span>
+            {% if n.imagem %}
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                class="news-thumb"
+                loading="lazy"
+              >
             {% endif %}
 
-            <strong class="news-title">
-              {{ n.titulo }}
-            </strong>
+            <div class="news-info">
+              {% if n.categoria %}
+                <span class="news-category">{{ n.categoria }}</span>
+              {% endif %}
 
-            {% if n.fonte %}
-              <span class="news-source">
-                {{ n.fonte }}
-              </span>
-            {% endif %}
+              <strong class="news-title">
+                {{ n.titulo }}
+              </strong>
+
+              {% if n.fonte %}
+                <span class="news-source">{{ n.fonte }}</span>
+              {% endif %}
+            </div>
 
           </a>
         </li>
@@ -169,15 +178,17 @@
         {% for j in jogos_do_dia[:6] %}
           <li class="match-item">
 
-            <div class="match-league">
-              <span class="league-name">{{ j.liga }}</span>
+            <div class="match-header">
+              <span class="match-league">{{ j.liga }}</span>
               <span class="match-time">{{ j.hora }}</span>
             </div>
 
             <div class="match-teams">
 
-              <div class="team team-home">
-                <img src="{{ j.casa_logo }}" alt="{{ j.casa }}" loading="lazy">
+              <div class="team">
+                {% if j.casa_logo %}
+                  <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
+                {% endif %}
                 <span>{{ j.casa }}</span>
               </div>
 
@@ -185,8 +196,10 @@
                 {{ j.gols_casa }} × {{ j.gols_fora }}
               </div>
 
-              <div class="team team-away">
-                <img src="{{ j.fora_logo }}" alt="{{ j.fora }}" loading="lazy">
+              <div class="team">
+                {% if j.fora_logo %}
+                  <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
+                {% endif %}
                 <span>{{ j.fora }}</span>
               </div>
 
@@ -205,11 +218,8 @@
       </a>
 
     {% else %}
-      <p class="empty-state">
-        Nenhum jogo disponível no momento.
-      </p>
+      <p class="empty-state">Nenhum jogo disponível.</p>
     {% endif %}
-
   </div>
 
 </aside>
