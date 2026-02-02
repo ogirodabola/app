@@ -51,3 +51,45 @@ def buscar_classificacao_brasileirao():
 
     # fallback absoluto (não quebra a home nem a classificação)
     return []
+import requests
+from datetime import date
+
+API_KEY = "SUA_API_KEY_AQUI"
+BASE_URL = "https://v3.football.api-sports.io"
+
+headers = {
+    "x-apisports-key": API_KEY
+}
+
+
+def buscar_jogos_do_dia():
+    hoje = date.today().isoformat()
+
+    response = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=headers,
+        params={
+            "date": hoje,
+            "timezone": "America/Sao_Paulo"
+        }
+    )
+
+    data = response.json()
+
+    jogos = []
+
+    for f in data.get("response", [])[:6]:
+        jogos.append({
+            "liga": f["league"]["name"],
+            "data": "Hoje",
+            "hora": f["fixture"]["date"][11:16],
+            "casa": f["teams"]["home"]["name"],
+            "fora": f["teams"]["away"]["name"],
+            "casa_logo": f["teams"]["home"]["logo"],
+            "fora_logo": f["teams"]["away"]["logo"],
+            "gols_casa": f["goals"]["home"],
+            "gols_fora": f["goals"]["away"],
+            "link": "#"
+        })
+
+    return jogos
