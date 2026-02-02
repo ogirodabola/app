@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pathlib import Path
+from core.futebol_api import buscar_jogos_do_dia
 
 from core.database import (
     criar_tabelas,
