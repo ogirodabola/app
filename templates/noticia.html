@@ -10,9 +10,10 @@
 
   <!-- ================= HERO ================= -->
   {% if noticia.imagem %}
-  <section class="news-hero"
-    style="background-image: url('{{ noticia.imagem }}');">
-    
+  <section
+    class="news-hero"
+    style="background-image: url('{{ noticia.imagem }}');"
+  >
     <div class="news-hero-overlay"></div>
 
     <div class="news-hero-content container">
@@ -20,17 +21,19 @@
         <span class="news-category">{{ noticia.categoria }}</span>
       {% endif %}
 
+      <!-- TÍTULO -->
       <h1 class="news-title">
         {{ noticia.titulo_editorial or noticia.titulo }}
       </h1>
-      
+
+      <!-- LINHA FINA / HEADLINE -->
       {% if noticia.linha_fina %}
       <p class="news-dek">
         {{ noticia.linha_fina }}
       </p>
       {% endif %}
 
-
+      <!-- META -->
       <div class="news-meta">
         {% if noticia.fonte %}
           <span>{{ noticia.fonte }}</span>
@@ -47,10 +50,22 @@
   <!-- ================= CONTEÚDO ================= -->
   <section class="news-content-wrapper">
     <div class="container">
+
       <article class="news-content editorial-content">
+
         {{ noticia.conteudo_editorial | safe }}
+
+        <!-- ===== AD INLINE (APÓS PRIMEIRO BLOCO) ===== -->
+        <div class="news-ad-inline">
+          <span class="ads-label">Publicidade</span>
+          <div class="ads-slot">
+            ADS
+          </div>
+        </div>
+
       </article>
 
+      <!-- TAGS -->
       {% if noticia.tags %}
       <div class="news-tags">
         {% for tag in noticia.tags %}
@@ -58,6 +73,7 @@
         {% endfor %}
       </div>
       {% endif %}
+
     </div>
   </section>
 
@@ -71,7 +87,7 @@
       </h2>
 
       <div class="news-related-grid">
-        {% for n in recomendadas %}
+        {% for n in recomendadas[:3] %}
           <a href="/noticia/{{ n.slug }}" class="related-card">
 
             {% if n.imagem %}
@@ -89,7 +105,9 @@
                 {{ n.titulo_editorial or n.titulo }}
               </h3>
 
-              <p>{{ n.fonte }}</p>
+              {% if n.fonte %}
+                <p>{{ n.fonte }}</p>
+              {% endif %}
             </div>
 
           </a>
