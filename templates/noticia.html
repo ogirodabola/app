@@ -23,6 +23,13 @@
       <h1 class="news-title">
         {{ noticia.titulo_editorial or noticia.titulo }}
       </h1>
+      
+      {% if noticia.linha_fina %}
+      <p class="news-dek">
+        {{ noticia.linha_fina }}
+      </p>
+      {% endif %}
+
 
       <div class="news-meta">
         {% if noticia.fonte %}
