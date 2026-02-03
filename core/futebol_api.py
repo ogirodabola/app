@@ -158,6 +158,25 @@ def peso_competicao(league_name: str) -> int:
             return idx
     return 99
 
+from datetime import timedelta
+
+
+def buscar_fixtures_por_data(data_str: str):
+    params = {
+        "date": data_str,
+        "timezone": "America/Sao_Paulo"
+    }
+
+    r = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=HEADERS,
+        params=params,
+        timeout=10
+    )
+    r.raise_for_status()
+
+    return r.json().get("response", [])
+
 
 # =========================
 # JOGOS DO DIA (EDITORIAL)
@@ -170,76 +189,73 @@ def buscar_jogos_do_dia():
     if cached is not None:
         return cached
 
-    params = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "timezone": "America/Sao_Paulo"
-    }
-
-    r = requests.get(
-        f"{BASE_URL}/fixtures",
-        headers=HEADERS,
-        params=params,
-        timeout=10
-    )
-    r.raise_for_status()
-
-    fixtures = r.json().get("response", [])
     jogos_priorizados = []
+    datas_consultadas = []
 
-    for f in fixtures:
-        league = f.get("league", {}).get("name", "")
-        country = f.get("league", {}).get("country", "")
+    # hoje + próximos 2 dias
+    for offset in range(0, 3):
+        data = datetime.now() + timedelta(days=offset)
+        data_str = data.strftime("%Y-%m-%d")
+        datas_consultadas.append(data_str)
 
-        if not league:
-            continue
+        fixtures = buscar_fixtures_por_data(data_str)
 
-        # remove lixo editorial
-        if is_blacklisted(league):
-            continue
+        for f in fixtures:
+            league = f.get("league", {}).get("name", "")
+            country = f.get("league", {}).get("country", "")
 
-        # competições nacionais
-        if country == "Brazil":
-            peso = peso_competicao(league)
-            if peso == 99:
+            if not league or is_blacklisted(league):
                 continue
 
-        # libertadores / sula só com brasileiro
-        elif "CONMEBOL" in league:
-            if not tem_time_brasileiro(f):
+            # competições nacionais
+            if country == "Brazil":
+                peso = peso_competicao(league)
+                if peso == 99:
+                    continue
+
+            # libertadores / sula
+            elif "CONMEBOL" in league:
+                if not tem_time_brasileiro(f):
+                    continue
+                peso = peso_competicao(league)
+
+            else:
                 continue
-            peso = peso_competicao(league)
 
-        else:
-            continue
+            gols_casa = f.get("goals", {}).get("home")
+            gols_fora = f.get("goals", {}).get("away")
 
-        gols_casa = f.get("goals", {}).get("home")
-        gols_fora = f.get("goals", {}).get("away")
+            placar = None
+            if gols_casa is not None and gols_fora is not None:
+                placar = f"{gols_casa} × {gols_fora}"
 
-        placar = None
-        if gols_casa is not None and gols_fora is not None:
-            placar = f"{gols_casa} × {gols_fora}"
+            jogos_priorizados.append({
+                "peso": peso,
+                "liga": league,
+                "data": data.strftime("%d/%m"),
+                "hora": f.get("fixture", {}).get("date", "")[11:16],
+                "casa": f.get("teams", {}).get("home", {}).get("name", ""),
+                "fora": f.get("teams", {}).get("away", {}).get("name", ""),
+                "casa_logo": f.get("teams", {}).get("home", {}).get("logo", ""),
+                "fora_logo": f.get("teams", {}).get("away", {}).get("logo", ""),
+                "placar": placar,
+                "status": f.get("fixture", {}).get("status", {}).get("short", ""),
+                "link": "#"
+            })
 
-        jogos_priorizados.append({
-            "peso": peso,
-            "liga": league,
-            "data": "Hoje",
-            "hora": f.get("fixture", {}).get("date", "")[11:16],
-            "casa": f.get("teams", {}).get("home", {}).get("name", ""),
-            "fora": f.get("teams", {}).get("away", {}).get("name", ""),
-            "casa_logo": f.get("teams", {}).get("home", {}).get("logo", ""),
-            "fora_logo": f.get("teams", {}).get("away", {}).get("logo", ""),
-            "placar": placar,
-            "status": f.get("fixture", {}).get("status", {}).get("short", ""),
-            "link": "#"
-        })
+        # já dá pra parar?
+        if len(jogos_priorizados) >= 6:
+            break
 
+    # ordena por prioridade editorial
     jogos_priorizados.sort(key=lambda x: x["peso"])
+
     jogos = jogos_priorizados[:6]
 
-    set_cache(cache_key, jogos, ttl=600)
+    # cache maior porque envolve datas futuras
+    set_cache(cache_key, jogos, ttl=900)  # 15 min
 
     return jogos
-
 
 # =========================
 # CLASSIFICAÇÃO BRASILEIRÃO
