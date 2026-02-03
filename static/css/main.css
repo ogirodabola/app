@@ -2,7 +2,7 @@
 IDENTIDADE VISUAL – GIRO DESPORTIVO
 ====================================================== */
 :root {
-  /* cores base */
+  
   --gd-blue-900: #0b1a2b;
   --gd-blue-800: #10263f;
   --gd-blue-700: #16355a;
@@ -22,12 +22,16 @@ IDENTIDADE VISUAL – GIRO DESPORTIVO
      DESIGN SYSTEM — UI TOKENS
   =============================== */
 
+  /* ações */
   --ui-primary: var(--gd-green-500);
   --ui-primary-hover: #7cc700;
+  --ui-on-primary: #0b1c2d;
 
+  /* widgets */
   --ui-widget-bg: rgba(255,255,255,0.03);
   --ui-widget-radius: 14px;
 
+  /* headers */
   --ui-header-font-size: 15px;
   --ui-header-letter-spacing: 0.08em;
 }
@@ -1172,26 +1176,25 @@ HOME – ÚLTIMAS NOTÍCIAS
   padding: 10px 20px;
   border-radius: 999px;
 
-  background: var(--gd-green-500);
-  color: #0b1c2d;
+  background: var(--ui-primary);
+  color: var(--ui-on-primary); /* 👈 contraste resolvido */
 
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
+.table-more-btn .arrow {
+  color: var(--ui-on-primary); /* seta acompanha o texto */
+}
+
 .table-more-btn:hover {
-  background: #7cc700; /* leve escurecida do mesmo verde */
+  background: var(--ui-primary-hover);
   transform: translateY(-1px);
 }
 
-
-.table-more-btn .arrow {
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
 
 .table-more-btn:hover .arrow {
   transform: translateX(4px);
