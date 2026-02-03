@@ -18,13 +18,84 @@ HEADERS = {
 # =========================
 
 TIMES_BRASILEIROS = {
-    "Flamengo", "Palmeiras", "São Paulo", "Corinthians", "Santos",
-    "Grêmio", "Internacional", "Atlético Mineiro", "Cruzeiro",
-    "Botafogo", "Fluminense", "Vasco",
-    "Athletico Paranaense", "Atlético Goianiense",
-    "Bahia", "Fortaleza", "Ceará", "Sport", "Vitória",
-    "Coritiba", "Goiás", "Bragantino"
+    # =========================
+    # CAMPEONATO PAULISTA (A1)
+    # =========================
+    "Botafogo-SP",
+    "Capivariano",
+    "Corinthians",
+    "Guarani",
+    "Mirassol",
+    "Noroeste",
+    "Novorizontino",
+    "Palmeiras",
+    "Ponte Preta",
+    "Portuguesa",
+    "Primavera",
+    "Red Bull Bragantino",
+    "RB Bragantino",
+    "Santos",
+    "São Bernardo",
+    "São Paulo",
+    "Velo Clube",
+
+    # =========================
+    # CAMPEONATO CARIOCA
+    # =========================
+    "Bangu",
+    "Boavista-RJ",
+    "Boavista",
+    "Botafogo",
+    "Flamengo",
+    "Fluminense",
+    "Madureira",
+    "Maricá",
+    "Nova Iguaçu",
+    "Portuguesa-RJ",
+    "Portuguesa",
+    "Sampaio Corrêa-RJ",
+    "Sampaio Corrêa",
+    "Vasco da Gama",
+    "Vasco",
+    "Volta Redonda",
+
+    # =========================
+    # CAMPEONATO MINEIRO
+    # =========================
+    "América-MG",
+    "América Mineiro",
+    "Athletic Club",
+    "Atlético Mineiro",
+    "Atlético-MG",
+    "Betim Futebol",
+    "Cruzeiro",
+    "Democrata GV",
+    "Itabirito FC",
+    "North EC",
+    "Pouso Alegre FC",
+    "Tombense FC",
+    "Uberlândia EC",
+    "URT",
+
+    # =========================
+    # CAMPEONATO GAÚCHO
+    # =========================
+    "Avenida",
+    "Caxias",
+    "Grêmio",
+    "Guarany Bagé",
+    "Internacional",
+    "Inter",
+    "Inter-SM",
+    "Juventude",
+    "Monsoon FC",
+    "Novo Hamburgo",
+    "São José-RS",
+    "São José",
+    "São Luiz",
+    "Ypiranga-RS",
 }
+
 
 PRIORIDADE_COMPETICOES = [
     "Serie A",
