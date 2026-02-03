@@ -1,7 +1,6 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from core.futebol_api import buscar_classificacao_brasileirao
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -414,23 +413,23 @@ def buscar_classificacao_brasileirao():
     Fonte única da classificação.
     - Tenta API
     - Se falhar, usa mock
-    - Garante contrato com o template
+    - Nunca quebra o template
     """
 
     try:
-        # import atrasado evita import circular
+        # import atrasado (CORRETO)
         from core.futebol_api import buscar_classificacao_brasileirao as api_call
-
         tabela = api_call()
+        print("Classificação vinda da API:", type(tabela))
     except Exception as e:
         print("Erro ao buscar classificação na API:", e)
         tabela = None
 
-    # 🔥 AQUI entra exatamente o trecho que você perguntou
+    # ✅ fallback seguro
     if not tabela:
+        print("Usando MOCK da classificação")
         tabela = tabela_brasileirao_mock()
 
-    # Normaliza o formato para o template
     return [
         {
             "posicao": t.get("posicao"),
@@ -445,3 +444,4 @@ def buscar_classificacao_brasileirao():
         }
         for t in tabela
     ]
+
