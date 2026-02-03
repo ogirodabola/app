@@ -1688,3 +1688,21 @@ WIDGET — TABELA PADRONIZADA
   gap: 14px;
 }
 
+/* ===============================
+WIDGET HEADER (PADRÃO)
+=============================== */
+
+.widget-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.widget-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gd-white);
+}
