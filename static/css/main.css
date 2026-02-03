@@ -2,6 +2,7 @@
 IDENTIDADE VISUAL – GIRO DESPORTIVO
 ====================================================== */
 :root {
+  /* cores base */
   --gd-blue-900: #0b1a2b;
   --gd-blue-800: #10263f;
   --gd-blue-700: #16355a;
@@ -16,7 +17,21 @@ IDENTIDADE VISUAL – GIRO DESPORTIVO
 
   --gd-black: #050b14;
   --gd-border: rgba(255,255,255,0.08);
+
+  /* ===============================
+     DESIGN SYSTEM — UI TOKENS
+  =============================== */
+
+  --ui-primary: var(--gd-green-500);
+  --ui-primary-hover: #7cc700;
+
+  --ui-widget-bg: rgba(255,255,255,0.03);
+  --ui-widget-radius: 14px;
+
+  --ui-header-font-size: 15px;
+  --ui-header-letter-spacing: 0.08em;
 }
+
 
 /* ======================================================
 RESET / BASE
@@ -1154,10 +1169,10 @@ HOME – ÚLTIMAS NOTÍCIAS
   align-items: center;
   gap: 8px;
 
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 999px;
 
-  background: #22c55e; /* verde do Giro */
+  background: var(--gd-green-500);
   color: #0b1c2d;
 
   font-size: 13px;
@@ -1167,14 +1182,15 @@ HOME – ÚLTIMAS NOTÍCIAS
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
+.table-more-btn:hover {
+  background: #7cc700; /* leve escurecida do mesmo verde */
+  transform: translateY(-1px);
+}
+
+
 .table-more-btn .arrow {
   display: inline-block;
   transition: transform 0.2s ease;
-}
-
-.table-more-btn:hover {
-  background: #16a34a; /* verde um pouco mais escuro */
-  transform: translateY(-1px);
 }
 
 .table-more-btn:hover .arrow {
