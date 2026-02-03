@@ -120,10 +120,36 @@ def is_blacklisted(text: str) -> bool:
     return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
 
 
+def normalizar_nome(nome: str) -> str:
+    return (
+        nome.lower()
+        .replace("á", "a")
+        .replace("ã", "a")
+        .replace("â", "a")
+        .replace("é", "e")
+        .replace("ê", "e")
+        .replace("í", "i")
+        .replace("ó", "o")
+        .replace("ô", "o")
+        .replace("ú", "u")
+        .replace("-", "")
+        .strip()
+    )
+
 def tem_time_brasileiro(fixture) -> bool:
     home = fixture.get("teams", {}).get("home", {}).get("name", "")
     away = fixture.get("teams", {}).get("away", {}).get("name", "")
-    return home in TIMES_BRASILEIROS or away in TIMES_BRASILEIROS
+
+    home_norm = normalizar_nome(home)
+    away_norm = normalizar_nome(away)
+
+    for time in TIMES_BRASILEIROS:
+        t_norm = normalizar_nome(time)
+        if home_norm == t_norm or away_norm == t_norm:
+            return True
+
+    return False
+
 
 
 def peso_competicao(league_name: str) -> int:
