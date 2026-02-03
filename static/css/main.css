@@ -1315,8 +1315,27 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   border-left: 4px solid #ffab00;
 }
 
+/* ===============================
+CLASSIFICAÇÃO — ZONA DE REBAIXAMENTO
+=============================== */
+
 .zona-rebaixamento {
-  border-left: 4px solid #d50000;
+  border-left: 4px solid #e53935;
+  background: linear-gradient(
+    90deg,
+    rgba(229, 57, 53, 0.14),
+    rgba(229, 57, 53, 0.06),
+    transparent 45%
+  );
+}
+
+.zona-rebaixamento:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(229, 57, 53, 0.22),
+    rgba(229, 57, 53, 0.10),
+    transparent 45%
+  );
 }
 
 .table-legend {
