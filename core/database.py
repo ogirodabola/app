@@ -405,3 +405,43 @@ def listar_recomendadas_por_slug(slug_atual, limit=5):
                 (slug_atual, limit)
             )
             return cur.fetchall()
+            
+# ======================================================
+# CLASSIFICAÇÃO — BRASILEIRÃO
+# ======================================================
+def buscar_classificacao_brasileirao():
+    """
+    Fonte única da classificação.
+    - Tenta API
+    - Se falhar, usa mock
+    - Garante contrato com o template
+    """
+
+    try:
+        # import atrasado evita import circular
+        from core.futebol_api import buscar_classificacao_brasileirao as api_call
+
+        tabela = api_call()
+    except Exception as e:
+        print("Erro ao buscar classificação na API:", e)
+        tabela = None
+
+    # 🔥 AQUI entra exatamente o trecho que você perguntou
+    if not tabela:
+        tabela = tabela_brasileirao_mock()
+
+    # Normaliza o formato para o template
+    return [
+        {
+            "posicao": t.get("posicao"),
+            "nome": t.get("nome"),
+            "escudo": t.get("escudo"),
+            "pontos": t.get("pontos", 0),
+            "jogos": t.get("jogos", 0),
+            "vitorias": t.get("vitorias", 0),
+            "saldo_gols": t.get("saldo_gols", 0),
+            "gols_pro": t.get("gols_pro", 0),
+            "gols_contra": t.get("gols_contra", 0),
+        }
+        for t in tabela
+    ]
