@@ -1,6 +1,7 @@
 import os
 import requests
 from datetime import datetime
+from core.cache import get_cache, set_cache
 
 BASE_URL = "https://v3.football.api-sports.io"
 
@@ -12,14 +13,19 @@ HEADERS = {
     "x-apisports-key": API_FOOTBALL_KEY
 }
 
+# =========================
+# FILTROS EDITORIAIS
+# =========================
 
-COUNTRIES_ALLOWED = {
-    "Brazil", "England", "Spain", "Italy", "Germany", "France", "Portugal"
-}
-
-BRAZIL_LEAGUES = {
-    "Serie A", "Serie B", "Paulista", "Carioca", "Mineiro", "Gaúcho"
-}
+PRIORIDADE_COMPETICOES = [
+    "Serie A",
+    "Paulista",
+    "Carioca",
+    "Mineiro",
+    "Gaúcho",
+    "CONMEBOL Libertadores",
+    "CONMEBOL Sudamericana",
+]
 
 BLACKLIST_KEYWORDS = [
     "U20", "U21", "U23", "U17",
@@ -34,7 +40,23 @@ def is_blacklisted(text: str) -> bool:
     return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
 
 
-from core.cache import get_cache, set_cache
+def tem_time_brasileiro(fixture) -> bool:
+    return (
+        fixture["teams"]["home"]["country"] == "Brazil"
+        or fixture["teams"]["away"]["country"] == "Brazil"
+    )
+
+
+def peso_competicao(league_name: str) -> int:
+    for idx, nome in enumerate(PRIORIDADE_COMPETICOES):
+        if nome.lower() in league_name.lower():
+            return idx
+    return 99
+
+
+# =========================
+# JOGOS DO DIA (EDITORIAL)
+# =========================
 
 def buscar_jogos_do_dia():
     cache_key = "jogos_do_dia"
@@ -57,22 +79,29 @@ def buscar_jogos_do_dia():
     r.raise_for_status()
 
     fixtures = r.json().get("response", [])
-    jogos = []
+    jogos_priorizados = []
 
-    # =========================
-    # FILTRO PRINCIPAL
-    # =========================
     for f in fixtures:
         league = f["league"]["name"]
         country = f["league"]["country"]
 
+        # remove lixo editorial
         if is_blacklisted(league):
             continue
 
+        # competições nacionais
         if country == "Brazil":
-            if not any(l in league for l in BRAZIL_LEAGUES):
+            peso = peso_competicao(league)
+            if peso == 99:
                 continue
-        elif country not in COUNTRIES_ALLOWED:
+
+        # libertadores / sula só com brasileiro
+        elif "CONMEBOL" in league:
+            if not tem_time_brasileiro(f):
+                continue
+            peso = peso_competicao(league)
+
+        else:
             continue
 
         gols_casa = f["goals"]["home"]
@@ -82,7 +111,8 @@ def buscar_jogos_do_dia():
         if gols_casa is not None and gols_fora is not None:
             placar = f"{gols_casa} × {gols_fora}"
 
-        jogos.append({
+        jogos_priorizados.append({
+            "peso": peso,
             "liga": league,
             "data": "Hoje",
             "hora": f["fixture"]["date"][11:16],
@@ -95,84 +125,13 @@ def buscar_jogos_do_dia():
             "link": "#"
         })
 
-        if len(jogos) == 6:
-            break
+    # ordena por prioridade editorial
+    jogos_priorizados.sort(key=lambda x: x["peso"])
 
-    # =========================
-    # FALLBACK (SEM FILTRO)
-    # =========================
-    if len(jogos) < 6:
-        for f in fixtures:
-            gols_casa = f["goals"]["home"]
-            gols_fora = f["goals"]["away"]
+    # limita a 6 jogos
+    jogos = jogos_priorizados[:6]
 
-            placar = None
-            if gols_casa is not None and gols_fora is not None:
-                placar = f"{gols_casa} × {gols_fora}"
-
-            jogos.append({
-                "liga": f["league"]["name"],
-                "data": "Hoje",
-                "hora": f["fixture"]["date"][11:16],
-                "casa": f["teams"]["home"]["name"],
-                "fora": f["teams"]["away"]["name"],
-                "casa_logo": f["teams"]["home"]["logo"],
-                "fora_logo": f["teams"]["away"]["logo"],
-                "placar": placar,
-                "status": f["fixture"]["status"]["short"],
-                "link": "#"
-            })
-
-            if len(jogos) == 6:
-                break
-
-    # ✅ CACHE SALVO UMA ÚNICA VEZ
+    # cache por 10 minutos
     set_cache(cache_key, jogos, ttl=600)
 
     return jogos
-
-
-def buscar_classificacao_brasileirao():
-    url = "https://v3.football.api-sports.io/standings"
-
-    # tenta temporadas mais recentes primeiro
-    for season in [2026, 2025, 2024, 2023]:
-        params = {
-            "league": 71,  # Brasileirão Série A
-            "season": season
-        }
-
-        try:
-            response = requests.get(url, headers=HEADERS, params=params, timeout=10)
-            data = response.json()
-        except Exception:
-            continue
-
-        if not data.get("response"):
-            continue
-
-        try:
-            standings = data["response"][0]["league"]["standings"][0]
-        except (IndexError, KeyError, TypeError):
-            continue
-
-        tabela = []
-
-        for time in standings:
-            tabela.append({
-                "posicao": time["rank"],
-                "nome": time["team"]["name"],
-                "escudo": time["team"]["logo"],
-                "pontos": time["points"],
-                "jogos": time["all"]["played"],
-                "vitorias": time["all"]["win"],
-                "saldo_gols": time["goalsDiff"],
-                "gols_pro": time["all"]["goals"]["for"],
-                "gols_contra": time["all"]["goals"]["against"],
-            })
-
-        # retorna a tabela COMPLETA (20 times)
-        return tabela
-
-    # fallback absoluto (não quebra a home nem a classificação)
-    return []
