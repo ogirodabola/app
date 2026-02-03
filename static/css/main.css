@@ -1247,6 +1247,18 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   margin-bottom: 8px;
 }
 
+.table-header div,
+.table-row div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-header .team,
+.table-row .team {
+  justify-content: flex-start;
+}
+
 .table-row {
   font-size: 14px;
   color: #e6eef6;
@@ -1738,48 +1750,46 @@ WIDGET HEADER (PADRÃO)
 }
 
 /* ===============================
-PAGE HERO — CLASSIFICAÇÃO
+HERO — PADRÃO NOTÍCIA
 =============================== */
 
-.page-hero {
+.page-hero.classificacao-hero {
   position: relative;
-  padding: 96px 0 64px;
-  border-radius: 18px;
-  overflow: hidden;
+  min-height: 380px;
+  display: flex;
+  align-items: flex-end;
+
+  padding: 48px 0;
+  background-image: url("/static/img/hero.png");
   background-size: cover;
   background-position: center;
 }
 
-.classificacao-hero {
-  background-image: url("/static/img/hero.png");
-}
-
-.page-hero::after {
+.page-hero.classificacao-hero::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to bottom,
-    rgba(5, 12, 24, 0.85),
-    rgba(5, 12, 24, 0.95)
+    to top,
+    rgba(5, 12, 24, 0.75),
+    rgba(5, 12, 24, 0.35),
+    rgba(5, 12, 24, 0.15)
   );
 }
 
-.page-hero > * {
+.page-hero.classificacao-hero .container {
   position: relative;
   z-index: 2;
 }
 
-.page-hero h1 {
-  font-size: 32px;
+.page-hero.classificacao-hero h1 {
+  font-size: 34px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   margin-bottom: 12px;
 }
 
-.page-hero p {
+.page-hero.classificacao-hero p {
   max-width: 720px;
   font-size: 16px;
   color: var(--gd-gray-100);
 }
-
