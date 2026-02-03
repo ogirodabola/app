@@ -35,54 +35,37 @@
       </div>
 
       <!-- ROWS -->
-      {% for t in tabela_brasileirao %}
-      <div class="
-        standings-row
-        {% if t.posicao <= 6 %}zona-libertadores
-        {% elif t.posicao <= 12 %}zona-sulamericana
-        {% elif t.posicao >= 17 %}zona-rebaixamento
-        {% endif %}
-      ">
-        <div>{{ t.posicao }}</div>
+      {% if tabela_brasileirao %}
+        {% for t in tabela_brasileirao %}
+        <div class="
+          standings-row
+          {% if t.posicao <= 6 %}zona-libertadores
+          {% elif t.posicao <= 12 %}zona-sulamericana
+          {% elif t.posicao >= 17 %}zona-rebaixamento
+          {% endif %}
+        ">
+          <div>{{ t.posicao }}</div>
 
-        <div class="team">
-          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-          <span>{{ t.nome }}</span>
+          <div class="team">
+            <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+            <span>{{ t.nome }}</span>
+          </div>
+
+          <div class="points">{{ t.pontos }}</div>
+          <div>{{ t.jogos }}</div>
+          <div>{{ t.vitorias }}</div>
+          <div>{{ t.saldo_gols }}</div>
+          <div>{{ t.gols_pro }}</div>
+          <div>{{ t.gols_contra }}</div>
         </div>
-
-        <div class="points">{{ t.pontos }}</div>
-        <div>{{ t.jogos }}</div>
-        <div>{{ t.vitorias }}</div>
-        <div>{{ t.saldo_gols }}</div>
-        <div>{{ t.gols_pro }}</div>
-        <div>{{ t.gols_contra }}</div>
-      </div>
-      {% endfor %}
-
-    </div> <!-- /.standings-grid -->
-
-  </div> <!-- /.table-wrapper -->
-
-</section>
-
-{% endblock %}
-
-        <!-- EQUIPE -->
-        <div class="team">
-          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-          <span>{{ t.nome }}</span>
+        {% endfor %}
+      {% else %}
+        <div style="padding:24px;color:#22c55e">
+          Classificação indisponível no momento.
         </div>
+      {% endif %}
 
-        <!-- INDICADORES -->
-        <div class="points">{{ t.pontos }}</div>
-        <div>{{ t.jogos }}</div>
-        <div>{{ t.vitorias }}</div>
-        <div>{{ t.saldo_gols }}</div>
-        <div>{{ t.gols_pro }}</div>
-        <div>{{ t.gols_contra }}</div>
-
-      </div>
-    {% endfor %}
+    </div>
 
   </div>
 
@@ -93,21 +76,17 @@
     <div class="leg reb">Rebaixamento</div>
   </div>
 
-  <!-- CONTEÚDO EDITORIAL (EVITA PÁGINA “SECA”) -->
+  <!-- CONTEÚDO EDITORIAL -->
   <section class="editorial-box">
     <h2>Como funciona a classificação do Brasileirão?</h2>
     <p>
       O Campeonato Brasileiro Série A é disputado por 20 clubes em sistema
-      de pontos corridos. Cada equipe joga 38 partidas, enfrentando todos
-      os adversários em turno e returno.
-    </p>
-    <p>
-      Ao final do campeonato:
+      de pontos corridos. Cada equipe joga 38 partidas.
     </p>
     <ul>
-      <li>Os <strong>6 primeiros</strong> se classificam para a Libertadores</li>
-      <li>Do <strong>7º ao 12º</strong> vão para a Sul-Americana</li>
-      <li>Os <strong>4 últimos</strong> são rebaixados para a Série B</li>
+      <li>Os <strong>6 primeiros</strong> vão à Libertadores</li>
+      <li>Do <strong>7º ao 12º</strong> à Sul-Americana</li>
+      <li>Os <strong>4 últimos</strong> são rebaixados</li>
     </ul>
   </section>
 
