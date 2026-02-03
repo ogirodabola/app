@@ -659,11 +659,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   line-height: 1.75;
 }
 
-.editorial-content p:first-of-type {
-  font-size: 20px;
-  font-weight: 500;
-}
-
 /* ======================================================
 BLOCO EDITORIAL – OVERLAY SUAVE DE LEITURA
 ====================================================== */
@@ -731,13 +726,6 @@ BLOCO DE CONTEÚDO
   box-shadow: 0 30px 80px rgba(0,0,0,0.45);
 }
 
-.news-content p {
-  font-size: 17px;
-  line-height: 1.75;
-  color: #e5e7eb;
-  margin-bottom: 20px;
-}
-
 /* ======================================================
 RESPONSIVO
 ====================================================== */
@@ -772,13 +760,6 @@ BLOCO EDITORIAL – CONTEÚDO DA NOTÍCIA
 }
 
 /* tipografia editorial */
-.editorial-content p {
-  font-size: 17px;
-  line-height: 1.75;
-  color: #e5e7eb;
-  margin-bottom: 20px;
-}
-
 .editorial-content h2,
 .editorial-content h3 {
   margin: 32px 0 16px;
@@ -2005,4 +1986,38 @@ NOTÍCIA — ADS (ESTRUTURA FINAL)
   .ads-slot-bottom {
     height: 140px;
   }
+}
+
+/* ===============================
+NOTÍCIA — PADRÃO EDITORIAL DE TEXTO
+=============================== */
+
+.news-article .editorial-content {
+  max-width: 720px;
+  margin: 0 auto;
+
+  font-size: 19px;
+  line-height: 1.75;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.news-article .editorial-content p {
+  margin-bottom: 22px;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.news-article .editorial-content strong {
+  font-weight: 600;
+}
+/* ===============================
+CORREÇÃO — LABEL PUBLICIDADE LEGADA
+=============================== */
+
+.publicidade,
+.news-hero .publicidade,
+.news-article .publicidade {
+  display: none !important;
 }
