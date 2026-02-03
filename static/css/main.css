@@ -1813,3 +1813,44 @@ HERO — PADRÃO NOTÍCIA
   color: rgba(255,255,255,0.85);
 }
 
+.standings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.standings-row {
+  display: grid;
+  grid-template-columns:
+    40px
+    1.8fr
+    60px
+    60px
+    60px
+    60px
+    60px
+    60px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 12px;
+}
+
+.standings-head {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gd-gray-300);
+  background: rgba(255,255,255,0.03);
+}
+
+.standings-row > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.standings-row .team {
+  justify-content: flex-start;
+  gap: 10px;
+}
