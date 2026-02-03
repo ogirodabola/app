@@ -22,44 +22,50 @@
 
     <div class="standings-grid">
 
-  <!-- HEADER -->
-  <div class="standings-row standings-head">
-    <div>#</div>
-    <div class="team">Equipe</div>
-    <div>P</div>
-    <div>J</div>
-    <div>V</div>
-    <div>SG</div>
-    <div>GP</div>
-    <div>GC</div>
-  </div>
+      <!-- HEADER -->
+      <div class="standings-row standings-head">
+        <div>#</div>
+        <div class="team">Equipe</div>
+        <div>P</div>
+        <div>J</div>
+        <div>V</div>
+        <div>SG</div>
+        <div>GP</div>
+        <div>GC</div>
+      </div>
 
-  <!-- ROWS -->
-  {% for t in tabela_brasileirao %}
-  <div class="
-    standings-row
-    {% if t.posicao <= 6 %}zona-libertadores
-    {% elif t.posicao <= 12 %}zona-sulamericana
-    {% elif t.posicao >= 17 %}zona-rebaixamento
-    {% endif %}
-  ">
-    <div>{{ t.posicao }}</div>
+      <!-- ROWS -->
+      {% for t in tabela_brasileirao %}
+      <div class="
+        standings-row
+        {% if t.posicao <= 6 %}zona-libertadores
+        {% elif t.posicao <= 12 %}zona-sulamericana
+        {% elif t.posicao >= 17 %}zona-rebaixamento
+        {% endif %}
+      ">
+        <div>{{ t.posicao }}</div>
 
-    <div class="team">
-      <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-      <span>{{ t.nome }}</span>
-    </div>
+        <div class="team">
+          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+          <span>{{ t.nome }}</span>
+        </div>
 
-    <div class="points">{{ t.pontos }}</div>
-    <div>{{ t.jogos }}</div>
-    <div>{{ t.vitorias }}</div>
-    <div>{{ t.saldo_gols }}</div>
-    <div>{{ t.gols_pro }}</div>
-    <div>{{ t.gols_contra }}</div>
-  </div>
-  {% endfor %}
+        <div class="points">{{ t.pontos }}</div>
+        <div>{{ t.jogos }}</div>
+        <div>{{ t.vitorias }}</div>
+        <div>{{ t.saldo_gols }}</div>
+        <div>{{ t.gols_pro }}</div>
+        <div>{{ t.gols_contra }}</div>
+      </div>
+      {% endfor %}
 
-</div>
+    </div> <!-- /.standings-grid -->
+
+  </div> <!-- /.table-wrapper -->
+
+</section>
+
+{% endblock %}
 
         <!-- EQUIPE -->
         <div class="team">
