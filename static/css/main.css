@@ -1854,3 +1854,19 @@ HERO — PADRÃO NOTÍCIA
   justify-content: flex-start;
   gap: 10px;
 }
+
+.standings-row .team span {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ===============================
+CLASSIFICAÇÃO — ESCUDOS
+=============================== */
+
+.standings-row .team img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
