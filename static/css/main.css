@@ -1093,36 +1093,43 @@ HOME – ÚLTIMAS NOTÍCIAS
 }
 
 .table-standings {
-  width: 100%;
-  border-collapse: collapse;
-  background: rgba(255,255,255,0.02);
-  border-radius: 12px;
-  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0 8px; /* espaço entre linhas */
 }
 
-.table-standings th {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 600;
-  color: #9ca3af;
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+.table-standings tbody tr {
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.table-standings tbody tr:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+.table-standings thead th {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gd-gray-300);
+  padding: 8px 14px;
+  border: none;
 }
 
 .table-standings td {
-  padding: 12px;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border: none;
+  padding: 12px 14px;
+  font-size: 13px;
 }
 
 .table-standings tr:last-child td {
   border-bottom: none;
 }
 
-.team-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.team-cell span {
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .team-cell img {
@@ -1667,3 +1674,17 @@ LINHA LATERAL — VERDE
   background: var(--gd-green-500);
   animation: live-pulse 1.4s ease-in-out infinite;
 }
+
+/* ===============================
+WIDGET — TABELA PADRONIZADA
+=============================== */
+
+.brasileirao-table {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
