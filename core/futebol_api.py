@@ -26,7 +26,6 @@ TIMES_BRASILEIROS = {
     "Coritiba", "Goiás", "Bragantino"
 }
 
-
 PRIORIDADE_COMPETICOES = [
     "Serie A",
     "Paulista",
@@ -51,9 +50,8 @@ def is_blacklisted(text: str) -> bool:
 
 
 def tem_time_brasileiro(fixture) -> bool:
-    home = fixture["teams"]["home"]["name"]
-    away = fixture["teams"]["away"]["name"]
-
+    home = fixture.get("teams", {}).get("home", {}).get("name", "")
+    away = fixture.get("teams", {}).get("away", {}).get("name", "")
     return home in TIMES_BRASILEIROS or away in TIMES_BRASILEIROS
 
 
@@ -92,8 +90,11 @@ def buscar_jogos_do_dia():
     jogos_priorizados = []
 
     for f in fixtures:
-        league = f["league"]["name"]
-        country = f["league"]["country"]
+        league = f.get("league", {}).get("name", "")
+        country = f.get("league", {}).get("country", "")
+
+        if not league:
+            continue
 
         # remove lixo editorial
         if is_blacklisted(league):
@@ -114,8 +115,8 @@ def buscar_jogos_do_dia():
         else:
             continue
 
-        gols_casa = f["goals"]["home"]
-        gols_fora = f["goals"]["away"]
+        gols_casa = f.get("goals", {}).get("home")
+        gols_fora = f.get("goals", {}).get("away")
 
         placar = None
         if gols_casa is not None and gols_fora is not None:
@@ -125,26 +126,28 @@ def buscar_jogos_do_dia():
             "peso": peso,
             "liga": league,
             "data": "Hoje",
-            "hora": f["fixture"]["date"][11:16],
-            "casa": f["teams"]["home"]["name"],
-            "fora": f["teams"]["away"]["name"],
-            "casa_logo": f["teams"]["home"]["logo"],
-            "fora_logo": f["teams"]["away"]["logo"],
+            "hora": f.get("fixture", {}).get("date", "")[11:16],
+            "casa": f.get("teams", {}).get("home", {}).get("name", ""),
+            "fora": f.get("teams", {}).get("away", {}).get("name", ""),
+            "casa_logo": f.get("teams", {}).get("home", {}).get("logo", ""),
+            "fora_logo": f.get("teams", {}).get("away", {}).get("logo", ""),
             "placar": placar,
-            "status": f["fixture"]["status"]["short"],
+            "status": f.get("fixture", {}).get("status", {}).get("short", ""),
             "link": "#"
         })
 
-    # ordena por prioridade editorial
     jogos_priorizados.sort(key=lambda x: x["peso"])
-
-    # limita a 6 jogos
     jogos = jogos_priorizados[:6]
 
-    # cache por 10 minutos
     set_cache(cache_key, jogos, ttl=600)
 
     return jogos
+
+
+# =========================
+# CLASSIFICAÇÃO BRASILEIRÃO
+# =========================
+
 def buscar_classificacao_brasileirao():
     url = "https://v3.football.api-sports.io/standings"
 
@@ -177,15 +180,15 @@ def buscar_classificacao_brasileirao():
 
         for time in standings:
             tabela.append({
-                "posicao": time["rank"],
-                "nome": time["team"]["name"],
-                "escudo": time["team"]["logo"],
-                "pontos": time["points"],
-                "jogos": time["all"]["played"],
-                "vitorias": time["all"]["win"],
-                "saldo_gols": time["goalsDiff"],
-                "gols_pro": time["all"]["goals"]["for"],
-                "gols_contra": time["all"]["goals"]["against"],
+                "posicao": time.get("rank"),
+                "nome": time.get("team", {}).get("name"),
+                "escudo": time.get("team", {}).get("logo"),
+                "pontos": time.get("points"),
+                "jogos": time.get("all", {}).get("played"),
+                "vitorias": time.get("all", {}).get("win"),
+                "saldo_gols": time.get("goalsDiff"),
+                "gols_pro": time.get("all", {}).get("goals", {}).get("for"),
+                "gols_contra": time.get("all", {}).get("goals", {}).get("against"),
             })
 
         return tabela
