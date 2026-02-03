@@ -543,19 +543,6 @@ RESPONSIVO
 PÁGINA DE NOTÍCIA – EDITORIAL
 ====================================================== */
 
-.news-hero {
-  position: relative;
-  margin-bottom: 64px;
-}
-
-.news-hero-image {
-  position: relative;
-  min-height: 60vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: flex-end;
-}
 
 .news-hero-overlay {
   position: absolute;
@@ -608,21 +595,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
 
 
 /* ================= CONTEÚDO ================= */
-
-.news-body {
-  padding-bottom: 80px;
-}
-
-.news-content {
-  max-width: 800px;
-}
-
-.news-text p {
-  font-size: 18px;
-  line-height: 1.7;
-  margin-bottom: 24px;
-  color: #e5e7eb;
-}
 
 .news-text h2 {
   margin-top: 48px;
@@ -720,22 +692,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
 /* ======================================================
 BLOCO EDITORIAL – OVERLAY SUAVE DE LEITURA
 ====================================================== */
-
-.news-body {
-  position: relative;
-  padding-top: 0;
-}
-
-.news-content {
-  position: relative;
-  margin-top: -120px; /* puxa o conteúdo sobre o hero */
-  padding: 48px 56px;
-  background: rgba(8, 16, 32, 0.88); /* overlay MUITO sutil */
-  backdrop-filter: blur(6px);
-  border-radius: 18px;
-  box-shadow:
-    0 30px 60px rgba(0,0,0,0.45);
-}
 
 /* Mobile */
 @media (max-width: 768px) {
