@@ -1208,12 +1208,20 @@ HOME – ÚLTIMAS NOTÍCIAS
   background: linear-gradient(180deg, #0b1e33, #081524);
 }
 
+/* ===============================
+CLASSIFICAÇÃO — GRID UNIFICADO
+=============================== */
+
+/* ===============================
+CLASSIFICAÇÃO — GRID UNIFICADO
+=============================== */
+
 .table-header,
 .table-row {
   display: grid;
   grid-template-columns:
     40px       /* posição */
-    1.6fr      /* equipe */
+    1.8fr      /* equipe */
     60px       /* pontos */
     60px       /* jogos */
     60px       /* vitórias */
@@ -1223,39 +1231,45 @@ HOME – ÚLTIMAS NOTÍCIAS
   align-items: center;
 }
 
+.table-header,
+.table-row {
+  padding: 14px 16px;
+}
+
+.table-header {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gd-gray-300);
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.table-row {
+  font-size: 14px;
+  color: #e6eef6;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.table-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* alinhamento das colunas numéricas */
 .table-header div:not(.team),
 .table-row div:not(.team) {
   text-align: center;
 }
 
+/* equipe */
 .table-header .team,
-.table-row .team {
-  justify-content: flex-start;
-}
-
-.table-header {
-  padding: 14px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #9bb3c9;
-  background: rgba(255,255,255,0.04);
-}
-
-.table-row {
-  padding: 14px 16px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  font-size: 14px;
-  color: #e6eef6;
-}
-
-.table-row:hover {
-  background: rgba(255,255,255,0.04);
-}
-
-/* EQUIPE */
 .table-row .team {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -1722,3 +1736,50 @@ WIDGET HEADER (PADRÃO)
   text-transform: uppercase;
   color: var(--gd-white);
 }
+
+/* ===============================
+PAGE HERO — CLASSIFICAÇÃO
+=============================== */
+
+.page-hero {
+  position: relative;
+  padding: 96px 0 64px;
+  border-radius: 18px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.classificacao-hero {
+  background-image: url("/static/img/hero.png");
+}
+
+.page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 12, 24, 0.85),
+    rgba(5, 12, 24, 0.95)
+  );
+}
+
+.page-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.page-hero p {
+  max-width: 720px;
+  font-size: 16px;
+  color: var(--gd-gray-100);
+}
+
