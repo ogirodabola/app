@@ -1246,7 +1246,8 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   background: rgba(255,255,255,0.035);
   backdrop-filter: blur(6px);
   border-radius: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  min-height: 56px;
 }
 
 .table-header div,
@@ -1254,11 +1255,13 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .table-header .team,
 .table-row .team {
   justify-content: flex-start;
+  padding-left: 2px; /* micro-ajuste visual */
 }
 
 .table-row {
@@ -1301,7 +1304,11 @@ CLASSIFICAÇÃO — GRID UNIFICADO
 
 /* ZONAS */
 .zona-libertadores {
-  border-left: 4px solid #00c853;
+  background: linear-gradient(
+    90deg,
+    rgba(30,144,255,0.12),
+    transparent 40%
+  );
 }
 
 .zona-sulamericana {
@@ -1765,6 +1772,7 @@ HERO — PADRÃO NOTÍCIA
   background-image: url("/static/img/hero.png");
   background-size: cover;
   background-position: center;
+  text-align: left;
 }
 
 .page-hero.classificacao-hero::after {
@@ -1784,6 +1792,9 @@ HERO — PADRÃO NOTÍCIA
 .page-hero.classificacao-hero .container {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .page-hero.classificacao-hero h1 {
@@ -1792,10 +1803,11 @@ HERO — PADRÃO NOTÍCIA
   font-weight: 800;
   letter-spacing: -0.03em;
   margin-bottom: 16px;
+  max-width: 820px;
 }
 
 .page-hero.classificacao-hero p {
-  max-width: 680px;
+  max-width: 640px;
   font-size: 17px;
   line-height: 1.6;
   color: rgba(255,255,255,0.85);
