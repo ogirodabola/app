@@ -74,7 +74,7 @@ LAYOUT GLOBAL
 .content-stack {
   display: flex;
   flex-direction: column;
-  gap: 64px;
+  gap: 48px;
 }
 
 /* ======================================================
@@ -1234,6 +1234,7 @@ CLASSIFICAÇÃO — GRID UNIFICADO
 .table-header,
 .table-row {
   padding: 14px 16px;
+  min-height: 56px;
 }
 
 .table-header {
@@ -1242,16 +1243,17 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gd-gray-300);
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(6px);
   border-radius: 12px;
   margin-bottom: 8px;
 }
 
 .table-header div,
 .table-row div {
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .table-header .team,
@@ -1758,8 +1760,8 @@ HERO — PADRÃO NOTÍCIA
   min-height: 380px;
   display: flex;
   align-items: flex-end;
-
   padding: 48px 0;
+  margin-bottom: 48px;
   background-image: url("/static/img/hero.png");
   background-size: cover;
   background-position: center;
@@ -1769,13 +1771,15 @@ HERO — PADRÃO NOTÍCIA
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(5, 12, 24, 0.75),
-    rgba(5, 12, 24, 0.35),
-    rgba(5, 12, 24, 0.15)
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(3, 10, 20, 0.25),
+      rgba(3, 10, 20, 0.65),
+      rgba(3, 10, 20, 0.92)
+    );
 }
+
 
 .page-hero.classificacao-hero .container {
   position: relative;
@@ -1783,13 +1787,17 @@ HERO — PADRÃO NOTÍCIA
 }
 
 .page-hero.classificacao-hero h1 {
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
 }
 
 .page-hero.classificacao-hero p {
-  max-width: 720px;
-  font-size: 16px;
-  color: var(--gd-gray-100);
+  max-width: 680px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.85);
 }
+
