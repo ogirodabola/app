@@ -17,6 +17,16 @@ HEADERS = {
 # FILTROS EDITORIAIS
 # =========================
 
+TIMES_BRASILEIROS = {
+    "Flamengo", "Palmeiras", "São Paulo", "Corinthians", "Santos",
+    "Grêmio", "Internacional", "Atlético Mineiro", "Cruzeiro",
+    "Botafogo", "Fluminense", "Vasco",
+    "Athletico Paranaense", "Atlético Goianiense",
+    "Bahia", "Fortaleza", "Ceará", "Sport", "Vitória",
+    "Coritiba", "Goiás", "Bragantino"
+}
+
+
 PRIORIDADE_COMPETICOES = [
     "Serie A",
     "Paulista",
@@ -41,10 +51,10 @@ def is_blacklisted(text: str) -> bool:
 
 
 def tem_time_brasileiro(fixture) -> bool:
-    return (
-        fixture["teams"]["home"]["country"] == "Brazil"
-        or fixture["teams"]["away"]["country"] == "Brazil"
-    )
+    home = fixture["teams"]["home"]["name"]
+    away = fixture["teams"]["away"]["name"]
+
+    return home in TIMES_BRASILEIROS or away in TIMES_BRASILEIROS
 
 
 def peso_competicao(league_name: str) -> int:
