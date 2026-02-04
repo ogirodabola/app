@@ -2,7 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-
+import json
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
@@ -51,33 +51,93 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
         soup = BeautifulSoup(r.text, "lxml")
 
         imagem_url = None
+        credito = f"Foto: {fonte_nome}"
 
-        # 1️⃣ Open Graph padrão
-        og = soup.find("meta", property="og:image")
-        if og and og.get("content"):
-            imagem_url = og["content"]
+        # ======================================================
+        # 1️⃣ JSON-LD (UOL, GE, ESPN — padrão Google News)
+        # ======================================================
+        for script in soup.find_all("script", type="application/ld+json"):
+            try:
+                data = json.loads(script.string)
 
-        # 2️⃣ OG secure
+                # Alguns sites retornam lista
+                if isinstance(data, list):
+                    for item in data:
+                        if isinstance(item, dict):
+                            img = item.get("image")
+                            if isinstance(img, list) and img:
+                                imagem_url = img[0]
+                            elif isinstance(img, str):
+                                imagem_url = img
+                elif isinstance(data, dict):
+                    img = data.get("image")
+                    if isinstance(img, list) and img:
+                        imagem_url = img[0]
+                    elif isinstance(img, str):
+                        imagem_url = img
+
+                if imagem_url:
+                    break
+            except Exception:
+                continue
+
+        # ======================================================
+        # 2️⃣ Open Graph
+        # ======================================================
+        if not imagem_url:
+            og = soup.find("meta", property="og:image")
+            if og and og.get("content"):
+                imagem_url = og["content"]
+
         if not imagem_url:
             ogs = soup.find("meta", property="og:image:secure_url")
             if ogs and ogs.get("content"):
                 imagem_url = ogs["content"]
 
-        # 3️⃣ Primeira imagem do artigo
+        # ======================================================
+        # 3️⃣ IMG do artigo (lazy-load)
+        # ======================================================
         if not imagem_url:
             img = soup.select_one("article img")
-            if img and img.get("src"):
-                imagem_url = img["src"]
+            if img:
+                imagem_url = (
+                    img.get("data-src")
+                    or img.get("data-original")
+                    or img.get("src")
+                )
 
-        # Crédito
+        # ======================================================
+        # 4️⃣ FILTRO — imagens genéricas / lixo editorial
+        # ======================================================
+        if imagem_url:
+            imagem_url = imagem_url.strip()
+
+            PADROES_INVALIDOS = [
+                "default",
+                "placeholder",
+                "og-default",
+                "logo",
+                "sprite"
+            ]
+
+            if any(p in imagem_url.lower() for p in PADROES_INVALIDOS):
+                imagem_url = None
+
+        # ======================================================
+        # 5️⃣ CRÉDITO (quando existir)
+        # ======================================================
         figcaption = soup.find("figcaption")
-        credito = figcaption.get_text(strip=True) if figcaption else f"Foto: {fonte_nome}"
+        if figcaption:
+            texto = figcaption.get_text(strip=True)
+            if len(texto) > 5:
+                credito = texto
 
         return imagem_url, credito
 
     except Exception as e:
-        print(f"[IMG ERRO] {e}")
+        print(f"[IMG ERRO] {fonte_nome}: {e}")
         return None, None
+
 
 
 def extrair_noticias_fonte(fonte):
