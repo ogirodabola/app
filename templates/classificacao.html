@@ -40,39 +40,40 @@
       </div>
 
       <!-- ROWS -->
-      {% if tabela_brasileirao %}
-        {% for t in tabela_brasileirao %}
-        <div class="
-          standings-row
-          {% if t.posicao <= 6 %}zona-libertadores
-          {% elif t.posicao <= 12 %}zona-sulamericana
-          {% elif t.posicao >= 17 %}zona-rebaixamento
-          {% endif %}
-        ">
-          <div>{{ t.posicao }}</div>
+{% if tabela_brasileirao %}
+  {% for t in tabela_brasileirao %}
+  <div class="
+    standings-row
+    {% if t.posicao <= 6 %}
+      zona-libertadores
+    {% elif t.posicao <= 12 %}
+      zona-sulamericana
+    {% elif t.posicao >= 17 %}
+      zona-rebaixamento
+    {% else %}
+      zona-neutra
+    {% endif %}
+  ">
+    <div>{{ t.posicao }}</div>
 
-          <div class="team">
-            <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-            <span>{{ t.nome }}</span>
-          </div>
-
-          <div class="points">{{ t.pontos }}</div>
-          <div>{{ t.jogos }}</div>
-          <div>{{ t.vitorias }}</div>
-          <div>{{ t.saldo_gols }}</div>
-          <div>{{ t.gols_pro }}</div>
-          <div>{{ t.gols_contra }}</div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div style="padding:24px;color:#22c55e">
-          Classificação indisponível no momento.
-        </div>
-      {% endif %}
-
+    <div class="team">
+      <img src="{{ t.escudo }}" alt="{{ t.nome }}">
+      <span>{{ t.nome }}</span>
     </div>
 
+    <div class="points">{{ t.pontos }}</div>
+    <div>{{ t.jogos }}</div>
+    <div>{{ t.vitorias }}</div>
+    <div>{{ t.saldo_gols }}</div>
+    <div>{{ t.gols_pro }}</div>
+    <div>{{ t.gols_contra }}</div>
   </div>
+  {% endfor %}
+{% else %}
+  <div style="padding:24px;color:#22c55e">
+    Classificação indisponível no momento.
+  </div>
+{% endif %}
 
   <!-- LEGENDA -->
   <div class="table-legend">
