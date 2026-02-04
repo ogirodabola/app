@@ -1191,23 +1191,71 @@ CLASSIFICAÇÃO — GRID UNIFICADO
   color: #ffffff;
 }
 
-/* ZONAS */
+/* ===============================
+CLASSIFICAÇÃO — SISTEMA DE ZONAS
+=============================== */
+
+/* ZONA LIBERTADORES */
 .zona-libertadores {
+  border-left: 4px solid #1e90ff;
   background: linear-gradient(
     90deg,
-    rgba(30,144,255,0.12),
-    transparent 40%
+    rgba(30, 144, 255, 0.14),
+    rgba(30, 144, 255, 0.06),
+    transparent 45%
   );
 }
 
-.zona-sulamericana {
-  border-left: 4px solid #ffab00;
+.zona-libertadores:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 144, 255, 0.22),
+    rgba(30, 144, 255, 0.10),
+    transparent 45%
+  );
 }
 
-/* ===============================
-CLASSIFICAÇÃO — ZONA DE REBAIXAMENTO
-=============================== */
+/* ZONA SUL-AMERICANA */
+.zona-sulamericana {
+  border-left: 4px solid #ffab00;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 171, 0, 0.14),
+    rgba(255, 171, 0, 0.06),
+    transparent 45%
+  );
+}
 
+.zona-sulamericana:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 171, 0, 0.22),
+    rgba(255, 171, 0, 0.10),
+    transparent 45%
+  );
+}
+
+/* ZONA NEUTRA (MEIO DA TABELA) */
+.zona-neutra {
+  border-left: 4px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03),
+    transparent 45%
+  );
+}
+
+.zona-neutra:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.06),
+    transparent 45%
+  );
+}
+
+/* ZONA DE REBAIXAMENTO */
 .zona-rebaixamento {
   border-left: 4px solid #e53935;
   background: linear-gradient(
