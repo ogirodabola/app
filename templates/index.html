@@ -30,9 +30,12 @@
           <li class="latest-news-item">
             <a href="/noticia/{{ n.slug }}">
 
-              {% if n.imagem %}
-                <img src="{{ n.imagem }}" alt="{{ n.titulo_editorial or n.titulo }}">
-              {% endif %}
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo_editorial or n.titulo }}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+              >
 
               <div class="latest-news-text">
                 <span class="latest-news-category">
@@ -73,11 +76,14 @@
         {% for n in brasileirao | default([]) %}
           <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
 
-            {% if n.imagem %}
-              <div class="brasileirao-image">
-                <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
-              </div>
-            {% endif %}
+            <div class="brasileirao-image">
+              <img
+                src="{{ n.imagem }}"
+                alt="{{ n.titulo }}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+              >
+            </div>
 
             <div class="brasileirao-body">
               <h3>{{ n.titulo }}</h3>
@@ -92,39 +98,47 @@
     </div>
 
     <aside class="brasileirao-table">
-  <div class="widget-header">
-  <h2>Tabela de Classificação</h2>
-</div>
-  <table class="table-standings">
-    <thead>
-      <tr>
-        <th>Equipe</th>
-        <th>P</th>
-        <th>J</th>
-        <th>V</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for t in tabela_brasileirao %}
-      <tr>
-        <td class="team-cell">
-          <img src="{{ t.escudo }}" alt="{{ t.nome }}">
-          <span>{{ t.nome }}</span>
-        </td>
-        <td>{{ t.pontos }}</td>
-        <td>{{ t.jogos }}</td>
-        <td>{{ t.vitorias }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      <div class="widget-header">
+        <h2>Tabela de Classificação</h2>
+      </div>
+
+      <table class="table-standings">
+        <thead>
+          <tr>
+            <th>Equipe</th>
+            <th>P</th>
+            <th>J</th>
+            <th>V</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tabela_brasileirao %}
+          <tr>
+            <td class="team-cell">
+              <img
+                src="{{ t.escudo }}"
+                alt="{{ t.nome }}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+              >
+              <span>{{ t.nome }}</span>
+            </td>
+            <td>{{ t.pontos }}</td>
+            <td>{{ t.jogos }}</td>
+            <td>{{ t.vitorias }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
       <div class="table-footer">
-  <a href="/classificacao" class="table-more-btn">
-    Ver tabela completa
-    <span class="arrow">→</span>
-  </a>
-</div>
-</aside>
+        <a href="/classificacao" class="table-more-btn">
+          Ver tabela completa
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </aside>
+
   </div>
 </section>
 
@@ -137,7 +151,7 @@
   </div>
 </section>
 
- <!-- ================= BLOCO SECUNDÁRIO HOME ================= -->
+<!-- ================= BLOCO SECUNDÁRIO HOME ================= -->
 <section class="home-secondary">
   <div class="container">
     <div class="home-secondary-grid">
@@ -152,9 +166,10 @@
 
             <div class="news-card-image">
               <img
-                src="{{ n.imagem or '/static/img/placeholder-news.jpg' }}"
+                src="{{ n.imagem }}"
                 alt="{{ n.titulo }}"
                 loading="lazy"
+                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
               >
             </div>
 
@@ -169,68 +184,73 @@
         </div>
       </div>
 
-     <!-- COLUNA: JOGOS DO DIA -->
-<aside class="games-column">
-  <div class="games-header">
-    <h2>Jogos do Dia</h2>
-    <span class="games-subtitle">Hoje</span>
-  </div>
-
-  <div class="games-list">
-    {% for j in jogos_do_dia[:6] %}
-    <div class="game-card">
-
-      <!-- META (LIGA + STATUS) -->
-      <div class="game-meta">
-        <span class="game-league">{{ j.liga }}</span>
-
-        {% if j.status == 'FT' %}
-          <span class="game-time">Encerrado</span>
-        {% elif j.status == 'NS' %}
-          <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
-        {% else %}
-          <span class="game-time live">
-          <span class="live-dot"></span> Ao vivo
-        </span>
-
-        {% endif %}
-      </div>
-
-      <!-- TIMES + PLACAR -->
-      <div class="game-teams">
-        <div class="team home">
-          <img src="{{ j.casa_logo }}" alt="{{ j.casa }}">
-          <span class="team-name">{{ j.casa[:3]|upper }}</span>
+      <!-- COLUNA: JOGOS DO DIA -->
+      <aside class="games-column">
+        <div class="games-header">
+          <h2>Jogos do Dia</h2>
+          <span class="games-subtitle">Hoje</span>
         </div>
 
-        <div class="game-score">
-          {% if j.placar %}
-            <span class="score">{{ j.placar }}</span>
-          {% else %}
-            <span class="time">{{ j.hora }}</span>
-          {% endif %}
+        <div class="games-list">
+          {% for j in jogos_do_dia[:6] %}
+          <div class="game-card">
+
+            <div class="game-meta">
+              <span class="game-league">{{ j.liga }}</span>
+
+              {% if j.status == 'FT' %}
+                <span class="game-time">Encerrado</span>
+              {% elif j.status == 'NS' %}
+                <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
+              {% else %}
+                <span class="game-time live">
+                  <span class="live-dot"></span> Ao vivo
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="game-teams">
+              <div class="team home">
+                <img
+                  src="{{ j.casa_logo }}"
+                  alt="{{ j.casa }}"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+                >
+                <span class="team-name">{{ j.casa[:3]|upper }}</span>
+              </div>
+
+              <div class="game-score">
+                {% if j.placar %}
+                  <span class="score">{{ j.placar }}</span>
+                {% else %}
+                  <span class="time">{{ j.hora }}</span>
+                {% endif %}
+              </div>
+
+              <div class="team away">
+                <span class="team-name">{{ j.fora[:3]|upper }}</span>
+                <img
+                  src="{{ j.fora_logo }}"
+                  alt="{{ j.fora }}"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+                >
+              </div>
+            </div>
+
+            <a href="{{ j.link }}" class="game-link">
+              {% if j.placar %}
+                Saiba como foi →
+              {% else %}
+                O que esperar →
+              {% endif %}
+            </a>
+
+          </div>
+          {% endfor %}
         </div>
-
-        <div class="team away">
-          <span class="team-name">{{ j.fora[:3]|upper }}</span>
-          <img src="{{ j.fora_logo }}" alt="{{ j.fora }}">
-        </div>
-      </div>
-
-      <!-- LINK -->
-      <a href="{{ j.link }}" class="game-link">
-        {% if j.placar %}
-          Saiba como foi →
-        {% else %}
-          O que esperar →
-        {% endif %}
-      </a>
-
-    </div>
-    {% endfor %}
-  </div>
-</aside>
-
+      </aside>
 
     </div>
   </div>
@@ -245,11 +265,14 @@
       {% for n in ultima_hora %}
         <a href="/noticia/{{ n.slug }}" class="card">
 
-          {% if n.imagem %}
-            <div class="card-image">
-              <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
-            </div>
-          {% endif %}
+          <div class="card-image">
+            <img
+              src="{{ n.imagem }}"
+              alt="{{ n.titulo }}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+            >
+          </div>
 
           <div class="card-body">
             <span class="badge">{{ n.categoria }}</span>
@@ -269,6 +292,7 @@
     </div>
   </section>
 </section>
+
 <!-- ================= ADS HORIZONTAL FOOTER ================= -->
 <section class="home-ads-horizontal">
   <div class="container">
@@ -277,4 +301,5 @@
     </div>
   </div>
 </section>
+
 {% endblock %}
