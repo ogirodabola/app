@@ -1,3 +1,4 @@
+PLACEHOLDER_PADRAO = "/static/img/placeholder.png"
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -60,7 +61,6 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             try:
                 data = json.loads(script.string)
 
-                # Alguns sites retornam lista
                 if isinstance(data, list):
                     for item in data:
                         if isinstance(item, dict):
@@ -132,13 +132,18 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             if len(texto) > 5:
                 credito = texto
 
+        # ======================================================
+        # 6️⃣ FALLBACK FINAL — SEM IMAGEM EDITORIAL
+        # ======================================================
+        if not imagem_url:
+            imagem_url = PLACEHOLDER_PADRAO
+            credito = None
+
         return imagem_url, credito
 
     except Exception as e:
         print(f"[IMG ERRO] {fonte_nome}: {e}")
-        return None, None
-
-
+        return PLACEHOLDER_PADRAO, None
 
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
