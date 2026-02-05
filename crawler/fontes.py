@@ -5,9 +5,8 @@ FONTES = [
         "tipo": "html"
     },
     {
-        "nome": "UOL Esporte",
-        "url": "https://www.uol.com.br/esporte/futebol/",
-        "tipo": "html"
+        "nome": "Lance!",
+        "url": "https://www.lance.com.br"
     },
     {
         "nome": "ESPN Brasil",
