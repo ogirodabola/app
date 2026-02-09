@@ -1,12 +1,15 @@
 PLACEHOLDER_PADRAO = "/static/img/placeholder.png"
+
 import re
+import json
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
-import json
+from urllib.parse import urlparse, urljoin
+
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
+
 
 HEADERS = {
     "User-Agent": "O Giro da Bola"
@@ -23,18 +26,25 @@ PALAVRAS_PROIBIDAS = [
 ]
 
 
+# ======================================================
+# LINK VÁLIDO — SUPORTA LINKS RELATIVOS (LANCE!)
+# ======================================================
 def link_valido(url: str, dominio: str) -> bool:
     if not url:
         return False
 
     url = url.lower()
 
-    if dominio not in url:
-        return False
-
     for p in PALAVRAS_PROIBIDAS:
         if p in url:
             return False
+
+    # aceita links relativos
+    if url.startswith("/"):
+        return True
+
+    if dominio not in url:
+        return False
 
     return len(url) > 30
 
@@ -45,6 +55,9 @@ def limpar_titulo(titulo: str) -> str:
     return titulo.strip()
 
 
+# ======================================================
+# EXTRAÇÃO DE IMAGEM — ROBUSTA (LANCE / GE / ESPN)
+# ======================================================
 def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
     try:
         r = requests.get(url_noticia, headers=HEADERS, timeout=15)
@@ -54,9 +67,7 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
         imagem_url = None
         credito = f"Foto: {fonte_nome}"
 
-        # ======================================================
-        # 1️⃣ JSON-LD (UOL, GE, ESPN — padrão Google News)
-        # ======================================================
+        # 1️⃣ JSON-LD (padrão Google News)
         for script in soup.find_all("script", type="application/ld+json"):
             try:
                 data = json.loads(script.string)
@@ -81,9 +92,7 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             except Exception:
                 continue
 
-        # ======================================================
         # 2️⃣ Open Graph
-        # ======================================================
         if not imagem_url:
             og = soup.find("meta", property="og:image")
             if og and og.get("content"):
@@ -94,9 +103,7 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             if ogs and ogs.get("content"):
                 imagem_url = ogs["content"]
 
-        # ======================================================
         # 3️⃣ IMG do artigo (lazy-load)
-        # ======================================================
         if not imagem_url:
             img = soup.select_one("article img")
             if img:
@@ -106,9 +113,7 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
                     or img.get("src")
                 )
 
-        # ======================================================
-        # 4️⃣ FILTRO — imagens genéricas / lixo editorial
-        # ======================================================
+        # 4️⃣ Filtro de lixo editorial
         if imagem_url:
             imagem_url = imagem_url.strip()
 
@@ -123,18 +128,14 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
             if any(p in imagem_url.lower() for p in PADROES_INVALIDOS):
                 imagem_url = None
 
-        # ======================================================
-        # 5️⃣ CRÉDITO (quando existir)
-        # ======================================================
+        # 5️⃣ Crédito
         figcaption = soup.find("figcaption")
         if figcaption:
             texto = figcaption.get_text(strip=True)
             if len(texto) > 5:
                 credito = texto
 
-        # ======================================================
-        # 6️⃣ FALLBACK FINAL — SEM IMAGEM EDITORIAL
-        # ======================================================
+        # 6️⃣ Fallback final
         if not imagem_url:
             imagem_url = PLACEHOLDER_PADRAO
             credito = None
@@ -145,6 +146,10 @@ def extrair_imagem_e_credito(url_noticia: str, fonte_nome: str):
         print(f"[IMG ERRO] {fonte_nome}: {e}")
         return PLACEHOLDER_PADRAO, None
 
+
+# ======================================================
+# EXTRAÇÃO DE NOTÍCIAS POR FONTE
+# ======================================================
 def extrair_noticias_fonte(fonte):
     print(f"[INFO] Coletando: {fonte['nome']}")
 
@@ -160,13 +165,16 @@ def extrair_noticias_fonte(fonte):
             break
 
         titulo = limpar_titulo(a.get_text(strip=True))
-        url = a.get("href")
+        href = a.get("href")
 
         if not titulo or len(titulo) < 40:
             continue
 
-        if not link_valido(url, dominio):
+        if not link_valido(href, dominio):
             continue
+
+        # normaliza URL (links relativos do Lance)
+        url = urljoin(fonte["url"], href)
 
         imagem, imagem_credito = extrair_imagem_e_credito(url, fonte["nome"])
 
@@ -184,6 +192,9 @@ def extrair_noticias_fonte(fonte):
     return noticias
 
 
+# ======================================================
+# EXECUÇÃO PRINCIPAL
+# ======================================================
 def rodar_crawler():
     total = 0
 
