@@ -167,7 +167,10 @@ def extrair_noticias_fonte(fonte):
         titulo = limpar_titulo(a.get_text(strip=True))
         href = a.get("href")
 
-        if not titulo or len(titulo) < 40:
+        if not titulo or len(titulo) < 20:
+            continue
+        
+        if fonte["nome"] == "Lance!" and "/futebol/" not in url:
             continue
 
         if not link_valido(href, dominio):
@@ -175,6 +178,8 @@ def extrair_noticias_fonte(fonte):
 
         # normaliza URL (links relativos do Lance)
         url = urljoin(fonte["url"], href)
+        if "uol.com.br" in url:
+            continue
 
         imagem, imagem_credito = extrair_imagem_e_credito(url, fonte["nome"])
 
