@@ -8,9 +8,4 @@ FONTES = [
         "nome": "Lance!",
         "url": "https://www.lance.com.br"
     },
-    {
-        "nome": "ESPN Brasil",
-        "url": "https://www.espn.com.br/futebol/",
-        "tipo": "html"
-    }
 ]
