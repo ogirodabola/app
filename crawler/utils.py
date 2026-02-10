@@ -1,63 +1,71 @@
-import requests
-from bs4 import BeautifulSoup
+# crawler/utils.py
 
-def extrair_conteudo_noticia(url: str) -> str:
-    try:
-        resp = requests.get(url, timeout=15, headers={
-            "User-Agent": "Mozilla/5.0"
-        })
-        resp.raise_for_status()
-
-        soup = BeautifulSoup(resp.text, "lxml")
-
-        # remove lixo
-        for tag in soup(["script", "style", "aside", "footer", "nav"]):
-            tag.decompose()
-
-        paragrafos = [
-            p.get_text(strip=True)
-            for p in soup.find_all("p")
-            if len(p.get_text(strip=True)) > 40
-        ]
-
-        return "\n\n".join(paragrafos[:15])  # limite seguro
-    except Exception as e:
-        print(f"[ERRO] Conteúdo não extraído: {e}")
-        return ""
-
-import requests
-from bs4 import BeautifulSoup
 import json
 
 PLACEHOLDER_PADRAO = "/static/img/placeholder.png"
 
-def extrair_imagem_e_credito_por_url(url, fonte_nome):
-    try:
-        r = requests.get(url, timeout=15)
-        r.raise_for_status()
-        soup = BeautifulSoup(r.text, "lxml")
 
-        imagem = None
-        credito = None
+def extrair_imagem_artigo(soup):
+    """
+    Estratégia unificada de imagem:
+    1) JSON-LD
+    2) og:image
+    3) og:image:secure_url
+    4) <article> img
+    5) placeholder
+    """
 
-        for script in soup.find_all("script", type="application/ld+json"):
-            try:
-                data = json.loads(script.string)
-                if isinstance(data, dict):
-                    img = data.get("image")
-                    if isinstance(img, list):
-                        imagem = img[0]
-                    elif isinstance(img, str):
-                        imagem = img
-                if imagem:
-                    break
-            except Exception:
-                pass
+    imagem = None
 
-        if not imagem:
-            imagem = PLACEHOLDER_PADRAO
+    # 1️⃣ JSON-LD
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(script.string)
 
-        return imagem, credito
+            if isinstance(data, list):
+                for item in data:
+                    img = item.get("image") if isinstance(item, dict) else None
+                    if img:
+                        imagem = img[0] if isinstance(img, list) else img
+                        break
 
-    except Exception:
-        return PLACEHOLDER_PADRAO, None
+            elif isinstance(data, dict):
+                img = data.get("image")
+                if img:
+                    imagem = img[0] if isinstance(img, list) else img
+
+        except Exception:
+            continue
+
+        if imagem:
+            break
+
+    # 2️⃣ Open Graph
+    if not imagem:
+        og = soup.find("meta", property="og:image")
+        if og and og.get("content"):
+            imagem = og["content"]
+
+    # 3️⃣ Open Graph Secure
+    if not imagem:
+        ogs = soup.find("meta", property="og:image:secure_url")
+        if ogs and ogs.get("content"):
+            imagem = ogs["content"]
+
+    # 4️⃣ IMG do artigo
+    if not imagem:
+        img = soup.select_one("article img")
+        if img:
+            imagem = (
+                img.get("data-src")
+                or img.get("data-original")
+                or img.get("src")
+            )
+
+    # 5️⃣ Filtro de lixo
+    if imagem:
+        invalidos = ["logo", "sprite", "placeholder", "default"]
+        if any(p in imagem.lower() for p in invalidos):
+            imagem = None
+
+    return imagem or PLACEHOLDER_PADRAO
