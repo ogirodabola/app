@@ -265,3 +265,61 @@ def anuncie(request: Request):
             "categoria_ativa": None
         }
     )
+
+from core.database import (
+    listar_ads_slots,
+    buscar_ads_slot,
+    salvar_ads_script,
+    atualizar_ads_slot_status
+)
+
+@app.get("/admin/ads", response_class=HTMLResponse)
+def admin_ads(request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    slots = listar_ads_slots()
+
+    return templates.TemplateResponse(
+        "admin/ads_list.html",
+        {
+            "request": request,
+            "slots": slots
+        }
+    )
+
+@app.get("/admin/ads/{slot_id}", response_class=HTMLResponse)
+def admin_ads_edit(slot_id: int, request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    slot = buscar_ads_slot(slot_id)
+
+    if not slot:
+        raise HTTPException(status_code=404, detail="Slot não encontrado")
+
+    return templates.TemplateResponse(
+        "admin/ads_edit.html",
+        {
+            "request": request,
+            "slot": slot
+        }
+    )
+
+@app.post("/admin/ads/{slot_id}")
+def admin_ads_save(
+    slot_id: int,
+    request: Request,
+    codigo: str = Form(...),
+    ativo: bool = Form(False)
+):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    salvar_ads_script(slot_id, codigo, ativo)
+
+    return RedirectResponse("/admin/ads", status_code=302)
+
