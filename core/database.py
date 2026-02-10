@@ -628,35 +628,31 @@ def criar_noticia(dados: dict):
 # NOTÍCIAS — ATUALIZAR
 # ======================================================
 def atualizar_noticia(noticia_id: int, dados: dict):
-    slug = slugify(dados["titulo"])
-
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
                 UPDATE noticias
                 SET
-                  titulo = %s,
-                  linha_fina = %s,
-                  slug = %s,
-                  conteudo = %s,
+                  titulo_editorial = %s,
+                  resumo = %s,
+                  conteudo_editorial = %s,
                   imagem = %s,
-                  categoria_id = %s,
+                  categoria = %s,
                   tags = %s,
-                  status = %s,
-                  atualizada_em = NOW()
+                  editorial_status = %s
                 WHERE id = %s;
             """, (
-                dados["titulo"],
-                dados.get("linha_fina"),
-                slug,
-                dados.get("conteudo"),
+                dados.get("titulo_editorial"),
+                dados.get("resumo"),
+                dados.get("conteudo_editorial"),
                 dados.get("imagem"),
-                dados.get("categoria_id"),
+                dados.get("categoria"),
                 dados.get("tags"),
-                dados.get("status", "draft"),
+                dados.get("editorial_status", "pendente"),
                 noticia_id
             ))
         conn.commit()
+
 
 from psycopg2.extras import RealDictCursor
 
