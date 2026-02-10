@@ -3,8 +3,10 @@ from fastapi import Request
 from core.database import get_conn
 from psycopg2.extras import RealDictCursor
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    deprecated="auto"
+)
 
 def gerar_hash(senha: str) -> str:
     return pwd_context.hash(senha)
