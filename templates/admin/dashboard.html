@@ -1,19 +1,34 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard • Giro Desportivo</title>
-</head>
-<body>
+{% extends "admin/base_admin.html" %}
 
-  <h1>Dashboard</h1>
+{% block content %}
+<h1>Dashboard</h1>
 
-  <p>Logado como: {{ usuario.email }}</p>
+<p style="color:#475569;margin-bottom:24px">
+  Bem-vindo! Aqui você gerencia a monetização e configurações do Giro Desportivo.
+</p>
 
-  <ul>
-    <li><a href="/admin/ads">Gerenciar Anúncios</a></li>
-    <li><a href="/admin/logout">Sair</a></li>
-  </ul>
+<div class="admin-cards">
 
-</body>
-</html>
+  <!-- CARD: ANÚNCIOS -->
+  <div class="admin-card">
+    <h3>Gerenciador de Anúncios</h3>
+    <p>
+      Configure scripts, controle mobile/desktop e ative ou desative anúncios
+      sem precisar de deploy.
+    </p>
+
+    <a href="/admin/ads" class="btn">Gerenciar anúncios</a>
+  </div>
+
+  <!-- CARD: STATUS -->
+  <div class="admin-card">
+    <h3>Status da Monetização</h3>
+    <ul>
+      <li>✔ Slots configurados</li>
+      <li>✔ Controle por dispositivo</li>
+      <li>⏳ AdSense aguardando aprovação</li>
+    </ul>
+  </div>
+
+</div>
+{% endblock %}
