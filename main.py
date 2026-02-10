@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 from pathlib import Path
 from core.futebol_api import buscar_jogos_do_dia
 from fastapi.responses import HTMLResponse
+from core.database import listar_noticias_admin
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -359,7 +360,7 @@ def admin_noticias(request: Request):
     if auth:
         return auth
 
-    noticias = listar_noticias()
+    noticias = listar_noticias_admin()
 
     return templates.TemplateResponse(
         "admin/noticias_list.html",
