@@ -13,7 +13,12 @@ from core.database import (
     buscar_noticia_por_slug,
     listar_recomendadas_por_slug,
     listar_ultimas_editoriais,
-    buscar_classificacao_brasileirao
+    buscar_classificacao_brasileirao,
+    listar_noticias,
+    buscar_noticia_admin,
+    criar_noticia,
+    atualizar_noticia,
+    listar_categorias
 )
 
 # ✅ CRIA O APP UMA ÚNICA VEZ
@@ -343,3 +348,108 @@ def admin_ads_preview(slot_id: int, request: Request):
             "slot": slot
         }
     )
+
+@app.get("/admin/noticias", response_class=HTMLResponse)
+def admin_noticias(request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    noticias = listar_noticias()
+
+    return templates.TemplateResponse(
+        "admin/noticias_list.html",
+        {"request": request, "noticias": noticias}
+    )
+
+@app.get("/admin/noticias/nova", response_class=HTMLResponse)
+def admin_noticia_nova(request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    categorias = listar_categorias()
+
+    return templates.TemplateResponse(
+        "admin/noticias_edit.html",
+        {
+            "request": request,
+            "noticia": None,
+            "categorias": categorias
+        }
+    )
+
+@app.post("/admin/noticias/nova")
+def admin_noticia_criar(
+    request: Request,
+    titulo: str = Form(...),
+    linha_fina: str = Form(""),
+    conteudo: str = Form(""),
+    imagem: str = Form(""),
+    categoria_id: int = Form(None),
+    tags: str = Form(""),
+    status: str = Form("draft")
+):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    criar_noticia({
+        "titulo": titulo,
+        "linha_fina": linha_fina,
+        "conteudo": conteudo,
+        "imagem": imagem,
+        "categoria_id": categoria_id,
+        "tags": tags,
+        "status": status
+    })
+
+    return RedirectResponse("/admin/noticias", status_code=302)
+
+@app.get("/admin/noticias/{noticia_id}", response_class=HTMLResponse)
+def admin_noticia_editar(noticia_id: int, request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    noticia = buscar_noticia_admin(noticia_id)
+    categorias = listar_categorias()
+
+    return templates.TemplateResponse(
+        "admin/noticias_edit.html",
+        {
+            "request": request,
+            "noticia": noticia,
+            "categorias": categorias
+        }
+    )
+
+@app.post("/admin/noticias/{noticia_id}")
+def admin_noticia_atualizar(
+    noticia_id: int,
+    request: Request,
+    titulo: str = Form(...),
+    linha_fina: str = Form(""),
+    conteudo: str = Form(""),
+    imagem: str = Form(""),
+    categoria_id: int = Form(None),
+    tags: str = Form(""),
+    status: str = Form("draft")
+):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    atualizar_noticia(noticia_id, {
+        "titulo": titulo,
+        "linha_fina": linha_fina,
+        "conteudo": conteudo,
+        "imagem": imagem,
+        "categoria_id": categoria_id,
+        "tags": tags,
+        "status": status
+    })
+
+    return RedirectResponse("/admin/noticias", status_code=302)
+
+
