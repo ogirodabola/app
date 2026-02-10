@@ -10,4 +10,8 @@ psycopg2-binary
 google-generativeai
 openai
 python-dotenv
+
+# auth / admin
 itsdangerous
+passlib[bcrypt]
+python-multipart
