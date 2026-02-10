@@ -9,10 +9,7 @@
   <div class="container">
     <div class="ads-programmatic">
       <span class="ads-label">Publicidade</span>
-
-      <div class="ads-programmatic-slot">
-        ADS
-      </div>
+      {{ render_ad("home_top_programmatic") | safe }}
     </div>
   </div>
 </section>
@@ -27,39 +24,36 @@
 
       <ul class="latest-news-list">
         {% for n in ultimas_noticias %}
-          <li class="latest-news-item">
-            <a href="/noticia/{{ n.slug }}">
+        <li class="latest-news-item">
+          <a href="/noticia/{{ n.slug }}">
+            <img
+              src="{{ n.imagem }}"
+              alt="{{ n.titulo_editorial or n.titulo }}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+            >
 
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo_editorial or n.titulo }}"
-                loading="lazy"
-                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-              >
+            <div class="latest-news-text">
+              <span class="latest-news-category">{{ n.categoria }}</span>
 
-              <div class="latest-news-text">
-                <span class="latest-news-category">
-                  {{ n.categoria }}
-                </span>
+              <h3 class="latest-news-title">
+                {{ n.titulo_editorial or n.titulo }}
+              </h3>
 
-                <h3 class="latest-news-title">
-                  {{ n.titulo_editorial or n.titulo }}
-                </h3>
-
-                <div class="latest-news-meta">
-                  {{ n.fonte }}
-                </div>
-              </div>
-
-            </a>
-          </li>
+              {% if n.fonte %}
+              <div class="latest-news-meta">{{ n.fonte }}</div>
+              {% endif %}
+            </div>
+          </a>
+        </li>
         {% endfor %}
       </ul>
     </div>
 
-    <!-- ADS -->
+    <!-- ADS SIDEBAR -->
     <aside class="latest-ads">
-      <div class="ads-placeholder">ADS</div>
+      <span class="ads-label">Publicidade</span>
+      {{ render_ad("home_sidebar") | safe }}
     </aside>
 
   </div>
@@ -74,25 +68,25 @@
 
       <div class="brasileirao-cards">
         {% for n in brasileirao | default([]) %}
-          <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
+        <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
 
-            <div class="brasileirao-image">
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo }}"
-                loading="lazy"
-                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-              >
-            </div>
+          <div class="brasileirao-image">
+            <img
+              src="{{ n.imagem }}"
+              alt="{{ n.titulo }}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+            >
+          </div>
 
-            <div class="brasileirao-body">
-              <h3>{{ n.titulo }}</h3>
-              {% if n.fonte %}
-                <span class="brasileirao-meta">{{ n.fonte }}</span>
-              {% endif %}
-            </div>
+          <div class="brasileirao-body">
+            <h3>{{ n.titulo }}</h3>
+            {% if n.fonte %}
+              <span class="brasileirao-meta">{{ n.fonte }}</span>
+            {% endif %}
+          </div>
 
-          </a>
+        </a>
         {% endfor %}
       </div>
     </div>
@@ -133,8 +127,7 @@
 
       <div class="table-footer">
         <a href="/classificacao" class="table-more-btn">
-          Ver tabela completa
-          <span class="arrow">→</span>
+          Ver tabela completa →
         </a>
       </div>
     </aside>
@@ -145,114 +138,8 @@
 <!-- ================= ADS HORIZONTAL ================= -->
 <section class="home-ads-horizontal">
   <div class="container">
-    <div class="ads-horizontal-placeholder">
-      ADS
-    </div>
-  </div>
-</section>
-
-<!-- ================= BLOCO SECUNDÁRIO HOME ================= -->
-<section class="home-secondary">
-  <div class="container">
-    <div class="home-secondary-grid">
-
-      <!-- COLUNA: ÚLTIMAS NOTÍCIAS -->
-      <div class="news-column">
-        <h2 class="section-title">Últimas Notícias</h2>
-
-        <div class="news-list">
-          {% for n in ultimas_noticias[:6] %}
-          <a href="/noticia/{{ n.slug }}" class="news-card">
-
-            <div class="news-card-image">
-              <img
-                src="{{ n.imagem }}"
-                alt="{{ n.titulo }}"
-                loading="lazy"
-                onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-              >
-            </div>
-
-            <div class="news-card-body">
-              <span class="news-card-category">{{ n.categoria }}</span>
-              <h3 class="news-card-title">{{ n.titulo }}</h3>
-              <span class="news-card-source">{{ n.fonte }}</span>
-            </div>
-
-          </a>
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- COLUNA: JOGOS DO DIA -->
-      <aside class="games-column">
-        <div class="games-header">
-          <h2>Jogos do Dia</h2>
-          <span class="games-subtitle">Hoje</span>
-        </div>
-
-        <div class="games-list">
-          {% for j in jogos_do_dia[:6] %}
-          <div class="game-card">
-
-            <div class="game-meta">
-              <span class="game-league">{{ j.liga }}</span>
-
-              {% if j.status == 'FT' %}
-                <span class="game-time">Encerrado</span>
-              {% elif j.status == 'NS' %}
-                <span class="game-time">{{ j.data }} • {{ j.hora }}</span>
-              {% else %}
-                <span class="game-time live">
-                  <span class="live-dot"></span> Ao vivo
-                </span>
-              {% endif %}
-            </div>
-
-            <div class="game-teams">
-              <div class="team home">
-                <img
-                  src="{{ j.casa_logo }}"
-                  alt="{{ j.casa }}"
-                  loading="lazy"
-                  onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-                >
-                <span class="team-name">{{ j.casa[:3]|upper }}</span>
-              </div>
-
-              <div class="game-score">
-                {% if j.placar %}
-                  <span class="score">{{ j.placar }}</span>
-                {% else %}
-                  <span class="time">{{ j.hora }}</span>
-                {% endif %}
-              </div>
-
-              <div class="team away">
-                <span class="team-name">{{ j.fora[:3]|upper }}</span>
-                <img
-                  src="{{ j.fora_logo }}"
-                  alt="{{ j.fora }}"
-                  loading="lazy"
-                  onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-                >
-              </div>
-            </div>
-
-            <a href="{{ j.link }}" class="game-link">
-              {% if j.placar %}
-                Saiba como foi →
-              {% else %}
-                O que esperar →
-              {% endif %}
-            </a>
-
-          </div>
-          {% endfor %}
-        </div>
-      </aside>
-
-    </div>
+    <span class="ads-label">Publicidade</span>
+    {{ render_ad("home_horizontal") | safe }}
   </div>
 </section>
 
@@ -263,42 +150,37 @@
 
     <div class="cards-grid">
       {% for n in ultima_hora %}
-        <a href="/noticia/{{ n.slug }}" class="card">
+      <a href="/noticia/{{ n.slug }}" class="card">
 
-          <div class="card-image">
-            <img
-              src="{{ n.imagem }}"
-              alt="{{ n.titulo }}"
-              loading="lazy"
-              onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-            >
-          </div>
+        <div class="card-image">
+          <img
+            src="{{ n.imagem }}"
+            alt="{{ n.titulo }}"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
+          >
+        </div>
 
-          <div class="card-body">
-            <span class="badge">{{ n.categoria }}</span>
+        <div class="card-body">
+          <span class="badge">{{ n.categoria }}</span>
+          <h3 class="card-title">{{ n.titulo }}</h3>
 
-            <h3 class="card-title">
-              {{ n.titulo }}
-            </h3>
+          {% if n.fonte %}
+          <p class="card-meta">{{ n.fonte }}</p>
+          {% endif %}
+        </div>
 
-            {% if n.fonte %}
-              <p class="card-meta">
-                {{ n.fonte }}
-              </p>
-            {% endif %}
-          </div>
-        </a>
+      </a>
       {% endfor %}
     </div>
   </section>
 </section>
 
-<!-- ================= ADS HORIZONTAL FOOTER ================= -->
+<!-- ================= ADS FOOTER ================= -->
 <section class="home-ads-horizontal">
   <div class="container">
-    <div class="ads-horizontal-placeholder">
-      ADS
-    </div>
+    <span class="ads-label">Publicidade</span>
+    {{ render_ad("home_footer") | safe }}
   </div>
 </section>
 
