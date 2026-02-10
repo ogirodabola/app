@@ -309,17 +309,10 @@ def admin_ads_edit(slot_id: int, request: Request):
     )
 
 @app.post("/admin/ads/{slot_id}")
-def admin_ads_save(
+ddef admin_ads_save(
     slot_id: int,
     request: Request,
     codigo: str = Form(...),
-    ativo: bool = Form(False)
+    ativo: bool = Form(False),
+    dispositivo: str = Form("all")
 ):
-    auth = login_required(request)
-    if auth:
-        return auth
-
-    salvar_ads_script(slot_id, codigo, ativo)
-
-    return RedirectResponse("/admin/ads", status_code=302)
-
