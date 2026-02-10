@@ -1,0 +1,29 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<h1>Notícias</h1>
+
+<a href="/admin/noticias/nova" class="btn" style="margin-bottom:16px;display:inline-block">
+  Nova notícia
+</a>
+
+<table>
+  <tr>
+    <th>Título</th>
+    <th>Categoria</th>
+    <th>Status</th>
+    <th>Ações</th>
+  </tr>
+
+  {% for n in noticias %}
+  <tr>
+    <td>{{ n.titulo }}</td>
+    <td>{{ n.categoria or "-" }}</td>
+    <td>{{ n.status }}</td>
+    <td>
+      <a class="btn" href="/admin/noticias/{{ n.id }}">Editar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
