@@ -795,3 +795,22 @@ def listar_ultimas_publicadas(limit=10):
     """
     with engine.connect() as conn:
         return conn.execute(text(query), {"limit": limit}).fetchall()
+
+@router.post("/admin/noticias/{id}")
+async def salvar_noticia_admin(id: int, request: Request):
+    form = await request.form()
+
+    dados = {
+        "titulo_editorial": form.get("titulo_editorial"),
+        "resumo": form.get("resumo"),
+        "conteudo_editorial": form.get("conteudo_editorial"),
+        "imagem": form.get("imagem"),
+        "categoria": form.get("categoria"),
+        "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
+        "editorial_status": form.get("editorial_status", "pendente"),
+    }
+
+    atualizar_noticia(id, dados)
+
+    return RedirectResponse("/admin/noticias", status_code=303)
+
