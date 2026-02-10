@@ -1,8 +1,8 @@
 from core.auth import gerar_hash
 from core.database import get_conn
 
-EMAIL = "admin@girodesportivo.com"
-SENHA = "SENHA_FORTE_AQUI"
+EMAIL = "fsr.tiago@gmail.com"
+SENHA = "#t25rootPUkroot$25$"
 
 senha_hash = gerar_hash(SENHA)
 
