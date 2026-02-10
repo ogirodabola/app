@@ -96,8 +96,8 @@ def extrair_artigo_goal(url: str):
     titulo = titulo_el.get_text(strip=True)
 
     # Filtro editorial obrigatório
-    if not menciona_clube_br(titulo):
-        return None
+    # if not menciona_clube_br(titulo):
+    #    return None
 
     subtitulo_el = soup.select_one("h2")
     subtitulo = subtitulo_el.get_text(strip=True) if subtitulo_el else None
