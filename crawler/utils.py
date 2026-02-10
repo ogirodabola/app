@@ -24,3 +24,31 @@ def extrair_conteudo_noticia(url: str) -> str:
     except Exception as e:
         print(f"[ERRO] Conteúdo não extraído: {e}")
         return ""
+
+PLACEHOLDER_PADRAO = "/static/img/placeholder.png"
+
+
+def extrair_imagem_e_credito_lance(soup):
+    imagem = None
+    credito = None
+
+    # Lance usa figure com img claro
+    figure = soup.find("figure")
+    if figure:
+        img = figure.find("img")
+        if img:
+            imagem = (
+                img.get("data-src")
+                or img.get("src")
+            )
+
+        figcaption = figure.find("figcaption")
+        if figcaption:
+            texto = figcaption.get_text(strip=True)
+            if texto:
+                credito = texto
+
+    if not imagem:
+        imagem = PLACEHOLDER_PADRAO
+
+    return imagem, credito
