@@ -28,10 +28,21 @@
 </select>
 
 <br><br>
-
   <label>Script do anúncio:</label><br>
+  <p style="color:#92400e;font-size:13px">
+  ⚠️ O preview executa o script em sandbox. Não salva alterações.
+</p>
+
   <textarea name="codigo" rows="12" cols="100">{{ slot.codigo or "" }}</textarea>
   <br><br>
+<a
+  href="/admin/ads/{{ slot.id }}/preview"
+  target="_blank"
+  class="btn"
+  style="margin-right:12px;background:#64748b"
+>
+  Pré-visualizar
+</a>
 
   <button type="submit">Salvar alterações</button>
   
