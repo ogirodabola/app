@@ -568,20 +568,36 @@ def listar_noticias():
 # ======================================================
 from psycopg2.extras import RealDictCursor
 
-def listar_noticias_admin():
-    with get_conn() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  categoria,
-                  editorial_status,
-                  criada_em
-                FROM noticias
-                ORDER BY criada_em DESC;
-            """)
-            return cur.fetchall()
+def listar_noticias_admin(
+    status: str | None = None,
+    categoria: str | None = None,
+    busca: str | None = None
+):
+    query = """
+        SELECT *
+        FROM noticias
+        WHERE 1=1
+    """
+    params = {}
+
+    if status:
+        query += " AND editorial_status = :status"
+        params["status"] = status
+
+    if categoria:
+        query += " AND categoria = :categoria"
+        params["categoria"] = categoria
+
+    if busca:
+        query += " AND titulo_editorial ILIKE :busca"
+        params["busca"] = f"%{busca}%"
+
+    query += " ORDER BY criada_em DESC"
+
+    with engine.connect() as conn:
+        result = conn.execute(text(query), params)
+        return result.fetchall()
+
 
 # ======================================================
 # NOTÍCIAS — CRIAR
@@ -772,3 +788,14 @@ def buscar_noticia_admin(noticia_id: int):
                 LIMIT 1;
             """, (noticia_id,))
             return cur.fetchone()
+
+def listar_ultimas_publicadas(limit=10):
+    query = """
+        SELECT *
+        FROM noticias
+        WHERE editorial_status = 'publicado'
+        ORDER BY criada_em DESC
+        LIMIT :limit
+    """
+    with engine.connect() as conn:
+        return conn.execute(text(query), {"limit": limit}).fetchall()
