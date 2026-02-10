@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin • Giro Desportivo</title>
+
+  <link rel="stylesheet" href="/static/css/admin.css">
 </head>
 <body>
 
-  <header>
+  <header class="admin-header">
     <h2>Giro Desportivo — Admin</h2>
-    <nav>
-      <a href="/admin/dashboard">Dashboard</a> |
-      <a href="/admin/ads">Anúncios</a> |
+
+    <nav class="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/ads">Anúncios</a>
       <a href="/admin/logout">Sair</a>
     </nav>
-    <hr>
   </header>
 
-  <main>
+  <main class="admin-container">
     {% block content %}{% endblock %}
   </main>
 
