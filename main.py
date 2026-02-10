@@ -115,23 +115,25 @@ templates.env.globals["render_ad"] = render_ad
 # ======================================================
 # HOME
 # ======================================================
+
+from core.database import listar_noticias_publicadas
+
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
     tabela_completa = buscar_classificacao_brasileirao()
-
-    jogos_do_dia = buscar_jogos_do_dia()  # SOMENTE API, SEM MOCK
+    jogos_do_dia = buscar_jogos_do_dia()
 
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
 
-            # topo / feed
-            "ultima_hora": listar_ultima_hora(6),
-            "ultimas_noticias": listar_ultimas_editoriais(6),
+            # blocos editoriais (CMS manda)
+            "ultima_hora": listar_noticias_publicadas(limit=6),
+            "ultimas_noticias": listar_noticias_publicadas(limit=6),
 
-            # bloco brasileirão
+            # bloco esportivo específico
             "brasileirao": listar_por_categoria("Brasileirão", limit=4),
 
             # widgets
@@ -143,7 +145,6 @@ def home(request: Request):
             "categoria_ativa": None
         }
     )
-
 
 # ======================================================
 # CLASSIFICAÇÃO COMPLETA
