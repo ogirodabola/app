@@ -309,7 +309,7 @@ def admin_ads_edit(slot_id: int, request: Request):
     )
 
 @app.post("/admin/ads/{slot_id}")
-ddef admin_ads_save(
+def admin_ads_save(
     slot_id: int,
     request: Request,
     codigo: str = Form(...),
