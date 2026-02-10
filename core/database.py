@@ -466,3 +466,81 @@ def buscar_ad_por_slot(nome_slot: str):
             return cur.fetchone()
     finally:
         conn.close()
+
+from psycopg2.extras import RealDictCursor
+
+# ======================================================
+# ADS — LISTAR SLOTS
+# ======================================================
+def listar_ads_slots():
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    s.id,
+                    s.nome,
+                    s.pagina,
+                    s.posicao,
+                    s.dispositivo,
+                    s.ativo,
+                    sc.codigo
+                FROM ads_slots s
+                LEFT JOIN ads_scripts sc ON sc.slot_id = s.id
+                ORDER BY s.pagina, s.posicao;
+            """)
+            return cur.fetchall()
+
+
+# ======================================================
+# ADS — BUSCAR SLOT POR ID
+# ======================================================
+def buscar_ads_slot(slot_id: int):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    s.id,
+                    s.nome,
+                    s.pagina,
+                    s.posicao,
+                    s.dispositivo,
+                    s.ativo,
+                    sc.codigo,
+                    sc.ativo AS script_ativo
+                FROM ads_slots s
+                LEFT JOIN ads_scripts sc ON sc.slot_id = s.id
+                WHERE s.id = %s
+                LIMIT 1;
+            """, (slot_id,))
+            return cur.fetchone()
+
+
+# ======================================================
+# ADS — SALVAR SCRIPT
+# ======================================================
+def salvar_ads_script(slot_id: int, codigo: str, ativo: bool):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO ads_scripts (slot_id, codigo, ativo)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (slot_id)
+                DO UPDATE SET
+                    codigo = EXCLUDED.codigo,
+                    ativo = EXCLUDED.ativo;
+            """, (slot_id, codigo, ativo))
+        conn.commit()
+
+
+# ======================================================
+# ADS — ATIVAR / DESATIVAR SLOT
+# ======================================================
+def atualizar_ads_slot_status(slot_id: int, ativo: bool):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE ads_slots
+                SET ativo = %s
+                WHERE id = %s;
+            """, (ativo, slot_id))
+        conn.commit()
