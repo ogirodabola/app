@@ -162,7 +162,7 @@ def politica_editorial(request: Request):
 @app.get("/politica-privacidade", response_class=HTMLResponse)
 def politica_privacidade(request: Request):
     return templates.TemplateResponse(
-        "politica-privacidade.html",
+        "privacidade.html",
         {
             "request": request,
             "categorias": listar_categorias(),
