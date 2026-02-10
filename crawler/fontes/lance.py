@@ -8,8 +8,8 @@ from crawler.utils import extrair_imagem_e_credito_por_url
 
 BASE_URL = "https://www.lance.com.br"
 EDITORIAS = [
-    "/futebol-nacional/",
-    "/brasileirao/"
+    "/futebol-nacional",
+    "/brasileirao"
 ]
 
 HEADERS = {
