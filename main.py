@@ -18,7 +18,9 @@ from core.database import (
     buscar_noticia_admin,
     criar_noticia,
     atualizar_noticia,
-    listar_categorias
+    listar_categorias,
+    listar_ultima_hora_publicada,
+    listar_editorial_publicado
 )
 
 # ✅ CRIA O APP UMA ÚNICA VEZ
@@ -130,8 +132,9 @@ def home(request: Request):
             "request": request,
 
             # blocos editoriais (CMS manda)
-            "ultima_hora": listar_noticias_publicadas(limit=6),
-            "ultimas_noticias": listar_noticias_publicadas(limit=6),
+            "ultima_hora": listar_ultima_hora_publicada(limit=6),
+            "ultimas_noticias": listar_editorial_publicado(limit=6),
+
 
             # bloco esportivo específico
             "brasileirao": listar_por_categoria("Brasileirão", limit=4),
