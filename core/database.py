@@ -448,3 +448,21 @@ def buscar_classificacao_brasileirao():
         for t in tabela
     ]
 
+def buscar_ad_por_slot(nome_slot: str):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    s.nome,
+                    s.ativo AS slot_ativo,
+                    sc.codigo,
+                    sc.ativo AS script_ativo
+                FROM ads_slots s
+                JOIN ads_scripts sc ON sc.slot_id = s.id
+                WHERE s.nome = %s
+                LIMIT 1;
+            """, (nome_slot,))
+            return cur.fetchone()
+    finally:
+        conn.close()
