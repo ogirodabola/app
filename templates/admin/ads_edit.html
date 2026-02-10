@@ -1,0 +1,24 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<h1>Editar Anúncio</h1>
+
+<p><strong>Slot:</strong> {{ slot.nome }}</p>
+<p><strong>Página:</strong> {{ slot.pagina }}</p>
+<p><strong>Posição:</strong> {{ slot.posicao }}</p>
+
+<form method="post">
+  <label>
+    <input type="checkbox" name="ativo" {% if slot.script_ativo %}checked{% endif %}>
+    Script ativo
+  </label>
+  <br><br>
+
+  <label>Script do anúncio:</label><br>
+  <textarea name="codigo" rows="12" cols="100">{{ slot.codigo or "" }}</textarea>
+  <br><br>
+
+  <button type="submit">Salvar</button>
+</form>
+
+{% endblock %}
