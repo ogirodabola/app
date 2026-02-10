@@ -1,0 +1,27 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<h1>Gerenciador de Anúncios</h1>
+
+<table border="1" cellpadding="8">
+  <tr>
+    <th>Slot</th>
+    <th>Página</th>
+    <th>Posição</th>
+    <th>Ativo</th>
+    <th>Ações</th>
+  </tr>
+
+  {% for s in slots %}
+  <tr>
+    <td>{{ s.nome }}</td>
+    <td>{{ s.pagina }}</td>
+    <td>{{ s.posicao }}</td>
+    <td>{{ "Sim" if s.ativo else "Não" }}</td>
+    <td>
+      <a href="/admin/ads/{{ s.id }}">Editar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
