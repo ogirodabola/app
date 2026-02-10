@@ -33,19 +33,26 @@ def coletar_urls_rss():
     urls = []
 
     for item in soup.find_all("item"):
-        # tenta <link>
+        url = None
+
+        # 1️⃣ tenta <link>
         link_tag = item.find("link")
         if link_tag and link_tag.text:
             url = link_tag.text.strip()
-        else:
+
+        # 2️⃣ fallback: <guid isPermaLink="true">
+        if not url:
+            guid = item.find("guid")
+            if guid and guid.get("isPermaLink") == "true":
+                url = guid.text.strip()
+
+        if not url:
             continue
 
         if url_valida(url):
             urls.append(url)
 
     return urls
-
-
 
 def coletar_noticias_gazeta(limit=20):
     noticias = []
