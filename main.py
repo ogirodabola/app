@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from pathlib import Path
 from core.futebol_api import buscar_jogos_do_dia
+from fastapi.responses import HTMLResponse
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -325,3 +326,20 @@ def admin_ads_save(
 
     return RedirectResponse("/admin/ads", status_code=302)
 
+@app.get("/admin/ads/{slot_id}/preview", response_class=HTMLResponse)
+def admin_ads_preview(slot_id: int, request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    slot = buscar_ads_slot(slot_id)
+    if not slot:
+        raise HTTPException(status_code=404, detail="Slot não encontrado")
+
+    return templates.TemplateResponse(
+        "admin/ads_preview.html",
+        {
+            "request": request,
+            "slot": slot
+        }
+    )
