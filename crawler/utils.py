@@ -40,7 +40,6 @@ def extrair_imagem_e_credito_por_url(url, fonte_nome):
         imagem = None
         credito = None
 
-        # JSON-LD
         for script in soup.find_all("script", type="application/ld+json"):
             try:
                 data = json.loads(script.string)
