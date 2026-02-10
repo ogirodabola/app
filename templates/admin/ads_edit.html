@@ -13,6 +13,21 @@
     Script ativo
   </label>
   <br><br>
+  <label>Exibir em:</label><br>
+
+<select name="dispositivo">
+  <option value="all" {% if slot.dispositivo == "all" %}selected{% endif %}>
+    Desktop e Mobile
+  </option>
+  <option value="desktop" {% if slot.dispositivo == "desktop" %}selected{% endif %}>
+    Apenas Desktop
+  </option>
+  <option value="mobile" {% if slot.dispositivo == "mobile" %}selected{% endif %}>
+    Apenas Mobile
+  </option>
+</select>
+
+<br><br>
 
   <label>Script do anúncio:</label><br>
   <textarea name="codigo" rows="12" cols="100">{{ slot.codigo or "" }}</textarea>
