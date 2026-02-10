@@ -37,6 +37,8 @@ app.mount(
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
+from core.ads import render_ad
+templates.env.globals["render_ad"] = render_ad
 
 # ======================================================
 # HOME
