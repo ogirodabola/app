@@ -544,3 +544,95 @@ def atualizar_ads_slot_status(slot_id: int, ativo: bool):
                 WHERE id = %s;
             """, (ativo, slot_id))
         conn.commit()
+
+from psycopg2.extras import RealDictCursor
+from slugify import slugify
+
+# ======================================================
+# NOTÍCIAS — LISTAR
+# ======================================================
+def listar_noticias():
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT n.id, n.titulo, n.status, n.criada_em, c.nome AS categoria
+                FROM noticias n
+                LEFT JOIN categorias c ON c.id = n.categoria_id
+                ORDER BY n.criada_em DESC;
+            """)
+            return cur.fetchall()
+
+
+# ======================================================
+# NOTÍCIAS — BUSCAR POR ID
+# ======================================================
+def buscar_noticia_admin(noticia_id: int):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE id = %s
+                LIMIT 1;
+            """, (noticia_id,))
+            return cur.fetchone()
+
+
+# ======================================================
+# NOTÍCIAS — CRIAR
+# ======================================================
+def criar_noticia(dados: dict):
+    slug = slugify(dados["titulo"])
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO noticias
+                (titulo, linha_fina, slug, conteudo, imagem, categoria_id, tags, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                dados["titulo"],
+                dados.get("linha_fina"),
+                slug,
+                dados.get("conteudo"),
+                dados.get("imagem"),
+                dados.get("categoria_id"),
+                dados.get("tags"),
+                dados.get("status", "draft")
+            ))
+        conn.commit()
+
+
+# ======================================================
+# NOTÍCIAS — ATUALIZAR
+# ======================================================
+def atualizar_noticia(noticia_id: int, dados: dict):
+    slug = slugify(dados["titulo"])
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE noticias
+                SET
+                  titulo = %s,
+                  linha_fina = %s,
+                  slug = %s,
+                  conteudo = %s,
+                  imagem = %s,
+                  categoria_id = %s,
+                  tags = %s,
+                  status = %s,
+                  atualizada_em = NOW()
+                WHERE id = %s;
+            """, (
+                dados["titulo"],
+                dados.get("linha_fina"),
+                slug,
+                dados.get("conteudo"),
+                dados.get("imagem"),
+                dados.get("categoria_id"),
+                dados.get("tags"),
+                dados.get("status", "draft"),
+                noticia_id
+            ))
+        conn.commit()
