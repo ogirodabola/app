@@ -758,3 +758,17 @@ def listar_noticias_admin():
                 ORDER BY criada_em DESC;
             """)
             return cur.fetchall()
+
+# ======================================================
+# NOTÍCIAS — BUSCAR UMA (ADMIN / CMS)
+# ======================================================
+def buscar_noticia_admin(noticia_id: int):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *
+                FROM noticias
+                WHERE id = %s
+                LIMIT 1;
+            """, (noticia_id,))
+            return cur.fetchone()
