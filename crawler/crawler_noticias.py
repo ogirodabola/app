@@ -5,7 +5,6 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
-from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
 from crawler.fontes.lance import coletar_noticias_lance
@@ -201,14 +200,17 @@ def bloquear_uol(url):
 # ======================================================
 # EXECUÇÃO PRINCIPAL
 # ======================================================
+from crawler.fontes.lance import coletar_noticias_lance
+from core.database import salvar_noticia
+
 def rodar_crawler():
     total = 0
 
     print("[RUNNER] Executando crawler do Lance")
 
-    noticias_lance = coletar_noticias_lance()
+    noticias = coletar_noticias_lance()
 
-    for n in noticias_lance:
+    for n in noticias:
         salvar_noticia(
             titulo=n["titulo"],
             resumo=n["resumo"],
@@ -226,3 +228,4 @@ def rodar_crawler():
 
 if __name__ == "__main__":
     rodar_crawler()
+
