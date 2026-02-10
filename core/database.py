@@ -636,3 +636,51 @@ def atualizar_noticia(noticia_id: int, dados: dict):
                 noticia_id
             ))
         conn.commit()
+
+from psycopg2.extras import RealDictCursor
+
+# ======================================================
+# NOTÍCIAS — HOME (PUBLICADAS)
+# ======================================================
+def listar_noticias_publicadas(limit=10):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  url,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+
+# ======================================================
+# NOTÍCIA — PÁGINA INDIVIDUAL
+# ======================================================
+def buscar_noticia_publica(slug: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  conteudo_editorial AS conteudo,
+                  imagem,
+                  imagem_credito,
+                  categoria,
+                  tags,
+                  criada_em
+                FROM noticias
+                WHERE slug = %s
+                  AND editorial_status = 'publicado'
+                LIMIT 1;
+            """, (slug,))
+            return cur.fetchone()
