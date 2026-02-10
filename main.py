@@ -18,6 +18,72 @@ from core.database import (
 # ✅ CRIA O APP UMA ÚNICA VEZ
 app = FastAPI()
 
+from starlette.middleware.sessions import SessionMiddleware
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="MUDE_ESSA_CHAVE_SUPER_SECRETA"
+)
+
+from fastapi.responses import RedirectResponse
+from fastapi import Request
+
+def login_required(request: Request):
+    if not request.session.get("admin_user"):
+        return RedirectResponse("/admin/login", status_code=302)
+
+from fastapi import Form
+from fastapi.responses import RedirectResponse
+from core.auth import autenticar_usuario
+
+@app.get("/admin/login", response_class=HTMLResponse)
+def admin_login(request: Request):
+    return templates.TemplateResponse(
+        "admin/login.html",
+        {"request": request, "erro": None}
+    )
+
+
+@app.post("/admin/login")
+def admin_login_post(
+    request: Request,
+    email: str = Form(...),
+    senha: str = Form(...)
+):
+    user = autenticar_usuario(email, senha)
+
+    if not user:
+        return templates.TemplateResponse(
+            "admin/login.html",
+            {"request": request, "erro": "Credenciais inválidas"}
+        )
+
+    request.session["admin_user"] = {
+        "id": user["id"],
+        "email": user["email"]
+    }
+
+    return RedirectResponse("/admin/dashboard", status_code=302)
+
+@app.get("/admin/logout")
+def admin_logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/admin/login", status_code=302)
+
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+def admin_dashboard(request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    return templates.TemplateResponse(
+        "admin/dashboard.html",
+        {
+            "request": request,
+            "usuario": request.session["admin_user"]
+        }
+    )
+
 # ✅ ADS.TXT (rota na raiz)
 @app.get("/ads.txt", response_class=PlainTextResponse)
 def ads_txt():
