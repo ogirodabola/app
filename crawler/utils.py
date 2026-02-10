@@ -25,30 +25,40 @@ def extrair_conteudo_noticia(url: str) -> str:
         print(f"[ERRO] Conteúdo não extraído: {e}")
         return ""
 
+import requests
+from bs4 import BeautifulSoup
+import json
+
 PLACEHOLDER_PADRAO = "/static/img/placeholder.png"
 
+def extrair_imagem_e_credito_por_url(url, fonte_nome):
+    try:
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "lxml")
 
-def extrair_imagem_e_credito_lance(soup):
-    imagem = None
-    credito = None
+        imagem = None
+        credito = None
 
-    # Lance usa figure com img claro
-    figure = soup.find("figure")
-    if figure:
-        img = figure.find("img")
-        if img:
-            imagem = (
-                img.get("data-src")
-                or img.get("src")
-            )
+        # JSON-LD
+        for script in soup.find_all("script", type="application/ld+json"):
+            try:
+                data = json.loads(script.string)
+                if isinstance(data, dict):
+                    img = data.get("image")
+                    if isinstance(img, list):
+                        imagem = img[0]
+                    elif isinstance(img, str):
+                        imagem = img
+                if imagem:
+                    break
+            except Exception:
+                pass
 
-        figcaption = figure.find("figcaption")
-        if figcaption:
-            texto = figcaption.get_text(strip=True)
-            if texto:
-                credito = texto
+        if not imagem:
+            imagem = PLACEHOLDER_PADRAO
 
-    if not imagem:
-        imagem = PLACEHOLDER_PADRAO
+        return imagem, credito
 
-    return imagem, credito
+    except Exception:
+        return PLACEHOLDER_PADRAO, None
