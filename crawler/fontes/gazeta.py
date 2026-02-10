@@ -1,10 +1,10 @@
 # crawler/fontes/gazeta.py
 
 import requests
-import feedparser
 from bs4 import BeautifulSoup
 from datetime import datetime
 from crawler.utils import extrair_imagem_artigo, PLACEHOLDER_PADRAO
+
 
 RSS_GAZETA = "https://www.gazetaesportiva.com/feed/"
 
@@ -26,16 +26,31 @@ def url_valida(url: str) -> bool:
     return True
 
 
+def coletar_urls_rss():
+    resp = requests.get(RSS_GAZETA, headers=HEADERS, timeout=15)
+    resp.raise_for_status()
+
+    soup = BeautifulSoup(resp.text, "xml")
+    urls = []
+
+    for item in soup.find_all("item"):
+        link = item.find("link")
+        if link and url_valida(link.text):
+            urls.append(link.text.strip())
+
+    return urls
+
+
 def coletar_noticias_gazeta(limit=20):
-    feed = feedparser.parse(RSS_GAZETA)
     noticias = []
 
-    for entry in feed.entries[:limit]:
-        url = entry.get("link")
+    try:
+        urls = coletar_urls_rss()
+    except Exception as e:
+        print(f"[GAZETA] erro ao ler RSS: {e}")
+        return noticias
 
-        if not url_valida(url):
-            continue
-
+    for url in urls[:limit]:
         try:
             noticia = extrair_artigo_gazeta(url)
             if noticia:
@@ -48,39 +63,39 @@ def coletar_noticias_gazeta(limit=20):
 
 
 def extrair_artigo_gazeta(url: str):
-    response = requests.get(url, headers=HEADERS, timeout=10)
+    resp = requests.get(url, headers=HEADERS, timeout=15)
 
-    if response.status_code != 200:
+    if resp.status_code != 200:
         return None
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(resp.text, "html.parser")
 
-    # título
-    titulo_el = soup.select_one("h1")
-    if not titulo_el:
+    # Título
+    h1 = soup.find("h1")
+    if not h1:
         return None
 
-    titulo = titulo_el.get_text(strip=True)
+    titulo = h1.get_text(strip=True)
 
-    # subtítulo (nem sempre existe)
-    subtitulo_el = soup.select_one("h2")
-    subtitulo = subtitulo_el.get_text(strip=True) if subtitulo_el else None
+    # Subtítulo (nem sempre existe)
+    h2 = soup.find("h2")
+    subtitulo = h2.get_text(strip=True) if h2 else None
 
-    # conteúdo
+    # Conteúdo
     article = soup.select_one("div[itemprop='articleBody']")
     if not article:
         return None
 
     conteudo_html = str(article)
 
-    # imagem
+    # Imagem
     imagem = extrair_imagem_artigo(soup)
     if not imagem:
         imagem = PLACEHOLDER_PADRAO
 
-    # data
+    # Data
     publicado_em = None
-    time_el = soup.select_one("time")
+    time_el = soup.find("time")
     if time_el and time_el.has_attr("datetime"):
         try:
             publicado_em = datetime.fromisoformat(
