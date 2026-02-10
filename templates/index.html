@@ -9,7 +9,7 @@
   <div class="container">
     <div class="ads-programmatic">
       <span class="ads-label">Publicidade</span>
-      {{ render_ad("home_top_programmatic") | safe }}
+      {{ render_ad("home_top_programmatic", request) | safe }}
     </div>
   </div>
 </section>
@@ -53,7 +53,7 @@
     <!-- ADS SIDEBAR -->
     <aside class="latest-ads">
       <span class="ads-label">Publicidade</span>
-      {{ render_ad("home_sidebar") | safe }}
+      {{ render_ad("home_sidebar", request) | safe }}
     </aside>
 
   </div>
@@ -139,7 +139,7 @@
 <section class="home-ads-horizontal">
   <div class="container">
     <span class="ads-label">Publicidade</span>
-    {{ render_ad("home_horizontal") | safe }}
+    {{ render_ad("home_horizontal", request) | safe }}
   </div>
 </section>
 
@@ -180,7 +180,7 @@
 <section class="home-ads-horizontal">
   <div class="container">
     <span class="ads-label">Publicidade</span>
-    {{ render_ad("home_footer") | safe }}
+    {{ render_ad("home_footer", request) | safe }}
   </div>
 </section>
 
