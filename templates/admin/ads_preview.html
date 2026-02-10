@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview do Anúncio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:16px;font-family:sans-serif;background:#f4f6f8">
+
+  <h2>Preview — {{ slot.nome }}</h2>
+  <p><strong>Página:</strong> {{ slot.pagina }} | <strong>Posição:</strong> {{ slot.posicao }}</p>
+
+  <div style="margin-top:24px;padding:16px;background:#fff;border:1px dashed #999">
+    {% if slot.codigo %}
+      {{ slot.codigo | safe }}
+    {% else %}
+      <em>Nenhum script configurado.</em>
+    {% endif %}
+  </div>
+
+</body>
+</html>
