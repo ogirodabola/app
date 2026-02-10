@@ -17,9 +17,9 @@
 
   {% for n in noticias %}
   <tr>
-    <td>{{ n.titulo }}</td>
+    <td>{{ n.titulo_editorial or "—" }}</td>
     <td>{{ n.categoria or "-" }}</td>
-    <td>{{ n.status }}</td>
+    <td>{{ n.editorial_status }}</td>
     <td>
       <a class="btn" href="/admin/noticias/{{ n.id }}">Editar</a>
     </td>
