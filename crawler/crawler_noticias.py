@@ -5,11 +5,10 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
-
 from crawler.fontes import FONTES
 from core.database import criar_tabelas, salvar_noticia
 from core.classificacao import classificar_noticia, gerar_slug
-
+from crawler.fontes.lance import coletar_noticias_lance
 
 HEADERS = {
     "User-Agent": "O Giro da Bola"
@@ -24,7 +23,6 @@ PALAVRAS_PROIBIDAS = [
     "cadastro", "assine", "newsletter", "sobre",
     "contato", "institucional", "legislacao"
 ]
-
 
 # ======================================================
 # LINK VÁLIDO — SUPORTA LINKS RELATIVOS (LANCE!)
@@ -206,30 +204,25 @@ def bloquear_uol(url):
 def rodar_crawler():
     total = 0
 
-    for fonte in FONTES:
-        try:
-            noticias = extrair_noticias_fonte(fonte)
+    print("[RUNNER] Executando crawler do Lance")
 
-            for n in noticias:
-                salvar_noticia(
-                    titulo=n["titulo"],
-                    resumo=n["resumo"],
-                    url=n["url"],
-                    fonte=n["fonte"],
-                    categoria=n["categoria"],
-                    slug=n["slug"],
-                    imagem=n["imagem"],
-                    imagem_credito=n["imagem_credito"]
-                )
-                total += 1
+    noticias_lance = coletar_noticias_lance()
 
-        except Exception as e:
-            print(f"[ERRO] Fonte {fonte['nome']}: {e}")
+    for n in noticias_lance:
+        salvar_noticia(
+            titulo=n["titulo"],
+            resumo=n["resumo"],
+            url=n["url"],
+            fonte=n["fonte"],
+            categoria=n["categoria"],
+            slug=n["slug"],
+            imagem=n["imagem"],
+            imagem_credito=n["imagem_credito"]
+        )
+        total += 1
 
     print(f"[OK] Total de notícias processadas: {total}")
 
 
 if __name__ == "__main__":
     rodar_crawler()
-
-
