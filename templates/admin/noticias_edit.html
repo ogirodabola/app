@@ -1,0 +1,47 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<h1>{{ "Editar" if noticia else "Nova" }} Notícia</h1>
+
+<form method="post">
+
+  <label>Título</label><br>
+  <input type="text" name="titulo" value="{{ noticia.titulo if noticia }}" required><br><br>
+
+  <label>Linha fina</label><br>
+  <input type="text" name="linha_fina" value="{{ noticia.linha_fina if noticia }}"><br><br>
+
+  <label>Categoria</label><br>
+  <select name="categoria_id">
+    <option value="">Selecione</option>
+    {% for c in categorias %}
+      <option value="{{ c.id }}"
+        {% if noticia and noticia.categoria_id == c.id %}selected{% endif %}>
+        {{ c.nome }}
+      </option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Tags (separadas por vírgula)</label><br>
+  <input type="text" name="tags" value="{{ noticia.tags if noticia }}"><br><br>
+
+  <label>Imagem (URL)</label><br>
+  <input type="text" name="imagem" value="{{ noticia.imagem if noticia }}"><br><br>
+
+  <label>Conteúdo</label><br>
+  <textarea name="conteudo" rows="14">{{ noticia.conteudo if noticia }}</textarea><br><br>
+
+  <label>Status</label><br>
+  <select name="status">
+    <option value="draft" {% if noticia and noticia.status == "draft" %}selected{% endif %}>
+      Rascunho
+    </option>
+    <option value="published" {% if noticia and noticia.status == "published" %}selected{% endif %}>
+      Publicada
+    </option>
+  </select><br><br>
+
+  <button type="submit">Salvar</button>
+
+</form>
+{% endblock %}
