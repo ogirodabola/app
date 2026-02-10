@@ -684,3 +684,52 @@ def buscar_noticia_publica(slug: str):
                 LIMIT 1;
             """, (slug,))
             return cur.fetchone()
+
+from psycopg2.extras import RealDictCursor
+
+# ======================================================
+# ÚLTIMA HORA — PUBLICADAS
+# ======================================================
+def listar_ultima_hora_publicada(limit=6):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  url,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                  AND categoria = 'Última Hora'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+
+# ======================================================
+# EDITORIAL — PUBLICADAS (EXCETO ÚLTIMA HORA)
+# ======================================================
+def listar_editorial_publicado(limit=6):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  url,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                  AND (categoria IS NULL OR categoria <> 'Última Hora')
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
