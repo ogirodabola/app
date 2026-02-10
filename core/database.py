@@ -733,3 +733,23 @@ def listar_editorial_publicado(limit=6):
                 LIMIT %s;
             """, (limit,))
             return cur.fetchall()
+
+from psycopg2.extras import RealDictCursor
+
+# ======================================================
+# NOTÍCIAS — LISTAGEM ADMIN (CMS)
+# ======================================================
+def listar_noticias_admin():
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  categoria,
+                  editorial_status,
+                  criada_em
+                FROM noticias
+                ORDER BY criada_em DESC;
+            """)
+            return cur.fetchall()
