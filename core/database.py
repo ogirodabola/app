@@ -115,7 +115,9 @@ def listar_ultima_hora(limit=12):
                   criada_em,
                   editorial_status
                 FROM noticias
+                WHERE conteudo_editorial IS NOT NULL
                 ORDER BY criada_em DESC
+
                 LIMIT %s;
                 """,
                 (limit,)
@@ -138,6 +140,7 @@ def listar_ultimas_editoriais(limit=5):
                     imagem,
                     fonte
                 FROM noticias
+                WHERE conteudo_editorial IS NOT NULL
                 ORDER BY criada_em DESC
                 LIMIT %s
             """, (limit,))
@@ -163,9 +166,8 @@ def listar_por_categoria(categoria: str, limit: int = 10):
                   imagem,
                   criada_em
                 FROM noticias
-
                 WHERE categoria = %s
-                ORDER BY criada_em DESC
+                AND conteudo_editorial IS NOT NULL
                 LIMIT %s;
             """, (categoria, limit))
             return cur.fetchall()
@@ -233,6 +235,7 @@ def buscar_noticia_por_slug(slug: str):
                     criada_em
                 FROM noticias
                 WHERE slug = %s
+                AND conteudo_editorial IS NOT NULL
                 LIMIT 1;
             """, (slug,))
             return cur.fetchone()
