@@ -123,3 +123,40 @@ button {
 button:hover {
   background: #1e40af;
 }
+
+/* DASHBOARD */
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.admin-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.admin-card p {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 16px;
+}
+
+.admin-card ul {
+  padding-left: 18px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.admin-card li {
+  margin-bottom: 6px;
+}
