@@ -128,3 +128,72 @@ def noticia(slug: str, request: Request):
         }
     )
 
+# ======================================================
+# SOBRE
+# ======================================================
+@app.get("/sobre", response_class=HTMLResponse)
+def sobre(request: Request):
+    return templates.TemplateResponse(
+        "sobre.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
+
+# ======================================================
+# POLÍTICA EDITORIAL
+# ======================================================
+@app.get("/politica-editorial", response_class=HTMLResponse)
+def politica_editorial(request: Request):
+    return templates.TemplateResponse(
+        "politica-editorial.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
+
+# ======================================================
+# POLÍTICA DE PRIVACIDADE
+# ======================================================
+@app.get("/politica-privacidade", response_class=HTMLResponse)
+def politica_privacidade(request: Request):
+    return templates.TemplateResponse(
+        "politica-privacidade.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
+
+# ======================================================
+# TERMOS DE USO
+# ======================================================
+@app.get("/termos", response_class=HTMLResponse)
+def termos(request: Request):
+    return templates.TemplateResponse(
+        "termos.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
+
+# ======================================================
+# ANUNCIE CONOSCO
+# ======================================================
+@app.get("/anuncie", response_class=HTMLResponse)
+def anuncie(request: Request):
+    return templates.TemplateResponse(
+        "anuncie.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
