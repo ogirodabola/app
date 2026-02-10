@@ -196,6 +196,9 @@ def extrair_noticias_fonte(fonte):
 
     return noticias
 
+def bloquear_uol(url):
+    return "uol.com.br" in url
+
 
 # ======================================================
 # EXECUÇÃO PRINCIPAL
@@ -228,3 +231,5 @@ def rodar_crawler():
 
 if __name__ == "__main__":
     rodar_crawler()
+
+
