@@ -316,3 +316,11 @@ def admin_ads_save(
     ativo: bool = Form(False),
     dispositivo: str = Form("all")
 ):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    salvar_ads_script(slot_id, codigo, ativo)
+    atualizar_ads_slot_dispositivo(slot_id, dispositivo)
+
+    return RedirectResponse("/admin/ads", status_code=302)
