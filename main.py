@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from pathlib import Path
-
 from core.futebol_api import buscar_jogos_do_dia
 from core.database import (
     criar_tabelas,
@@ -16,9 +15,15 @@ from core.database import (
     buscar_classificacao_brasileirao
 )
 
-BASE_DIR = Path(__file__).resolve().parent
-
+# ✅ CRIA O APP UMA ÚNICA VEZ
 app = FastAPI()
+
+# ✅ ADS.TXT (rota na raiz)
+@app.get("/ads.txt", response_class=PlainTextResponse)
+def ads_txt():
+    return "google.com, pub-6188298652182979, DIRECT, f08c47fec0942fa0"
+
+BASE_DIR = Path(__file__).resolve().parent
 
 # garante estrutura mínima
 criar_tabelas()
@@ -31,6 +36,7 @@ app.mount(
 )
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
 
 # ======================================================
 # HOME
