@@ -25,7 +25,6 @@ def url_valida(url: str) -> bool:
 
     return True
 
-
 def coletar_urls_rss():
     resp = requests.get(RSS_GAZETA, headers=HEADERS, timeout=15)
     resp.raise_for_status()
@@ -34,11 +33,18 @@ def coletar_urls_rss():
     urls = []
 
     for item in soup.find_all("item"):
-        link = item.find("link")
-        if link and url_valida(link.text):
-            urls.append(link.text.strip())
+        # tenta <link>
+        link_tag = item.find("link")
+        if link_tag and link_tag.text:
+            url = link_tag.text.strip()
+        else:
+            continue
+
+        if url_valida(url):
+            urls.append(url)
 
     return urls
+
 
 
 def coletar_noticias_gazeta(limit=20):
