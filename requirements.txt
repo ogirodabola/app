@@ -13,5 +13,5 @@ python-dotenv
 
 # auth / admin
 itsdangerous
-passlib[bcrypt]
+passlib
 python-multipart
