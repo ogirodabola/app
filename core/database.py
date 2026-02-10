@@ -566,17 +566,22 @@ def listar_noticias():
 # ======================================================
 # NOTÍCIAS — BUSCAR POR ID
 # ======================================================
-def buscar_noticia_admin(noticia_id: int):
+from psycopg2.extras import RealDictCursor
+
+def listar_noticias_admin():
     with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-                SELECT *
+                SELECT
+                  id,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  categoria,
+                  editorial_status,
+                  criada_em
                 FROM noticias
-                WHERE id = %s
-                LIMIT 1;
-            """, (noticia_id,))
-            return cur.fetchone()
-
+                ORDER BY criada_em DESC;
+            """)
+            return cur.fetchall()
 
 # ======================================================
 # NOTÍCIAS — CRIAR
