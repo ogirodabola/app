@@ -324,3 +324,4 @@ def admin_ads_save(
     atualizar_ads_slot_dispositivo(slot_id, dispositivo)
 
     return RedirectResponse("/admin/ads", status_code=302)
+302)
