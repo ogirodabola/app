@@ -159,7 +159,7 @@ def politica_editorial(request: Request):
 # ======================================================
 # POLÍTICA DE PRIVACIDADE
 # ======================================================
-@app.get("/politica-privacidade", response_class=HTMLResponse)
+@app.get("/privacidade", response_class=HTMLResponse)
 def politica_privacidade(request: Request):
     return templates.TemplateResponse(
         "privacidade.html",
