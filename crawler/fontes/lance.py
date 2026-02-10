@@ -1,5 +1,5 @@
 import requests
-import feedparser
+import xml.etree.ElementTree as ET
 
 from core.classificacao import classificar_noticia, gerar_slug
 from crawler.utils import extrair_imagem_e_credito_por_url
@@ -10,17 +10,20 @@ MAX_NOTICIAS = 20
 
 
 def coletar_noticias_lance():
-    print("[LANCE] Iniciando crawler do Lance via RSS")
+    print("[LANCE] Iniciando crawler do Lance via RSS (sem feedparser)")
 
-    feed = feedparser.parse(RSS_URL)
+    response = requests.get(RSS_URL, timeout=15)
+    response.raise_for_status()
+
+    root = ET.fromstring(response.content)
     noticias = []
 
-    for entry in feed.entries[:MAX_NOTICIAS]:
+    for item in root.findall(".//item")[:MAX_NOTICIAS]:
         try:
-            titulo = entry.title.strip()
-            url = entry.link.strip()
+            titulo = item.findtext("title", "").strip()
+            url = item.findtext("link", "").strip()
 
-            if len(titulo) < 15:
+            if not titulo or len(titulo) < 15 or not url:
                 continue
 
             imagem, credito = extrair_imagem_e_credito_por_url(
@@ -39,7 +42,7 @@ def coletar_noticias_lance():
             })
 
         except Exception as e:
-            print(f"[LANCE ERRO] {entry.link}: {e}")
+            print(f"[LANCE ERRO] {e}")
 
     print(f"[LANCE] Notícias coletadas: {len(noticias)}")
     return noticias
