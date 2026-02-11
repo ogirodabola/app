@@ -474,4 +474,26 @@ async def salvar_noticia_admin(id: int, request: Request):
 
     return RedirectResponse("/admin/noticias", status_code=303)
 
+@app.get("/admin/noticias")
+def listar_noticias_view(
+    request: Request,
+    busca: str | None = None,
+    status: str | None = None,
+    categoria: str | None = None
+):
+    noticias = listar_noticias_admin(
+        status=status,
+        categoria=categoria,
+        busca=busca
+    )
 
+    return templates.TemplateResponse(
+        "admin/noticias_list.html",
+        {
+            "request": request,
+            "noticias": noticias,
+            "busca": busca,
+            "status": status,
+            "categoria": categoria,
+        }
+    )
