@@ -353,18 +353,6 @@ def admin_ads_preview(slot_id: int, request: Request):
         }
     )
 
-@app.get("/admin/noticias", response_class=HTMLResponse)
-def admin_noticias(request: Request):
-    auth = login_required(request)
-    if auth:
-        return auth
-
-    noticias = listar_noticias_admin()
-
-    return templates.TemplateResponse(
-        "admin/noticias_list.html",
-        {"request": request, "noticias": noticias}
-    )
 
 @app.get("/admin/noticias/nova", response_class=HTMLResponse)
 def admin_noticia_nova(request: Request):
