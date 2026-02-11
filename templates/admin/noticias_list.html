@@ -7,6 +7,47 @@
   Nova notícia
 </a>
 
+<form method="get" style="margin-bottom:20px; display:flex; gap:10px;">
+
+  <input type="text"
+         name="busca"
+         placeholder="Buscar por título..."
+         value="{{ busca or '' }}"
+         style="padding:8px; width:300px;">
+
+  <select name="status">
+    <option value="">Todos os status</option>
+    <option value="pendente" {% if status == "pendente" %}selected{% endif %}>
+      Pendente
+    </option>
+    <option value="publicado" {% if status == "publicado" %}selected{% endif %}>
+      Publicado
+    </option>
+  </select>
+
+  <select name="categoria">
+    <option value="">Todas categorias</option>
+    <option value="Brasileirão" {% if categoria == "Brasileirão" %}selected{% endif %}>
+      Brasileirão
+    </option>
+    <option value="Última Hora" {% if categoria == "Última Hora" %}selected{% endif %}>
+      Última Hora
+    </option>
+    <option value="Análises" {% if categoria == "Análises" %}selected{% endif %}>
+      Análises
+    </option>
+  </select>
+
+  <button type="submit" class="btn btn-primary">
+    Buscar
+  </button>
+
+  <a href="/admin/noticias" style="padding:8px;">
+    Limpar
+  </a>
+
+</form>
+
 <table>
   <tr>
     <th>Título</th>
