@@ -17,7 +17,7 @@
 
   {% for n in noticias %}
   <tr>
-    <td>{{ n.titulo_editorial or "—" }}</td>
+    <td>{{ n.titulo_editorial or n.titulo }}</td>
     <td>{{ n.categoria or "-" }}</td>
     <td>{{ n.editorial_status }}</td>
     <td>
