@@ -6,6 +6,18 @@
 
   <link rel="stylesheet" href="/static/css/admin.css">
 </head>
+  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+  tinymce.init({
+    selector: 'textarea[name="conteudo_editorial"]',
+    height: 500,
+    menubar: false,
+    plugins: 'lists link image table code',
+    toolbar: 'undo redo | bold italic underline | h2 h3 | bullist numlist | link image | code',
+    branding: false
+  });
+</script>
 <body>
 
   <header class="admin-header">
