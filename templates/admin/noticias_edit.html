@@ -1,51 +1,111 @@
 {% extends "admin/base_admin.html" %}
 
 {% block content %}
-<h1>{{ "Editar" if noticia else "Nova" }} Notícia</h1>
 
-<form method="post" action="/admin/noticias/{{ noticia.id }}">
+<div class="admin-container">
 
-  <label>Título editorial</label><br>
-  <input type="text" name="titulo_editorial"
-         value="{{ noticia.titulo_editorial if noticia }}"
-         required><br><br>
+  <h1>
+    {{ "Editar Notícia" if noticia else "Nova Notícia" }}
+  </h1>
 
-  <label>Resumo</label><br>
-  <textarea name="resumo" rows="3">{{ noticia.resumo if noticia }}</textarea><br><br>
+  <form method="post"
+        action="{% if noticia %}/admin/noticias/{{ noticia.id }}{% else %}/admin/noticias/nova{% endif %}">
 
-  <label>Categoria</label><br>
-  <input type="text" name="categoria"
-         value="{{ noticia.categoria if noticia }}"
-         placeholder="Ex: Brasileirão, Libertadores"><br><br>
+    <!-- TÍTULO EDITORIAL -->
+    <div class="admin-form-group">
+      <label>Título editorial</label>
+      <input type="text"
+             name="titulo_editorial"
+             value="{{ noticia.titulo_editorial if noticia }}"
+             required>
+    </div>
 
-  <label>Tags (separadas por vírgula)</label><br>
-  <input type="text" name="tags"
-         value="{{ noticia.tags | join(', ') if noticia }}"><br><br>
+    <!-- SLUG -->
+    <div class="admin-form-group">
+      <label>Slug (URL da página)</label>
+      <input type="text"
+             name="slug"
+             value="{{ noticia.slug if noticia }}"
+             placeholder="ex: harry-kane-brilha-na-semi">
+    </div>
 
-  <label>Imagem (URL)</label><br>
-  <input type="text" name="imagem"
-         value="{{ noticia.imagem if noticia }}"><br><br>
+    <!-- RESUMO -->
+    <div class="admin-form-group">
+      <label>Resumo</label>
+      <textarea name="resumo" rows="3">{{ noticia.resumo if noticia }}</textarea>
+    </div>
 
-  <label>Conteúdo editorial</label><br>
-  <textarea name="conteudo_editorial" rows="16">
+    <!-- CATEGORIA -->
+    <div class="admin-form-group">
+      <label>Categoria</label>
+      <input type="text"
+             name="categoria"
+             value="{{ noticia.categoria if noticia }}"
+             placeholder="Ex: Brasileirão, Libertadores, Última Hora">
+    </div>
+
+    <!-- TAGS -->
+    <div class="admin-form-group">
+      <label>Tags (separadas por vírgula)</label>
+      <input type="text"
+             name="tags"
+             value="{{ noticia.tags | join(', ') if noticia }}">
+    </div>
+
+    <!-- IMAGEM -->
+    <div class="admin-form-group">
+      <label>Imagem (URL)</label>
+      <input type="text"
+             name="imagem"
+             value="{{ noticia.imagem if noticia }}"
+             placeholder="https://...">
+    </div>
+
+    <!-- PREVIEW DA IMAGEM -->
+    {% if noticia and noticia.imagem %}
+    <div class="admin-form-group">
+      <img src="{{ noticia.imagem }}"
+           alt="Preview"
+           style="max-width: 300px; border-radius: 6px;">
+    </div>
+    {% endif %}
+
+    <!-- CONTEÚDO EDITORIAL -->
+    <div class="admin-form-group">
+      <label>Conteúdo editorial</label>
+      <textarea name="conteudo_editorial">
 {{ noticia.conteudo_editorial if noticia }}
-  </textarea><br><br>
+      </textarea>
+    </div>
 
-  <label>Status editorial</label><br>
-  <select name="editorial_status">
-    <option value="pendente"
-      {% if noticia and noticia.editorial_status == "pendente" %}selected{% endif %}>
-      Pendente
-    </option>
-    <option value="publicado"
-      {% if noticia and noticia.editorial_status == "publicado" %}selected{% endif %}>
-      Publicado
-    </option>
-  </select><br><br>
+    <!-- STATUS EDITORIAL -->
+    <div class="admin-form-group">
+      <label>Status editorial</label>
+      <select name="editorial_status" class="status-select">
+        <option value="pendente"
+          {% if noticia and noticia.editorial_status == "pendente" %}selected{% endif %}>
+          Pendente
+        </option>
+        <option value="publicado"
+          {% if noticia and noticia.editorial_status == "publicado" %}selected{% endif %}>
+          Publicado
+        </option>
+      </select>
+    </div>
 
-  <button type="submit" class="btn btn-primary">
-    Salvar
-  </button>
+    <!-- BOTÕES -->
+    <div style="margin-top: 30px;">
+      <button type="submit" class="btn btn-primary">
+        Salvar
+      </button>
 
-</form>
+      <a href="/admin/noticias" class="btn btn-secondary" style="margin-left: 10px;">
+        Cancelar
+      </a>
+    </div>
+
+  </form>
+
+</div>
+
 {% endblock %}
