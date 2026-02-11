@@ -718,11 +718,13 @@ def listar_ultima_hora_publicada(limit=6):
             cur.execute("""
                 SELECT
                   id,
+                  slug,
+                  titulo_editorial,
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   resumo,
                   imagem,
                   categoria,
-                  url,
+                  fonte,
                   criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
@@ -731,7 +733,6 @@ def listar_ultima_hora_publicada(limit=6):
                 LIMIT %s;
             """, (limit,))
             return cur.fetchall()
-
 
 # ======================================================
 # EDITORIAL — PUBLICADAS (EXCETO ÚLTIMA HORA)
@@ -742,11 +743,13 @@ def listar_editorial_publicado(limit=6):
             cur.execute("""
                 SELECT
                   id,
+                  slug,
+                  titulo_editorial,
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   resumo,
                   imagem,
                   categoria,
-                  url,
+                  fonte,
                   criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
