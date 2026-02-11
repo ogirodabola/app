@@ -457,7 +457,7 @@ def admin_noticia_atualizar(
 
     return RedirectResponse("/admin/noticias", status_code=302)
 
-@router.post("/admin/noticias/{id}")
+@app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
     form = await request.form()
 
