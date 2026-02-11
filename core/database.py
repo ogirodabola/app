@@ -27,14 +27,15 @@ def criar_tabelas():
                     titulo TEXT NOT NULL,
                     titulo_editorial TEXT,
                     resumo TEXT,
-                    url TEXT UNIQUE NOT NULL,
-                    fonte TEXT,
+                    conteudo_editorial TEXT,
                     categoria TEXT,
-                    slug TEXT UNIQUE,
+                    tags TEXT[],
                     imagem TEXT,
                     imagem_credito TEXT,
-                    conteudo_editorial TEXT,
-                    tags TEXT[],
+                    url TEXT UNIQUE NOT NULL,
+                    slug TEXT UNIQUE NOT NULL,
+                    fonte TEXT,
+                    editorial_status TEXT DEFAULT 'pendente',
                     criada_em TIMESTAMP DEFAULT NOW()
                 );
             """)
