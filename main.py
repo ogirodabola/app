@@ -55,31 +55,29 @@ def admin_login(request: Request):
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 
-@app.post("/admin/noticias/{id}")
-async def salvar_noticia_admin(id: int, request: Request):
-    form = await request.form()
 from slugify import slugify
 
-form = await request.form()
+@app.post("/admin/noticias/{id}")
+async def salvar_noticia_admin(id: int, request: Request):
+    titulo = form.get("titulo_editorial")
+    slug_form = form.get("slug")
 
-titulo = form.get("titulo_editorial")
-slug_form = form.get("slug")
+    # Geração segura de slug
+    if not slug_form or slug_form.strip() == "":
+        slug = slugify(titulo)
+    else:
+        slug = slugify(slug_form)
 
-if not slug_form or slug_form.strip() == "":
-    slug = slugify(titulo)
-else:
-    slug = slugify(slug_form)
-    
     dados = {
-    "titulo_editorial": titulo,
-    "resumo": form.get("resumo"),
-    "conteudo_editorial": form.get("conteudo_editorial"),
-    "imagem": form.get("imagem"),
-    "categoria": form.get("categoria"),
-    "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
-    "editorial_status": form.get("editorial_status", "pendente"),
-    "slug": slug,
-}
+        "titulo_editorial": titulo,
+        "resumo": form.get("resumo"),
+        "conteudo_editorial": form.get("conteudo_editorial"),
+        "imagem": form.get("imagem"),
+        "categoria": form.get("categoria"),
+        "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
+        "editorial_status": form.get("editorial_status", "pendente"),
+        "slug": slug,
+    }
 
     atualizar_noticia(id, dados)
 
