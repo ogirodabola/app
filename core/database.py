@@ -583,25 +583,26 @@ def listar_noticias_admin(
         FROM noticias
         WHERE 1=1
     """
-    params = {}
-
+    params = []
+    
     if status:
-        query += " AND editorial_status = :status"
-        params["status"] = status
+        query += " AND editorial_status = %s"
+        params.append(status)
 
     if categoria:
-        query += " AND categoria = :categoria"
-        params["categoria"] = categoria
+        query += " AND categoria = %s"
+        params.append(categoria)
 
-    if busca:
-        query += " AND COALESCE(titulo_editorial, titulo) ILIKE :busca"
-        params["busca"] = f"%{busca}%"
+    if busca and busca.strip():
+        query += " AND COALESCE(titulo_editorial, titulo) ILIKE %s"
+        params.append(f"%{busca.strip()}%")
 
     query += " ORDER BY criada_em DESC"
 
-    with engine.connect() as conn:
-        result = conn.execute(text(query), params)
-        return result.mappings().all()
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(query, tuple(params))
+            return cur.fetchall()
 
 # ======================================================
 # NOTÍCIAS — CRIAR
@@ -756,24 +757,6 @@ def listar_editorial_publicado(limit=6):
             return cur.fetchall()
 
 from psycopg2.extras import RealDictCursor
-
-# ======================================================
-# NOTÍCIAS — LISTAGEM ADMIN (CMS)
-# ======================================================
-def listar_noticias_admin():
-    with get_conn() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT
-                  id,
-                  COALESCE(titulo_editorial, titulo) AS titulo,
-                  categoria,
-                  editorial_status,
-                  criada_em
-                FROM noticias
-                ORDER BY criada_em DESC;
-            """)
-            return cur.fetchall()
 
 # ======================================================
 # NOTÍCIAS — BUSCAR UMA (ADMIN / CMS)
