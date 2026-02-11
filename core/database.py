@@ -574,7 +574,12 @@ def listar_noticias_admin(
     busca: str | None = None
 ):
     query = """
-        SELECT *
+        SELECT
+            id,
+            COALESCE(titulo_editorial, titulo) AS titulo,
+            categoria,
+            editorial_status,
+            criada_em
         FROM noticias
         WHERE 1=1
     """
@@ -589,15 +594,14 @@ def listar_noticias_admin(
         params["categoria"] = categoria
 
     if busca:
-        query += " AND titulo_editorial ILIKE :busca"
+        query += " AND COALESCE(titulo_editorial, titulo) ILIKE :busca"
         params["busca"] = f"%{busca}%"
 
     query += " ORDER BY criada_em DESC"
 
     with engine.connect() as conn:
         result = conn.execute(text(query), params)
-        return result.fetchall()
-
+        return result.mappings().all()
 
 # ======================================================
 # NOTÍCIAS — CRIAR
