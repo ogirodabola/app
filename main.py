@@ -52,27 +52,26 @@ def admin_login(request: Request):
         {"request": request, "erro": None}
     )
 
+from fastapi import Request
+from fastapi.responses import RedirectResponse
 
-@app.post("/admin/login")
-def admin_login_post(
-    request: Request,
-    email: str = Form(...),
-    senha: str = Form(...)
-):
-    user = autenticar_usuario(email, senha)
+@app.post("/admin/noticias/{id}")
+async def salvar_noticia_admin(id: int, request: Request):
+    form = await request.form()
 
-    if not user:
-        return templates.TemplateResponse(
-            "admin/login.html",
-            {"request": request, "erro": "Credenciais inválidas"}
-        )
-
-    request.session["admin_user"] = {
-        "id": user["id"],
-        "email": user["email"]
+    dados = {
+        "titulo_editorial": form.get("titulo_editorial"),
+        "resumo": form.get("resumo"),
+        "conteudo_editorial": form.get("conteudo_editorial"),
+        "imagem": form.get("imagem"),
+        "categoria": form.get("categoria"),
+        "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
+        "editorial_status": form.get("editorial_status", "pendente"),
     }
 
-    return RedirectResponse("/admin/dashboard", status_code=302)
+    atualizar_noticia(id, dados)
+
+    return RedirectResponse("/admin/noticias", status_code=303)
 
 @app.get("/admin/logout")
 def admin_logout(request: Request):
