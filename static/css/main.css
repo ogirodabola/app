@@ -2180,3 +2180,9 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .page {
   overflow-x: hidden;
 }
+
+@media (max-width: 1024px) {
+  .brasileirao-table {
+    display: none;
+  }
+}
