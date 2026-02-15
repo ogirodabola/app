@@ -583,19 +583,19 @@ Sitemap: https://girodesportivo.com/sitemap.xml
 from fastapi.responses import Response
 from datetime import datetime
 
-# ======================================================
-# SITEMAP
-# ======================================================
-
 @app.get("/sitemap.xml", response_class=Response)
 def sitemap():
 
-    noticias = listar_noticias_publicadas(limit=5000)
+    try:
+        noticias = listar_noticias_publicadas(limit=5000)
+    except Exception as e:
+        print("Erro ao buscar notícias no sitemap:", e)
+        noticias = []
 
     urls = []
 
     # Home
-    urls.append(f"""
+    urls.append("""
     <url>
         <loc>https://girodesportivo.com/</loc>
         <changefreq>hourly</changefreq>
@@ -603,13 +603,21 @@ def sitemap():
     </url>
     """)
 
-    # Notícias
     for n in noticias:
-        lastmod = n["criada_em"].strftime("%Y-%m-%d") if n.get("criada_em") else datetime.utcnow().strftime("%Y-%m-%d")
+        slug = n.get("slug")
+        if not slug:
+            continue
+
+        criada_em = n.get("criada_em")
+
+        if hasattr(criada_em, "strftime"):
+            lastmod = criada_em.strftime("%Y-%m-%d")
+        else:
+            lastmod = datetime.utcnow().strftime("%Y-%m-%d")
 
         urls.append(f"""
         <url>
-            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+            <loc>https://girodesportivo.com/noticia/{slug}</loc>
             <lastmod>{lastmod}</lastmod>
             <changefreq>daily</changefreq>
             <priority>0.8</priority>
