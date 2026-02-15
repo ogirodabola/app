@@ -122,6 +122,10 @@ def ads_txt():
 
 BASE_DIR = Path(__file__).resolve().parent
 
+# 🔥 GARANTE PASTA DE UPLOAD
+UPLOAD_DIR = BASE_DIR / "static" / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
 # garante estrutura mínima
 criar_tabelas()
 
@@ -418,12 +422,16 @@ async def admin_noticia_criar(
 
     # 🔹 Upload imagem
     imagem_url = None
-    if imagem_file and imagem_file.filename:
-        upload_dir = "static/uploads"
-        os.makedirs(upload_dir, exist_ok=True)
 
-        filename = f"{slug_final}-{imagem_file.filename}"
-        filepath = os.path.join(upload_dir, filename)
+if imagem_file and imagem_file.filename:
+
+    filename = f"{slug_final}-{imagem_file.filename}"
+    filepath = UPLOAD_DIR / filename
+
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(imagem_file.file, buffer)
+
+    imagem_url = f"/static/uploads/{filename}"
 
         with open(filepath, "wb") as buffer:
             shutil.copyfileobj(imagem_file.file, buffer)
