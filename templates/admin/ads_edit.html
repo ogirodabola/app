@@ -7,45 +7,61 @@
 <p><strong>Página:</strong> {{ slot.pagina }}</p>
 <p><strong>Posição:</strong> {{ slot.posicao }}</p>
 
-<form method="post">
+<form method="post" action="">
+  
   <label>
-    <input type="checkbox" name="ativo" {% if slot.script_ativo %}checked{% endif %}>
+    <input 
+      type="checkbox" 
+      name="ativo" 
+      value="on"
+      {% if slot.script_ativo %}checked{% endif %}
+    >
     Script ativo
   </label>
+
   <br><br>
+
   <label>Exibir em:</label><br>
 
-<select name="dispositivo">
-  <option value="all" {% if slot.dispositivo == "all" %}selected{% endif %}>
-    Desktop e Mobile
-  </option>
-  <option value="desktop" {% if slot.dispositivo == "desktop" %}selected{% endif %}>
-    Apenas Desktop
-  </option>
-  <option value="mobile" {% if slot.dispositivo == "mobile" %}selected{% endif %}>
-    Apenas Mobile
-  </option>
-</select>
+  <select name="dispositivo">
+    <option value="all" {% if slot.dispositivo == "all" %}selected{% endif %}>
+      Desktop e Mobile
+    </option>
+    <option value="desktop" {% if slot.dispositivo == "desktop" %}selected{% endif %}>
+      Apenas Desktop
+    </option>
+    <option value="mobile" {% if slot.dispositivo == "mobile" %}selected{% endif %}>
+      Apenas Mobile
+    </option>
+  </select>
 
-<br><br>
-  <label>Script do anúncio:</label><br>
-  <p style="color:#92400e;font-size:13px">
-  ⚠️ O preview executa o script em sandbox. Não salva alterações.
-</p>
-
-  <textarea name="codigo" rows="12" cols="100">{{ slot.codigo or "" }}</textarea>
   <br><br>
-<a
-  href="/admin/ads/{{ slot.id }}/preview"
-  target="_blank"
-  class="btn"
-  style="margin-right:12px;background:#64748b"
->
-  Pré-visualizar
-</a>
+
+  <label>Script do anúncio:</label><br>
+
+  <p style="color:#92400e;font-size:13px">
+    ⚠️ O preview executa o script em sandbox. Não salva alterações.
+  </p>
+
+  <textarea 
+    name="codigo" 
+    rows="12" 
+    cols="100"
+  >{{ slot.codigo | default("", true) }}</textarea>
+
+  <br><br>
+
+  <a
+    href="/admin/ads/{{ slot.id }}/preview"
+    target="_blank"
+    class="btn"
+    style="margin-right:12px;background:#64748b"
+  >
+    Pré-visualizar
+  </a>
 
   <button type="submit">Salvar alterações</button>
-  
+
 </form>
 
 {% endblock %}
