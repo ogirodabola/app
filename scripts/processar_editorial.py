@@ -61,21 +61,22 @@ def gerar_slug_unico(conn, titulo: str) -> str:
 # ======================================================
 # BUSCAR PENDENTES (SEM REPROCESSAR ERROS)
 # ======================================================
-def buscar_pendentes(conn):
+def buscar_pendentes_balanceado(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute(
-            """
-            SELECT id, titulo, resumo
-            FROM noticias
-            WHERE conteudo_editorial IS NULL
-            AND (editorial_status IS NULL OR editorial_status <> 'erro_conteudo')
+        cur.execute("""
+            SELECT *
+            FROM (
+                SELECT *,
+                       ROW_NUMBER() OVER (PARTITION BY fonte ORDER BY criada_em ASC) as rn
+                FROM noticias
+                WHERE conteudo_editorial IS NULL
+                AND (editorial_status IS NULL OR editorial_status <> 'erro_conteudo')
+            ) sub
+            WHERE rn <= 3
             ORDER BY criada_em ASC
             LIMIT %s;
-            """,
-            (LIMITE_POR_EXECUCAO,)
-        )
+        """, (LIMITE_POR_EXECUCAO,))
         return cur.fetchall()
-
 
 # ======================================================
 # MARCAR ERRO
@@ -91,6 +92,28 @@ def marcar_erro(conn, noticia_id):
             (noticia_id,)
         )
     conn.commit()
+
+def normalizar_titulo(titulo):
+    return re.sub(r'\W+', '', titulo.lower())
+
+def noticia_similar_existe(conn, titulo):
+    titulo_norm = normalizar_titulo(titulo)
+
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT titulo
+            FROM noticias
+            WHERE editorial_status = 'publicado'
+            ORDER BY criada_em DESC
+            LIMIT 50;
+        """)
+        titulos = cur.fetchall()
+
+    for (t,) in titulos:
+        if normalizar_titulo(t)[:40] in titulo_norm:
+            return True
+
+    return False
 
 
 # ======================================================
@@ -137,16 +160,18 @@ def salvar_editorial(
     conn.commit()
 
 
+
 # ======================================================
 # PROCESSAMENTO PRINCIPAL
 # ======================================================
+
 def processar():
     print("🧠 Iniciando worker editorial...")
 
     conn = get_conn()
 
     try:
-        noticias = buscar_pendentes(conn)
+        noticias = buscar_pendentes_balanceado(conn)
 
         if not noticias:
             print("✅ Nenhuma notícia pendente.")
@@ -155,18 +180,23 @@ def processar():
         print(f"🔍 {len(noticias)} notícias pendentes encontradas.\n")
 
         for idx, noticia in enumerate(noticias, start=1):
+
             noticia_id = noticia["id"]
             titulo = noticia["titulo"]
             resumo = noticia["resumo"] or ""
 
             print(f"➡️ [{idx}/{len(noticias)}] ID {noticia_id}")
-            print(f"   Título original: {titulo}")
 
             try:
                 categoria, tags = classificar_editorial(titulo, resumo)
                 titulo_editorial = gerar_titulo_editorial(titulo)
 
-                # ⚠️ SEO CORRETO: usa título editorial
+                # 🔎 DEDUPLICAÇÃO
+                if noticia_similar_existe(conn, titulo_editorial):
+                    print("   ⚠️ Notícia similar já publicada. Ignorando.")
+                    marcar_erro(conn, noticia_id)
+                    continue
+
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo_editorial,
                     resumo=resumo,
@@ -192,7 +222,3 @@ def processar():
     finally:
         conn.close()
         print("🔒 Worker encerrado.")
-
-
-if __name__ == "__main__":
-    processar()
