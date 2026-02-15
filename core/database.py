@@ -523,15 +523,15 @@ def salvar_ads_script(slot_id: int, codigo: str, ativo: bool):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO ads_scripts (slot_id, codigo, ativo)
-                VALUES (%s, %s, %s)
+                INSERT INTO ads_scripts (slot_id, tipo, codigo, ativo)
+                VALUES (%s, %s, %s, %s)
                 ON CONFLICT (slot_id)
                 DO UPDATE SET
+                    tipo = EXCLUDED.tipo,
                     codigo = EXCLUDED.codigo,
                     ativo = EXCLUDED.ativo;
-            """, (slot_id, codigo, ativo))
+            """, (slot_id, "html", codigo, ativo))
         conn.commit()
-
 
 # ======================================================
 # ADS — ATIVAR / DESATIVAR SLOT
