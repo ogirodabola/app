@@ -56,110 +56,131 @@
 
 
 <!-- ================= ÚLTIMAS NOTÍCIAS ================= -->
-<section class="home-latest">
-  <div class="container home-latest-grid">
+<section class="section-block section-feed">
+  <div class="container">
 
-    <div class="latest-news">
-      <h2 class="section-title">Últimas Notícias</h2>
-
-      <ul class="latest-news-list">
-        {% for n in feed_noticias %}
-        <li class="latest-news-item">
-          <a href="/noticia/{{ n.slug }}">
-            <img
-              src="{{ n.imagem }}"
-              alt="{{ n.titulo }}"
-              loading="lazy"
-              onerror="this.onerror=null;this.src='/static/img/placeholder.png';"
-            >
-            <div class="latest-news-text">
-              <span class="latest-news-category">{{ n.categoria }}</span>
-              <h3 class="latest-news-title">{{ n.titulo }}</h3>
-              {% if n.fonte %}
-              <div class="latest-news-meta">{{ n.fonte }}</div>
-              {% endif %}
-            </div>
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
+    <div class="section-header">
+      <h2>Últimas Notícias</h2>
+      <span class="section-line"></span>
     </div>
 
-    <!-- ADS SIDEBAR -->
-    <aside class="latest-ads">
-      <span class="ads-label">Publicidade</span>
-      {{ render_ad("home_sidebar", request) | safe }}
-    </aside>
+    <div class="home-latest-grid">
+
+      <div class="latest-news">
+        <ul class="latest-news-list">
+          {% for n in feed_noticias %}
+          <li class="latest-news-item">
+            <a href="/noticia/{{ n.slug }}">
+
+              <img src="{{ n.imagem }}"
+                   alt="{{ n.titulo }}"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
+
+              <div class="latest-news-text">
+                <span class="latest-news-category">{{ n.categoria }}</span>
+
+                <h3 class="latest-news-title">
+                  {{ n.titulo }}
+                </h3>
+
+                {% if n.fonte %}
+                <div class="latest-news-meta">{{ n.fonte }}</div>
+                {% endif %}
+              </div>
+
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <aside class="latest-ads">
+        <span class="ads-label">Publicidade</span>
+        {{ render_ad("home_sidebar", request) | safe }}
+      </aside>
+
+    </div>
 
   </div>
 </section>
 
 
 <!-- ================= BRASILEIRÃO ================= -->
-<section class="home-brasileirao">
-  <div class="container brasileirao-grid">
+<section class="section-block section-brasileirao">
+  <div class="container">
 
-    <div class="brasileirao-news">
-      <h2 class="section-title">Brasileirão</h2>
-
-      <div class="brasileirao-cards">
-        {% for n in brasileirao %}
-        <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
-          <div class="brasileirao-image">
-            <img src="{{ n.imagem }}"
-                 alt="{{ n.titulo }}"
-                 loading="lazy"
-                 onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
-          </div>
-          <div class="brasileirao-body">
-            <h3>{{ n.titulo }}</h3>
-            {% if n.fonte %}
-            <span class="brasileirao-meta">{{ n.fonte }}</span>
-            {% endif %}
-          </div>
-        </a>
-        {% endfor %}
-      </div>
+    <div class="section-header">
+      <h2>Brasileirão</h2>
+      <span class="section-line"></span>
     </div>
 
-    <aside class="brasileirao-table">
-      <div class="widget-header">
-        <h2>Tabela de Classificação</h2>
-      </div>
+    <div class="brasileirao-grid">
 
-      <table class="table-standings">
-        <thead>
-          <tr>
-            <th>Equipe</th>
-            <th>P</th>
-            <th>J</th>
-            <th>V</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for t in tabela_brasileirao %}
-          <tr>
-            <td class="team-cell">
-              <img src="{{ t.escudo }}"
-                   alt="{{ t.nome }}"
+      <div class="brasileirao-news">
+        <div class="brasileirao-cards">
+          {% for n in brasileirao %}
+          <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
+
+            <div class="brasileirao-image">
+              <img src="{{ n.imagem }}"
+                   alt="{{ n.titulo }}"
                    loading="lazy"
                    onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
-              <span>{{ t.nome }}</span>
-            </td>
-            <td>{{ t.pontos }}</td>
-            <td>{{ t.jogos }}</td>
-            <td>{{ t.vitorias }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            </div>
 
-      <div class="table-footer">
-        <a href="/classificacao" class="table-more-btn">
-          Ver tabela completa →
-        </a>
+            <div class="brasileirao-body">
+              <h3>{{ n.titulo }}</h3>
+              {% if n.fonte %}
+              <span class="brasileirao-meta">{{ n.fonte }}</span>
+              {% endif %}
+            </div>
+
+          </a>
+          {% endfor %}
+        </div>
       </div>
-    </aside>
+
+      <aside class="brasileirao-table">
+        <div class="widget-header">
+          <h3>Tabela</h3>
+        </div>
+
+        <table class="table-standings">
+          <thead>
+            <tr>
+              <th>Equipe</th>
+              <th>P</th>
+              <th>J</th>
+              <th>V</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in tabela_brasileirao %}
+            <tr>
+              <td class="team-cell">
+                <img src="{{ t.escudo }}"
+                     alt="{{ t.nome }}"
+                     loading="lazy"
+                     onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
+                <span>{{ t.nome }}</span>
+              </td>
+              <td>{{ t.pontos }}</td>
+              <td>{{ t.jogos }}</td>
+              <td>{{ t.vitorias }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="table-footer">
+          <a href="/classificacao" class="table-more-btn">
+            Ver tabela completa →
+          </a>
+        </div>
+      </aside>
+
+    </div>
 
   </div>
 </section>
@@ -226,33 +247,38 @@
 
 
 <!-- ================= MAIS LIDAS ================= -->
-<section class="container content-stack">
-  <h2 class="section-title">Mais Lidas</h2>
+<section class="section-block section-trending">
+  <div class="container">
 
-  <div class="mais-lidas-list">
-    {% for n in mais_lidas %}
-    <a href="/noticia/{{ n.slug }}" class="mais-lidas-item">
-      
-      <span class="mais-lidas-rank">
-        {{ loop.index }}
-      </span>
+    <div class="section-header">
+      <h2>Mais Lidas</h2>
+      <span class="section-line"></span>
+    </div>
 
-      <div class="mais-lidas-content">
-        <span class="mais-lidas-category">
-          {{ n.categoria }}
+    <div class="mais-lidas-list">
+      {% for n in mais_lidas %}
+      <a href="/noticia/{{ n.slug }}" class="mais-lidas-item">
+
+        <span class="mais-lidas-rank">
+          {{ loop.index }}
         </span>
 
-        <h3 class="mais-lidas-title">
-          {{ n.titulo }}
-        </h3>
-      </div>
+        <div class="mais-lidas-content">
+          <span class="mais-lidas-category">
+            {{ n.categoria }}
+          </span>
 
-    </a>
-    {% endfor %}
+          <h3 class="mais-lidas-title">
+            {{ n.titulo }}
+          </h3>
+        </div>
+
+      </a>
+      {% endfor %}
+    </div>
+
   </div>
 </section>
-
-
 
 <!-- ================= ADS FOOTER ================= -->
 <section class="home-ads-horizontal">
