@@ -117,6 +117,7 @@ def admin_dashboard(request: Request):
         }
     )
 
+
 # ✅ ADS.TXT (rota na raiz)
 @app.get("/ads.txt", response_class=PlainTextResponse)
 def ads_txt():
