@@ -582,16 +582,26 @@ Sitemap: https://girodesportivo.com/sitemap.xml
 
 from fastapi.responses import Response
 from datetime import datetime
+import html
 
 @app.get("/sitemap.xml", response_class=Response)
 def sitemap():
 
-    noticias = listar_noticias_publicadas(limit=5000)
-    categorias = listar_categorias()
+    try:
+        noticias = listar_noticias_publicadas(limit=5000)
+    except Exception as e:
+        print("Erro ao buscar notícias:", e)
+        noticias = []
+
+    try:
+        categorias = listar_categorias()
+    except Exception as e:
+        print("Erro ao buscar categorias:", e)
+        categorias = []
 
     urls = []
 
-    # Home
+    # HOME
     urls.append("""
     <url>
         <loc>https://girodesportivo.com/</loc>
@@ -600,24 +610,39 @@ def sitemap():
     </url>
     """)
 
-    # Categorias
+    # CATEGORIAS
     for c in categorias:
+        if not c:
+            continue
+
+        c_safe = html.escape(str(c))
+
         urls.append(f"""
         <url>
-            <loc>https://girodesportivo.com/categoria/{c}</loc>
+            <loc>https://girodesportivo.com/categoria/{c_safe}</loc>
             <changefreq>daily</changefreq>
             <priority>0.7</priority>
         </url>
         """)
 
-    # Notícias
+    # NOTÍCIAS
     for n in noticias:
-        if not n.get("slug"):
+        slug = n.get("slug")
+        if not slug:
             continue
+
+        slug_safe = html.escape(str(slug))
+
+        criada_em = n.get("criada_em")
+        if hasattr(criada_em, "strftime"):
+            lastmod = criada_em.strftime("%Y-%m-%d")
+        else:
+            lastmod = datetime.utcnow().strftime("%Y-%m-%d")
 
         urls.append(f"""
         <url>
-            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+            <loc>https://girodesportivo.com/noticia/{slug_safe}</loc>
+            <lastmod>{lastmod}</lastmod>
             <changefreq>daily</changefreq>
             <priority>0.8</priority>
         </url>
