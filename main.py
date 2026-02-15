@@ -342,16 +342,7 @@ def admin_ads_save(
     ativo: str = Form(None),
     dispositivo: str = Form("all")
 ):
-    auth = login_required(request)
-    if auth:
-        return auth
-
-    ativo_bool = True if ativo == "on" else False
-
-    salvar_ads_script(slot_id, codigo, ativo_bool)
-    atualizar_ads_slot_dispositivo(slot_id, dispositivo)
-
-    return RedirectResponse("/admin/ads", status_code=302)
+    return {"ok": True}
 
 @app.get("/admin/ads/{slot_id}/preview", response_class=HTMLResponse)
 def admin_ads_preview(slot_id: int, request: Request):
