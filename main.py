@@ -433,11 +433,6 @@ if imagem_file and imagem_file.filename:
 
     imagem_url = f"/static/uploads/{filename}"
 
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(imagem_file.file, buffer)
-
-        imagem_url = f"/static/uploads/{filename}"
-
     criar_noticia({
         "titulo_editorial": titulo_editorial,
         "resumo": resumo,
