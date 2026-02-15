@@ -421,14 +421,19 @@ async def admin_noticia_criar(
 
     imagem_url = None
 
-    if imagem_file and imagem_file.filename:
-        filename = f"{slug_final}-{imagem_file.filename}"
-        filepath = UPLOAD_DIR / filename
+if imagem_file and imagem_file.filename:
+    filename = f"{slug_final}-{imagem_file.filename}"
+    filepath = UPLOAD_DIR / filename
 
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(imagem_file.file, buffer)
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(imagem_file.file, buffer)
 
-        imagem_url = f"/static/uploads/{filename}"
+    imagem_url = f"/static/uploads/{filename}"
+
+else:
+    # 🔥 mantém imagem original se existir
+    form = await request.form()
+    imagem_url = form.get("imagem_existente")
 
     criar_noticia({
         "titulo_editorial": titulo_editorial,
