@@ -8,7 +8,7 @@
     {{ "Editar Notícia" if noticia else "Nova Notícia" }}
   </h1>
 
-  <form method="post"
+<form method="post" enctype="multipart/form-data"
         action="{% if noticia %}/admin/noticias/{{ noticia.id }}{% else %}/admin/noticias/nova{% endif %}">
 
     <!-- TÍTULO EDITORIAL -->
@@ -52,14 +52,25 @@
              value="{{ noticia.tags | join(', ') if noticia and noticia.tags else '' }}">
     </div>
 
-    <!-- IMAGEM -->
-    <div class="admin-form-group">
-      <label>Imagem (URL)</label>
-      <input type="text"
-             name="imagem"
-             value="{{ noticia.imagem if noticia else '' }}"
-             placeholder="https://...">
-    </div>
+   <!-- IMAGEM ATUAL -->
+{% if noticia and noticia.imagem %}
+<div class="admin-form-group">
+  <label>Imagem atual</label>
+  <img src="{{ noticia.imagem }}"
+       alt="Preview"
+       style="max-width: 300px; border-radius: 6px; display:block; margin-bottom:10px;">
+  <small style="color:#64748b">
+    URL atual: {{ noticia.imagem }}
+  </small>
+</div>
+{% endif %}
+
+<!-- SUBSTITUIR IMAGEM -->
+<div class="admin-form-group">
+  <label>Substituir imagem (upload opcional)</label>
+  <input type="file" name="imagem_file" accept="image/*">
+</div>
+
 
     <!-- PREVIEW DA IMAGEM -->
     {% if noticia and noticia.imagem %}
@@ -108,6 +119,32 @@
   </form>
 
 </div>
+<script>
+function gerarSlug(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const tituloInput = document.querySelector('input[name="titulo_editorial"]');
+  const slugInput = document.querySelector('input[name="slug"]');
+
+  tituloInput.addEventListener("input", function() {
+    if (!slugInput.dataset.manual) {
+      slugInput.value = gerarSlug(tituloInput.value);
+    }
+  });
+
+  slugInput.addEventListener("input", function() {
+    slugInput.dataset.manual = "true";
+  });
+});
+</script>
 
 <!-- TinyMCE CDN COM API KEY -->
 <script src="https://cdn.tiny.cloud/1/skjq2qyvqx3pozohkaymt4ri2zyezho5lkeuh246doz049kr/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
