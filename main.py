@@ -481,3 +481,15 @@ def listar_noticias_view(
             "categoria": categoria,
         }
     )
+
+def salvar_ads_script(slot_id: int, codigo: str, ativo: bool):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE ads_slots
+                SET
+                    script = %s,
+                    ativo = %s
+                WHERE id = %s;
+            """, (codigo, ativo, slot_id))
+        conn.commit()
