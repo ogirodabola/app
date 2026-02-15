@@ -483,6 +483,7 @@ async def admin_noticia_atualizar(
 
     imagem_url = None
 
+    # 🔥 MANTÉM IMAGEM ORIGINAL SE NÃO ENVIAR NOVA
     if imagem_file and imagem_file.filename:
         upload_dir = "static/uploads"
         os.makedirs(upload_dir, exist_ok=True)
@@ -494,6 +495,9 @@ async def admin_noticia_atualizar(
             shutil.copyfileobj(imagem_file.file, buffer)
 
         imagem_url = f"/static/uploads/{filename}"
+    else:
+        noticia_existente = buscar_noticia_admin(noticia_id)
+        imagem_url = noticia_existente["imagem"]
 
     atualizar_noticia(noticia_id, {
         "titulo_editorial": titulo_editorial,
