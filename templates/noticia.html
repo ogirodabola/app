@@ -7,6 +7,8 @@
 {% block meta %}
 
 <meta name="description" content="{{ noticia.resumo or noticia.titulo }}">
+<link rel="canonical" href="https://girodesportivo.com/noticia/{{ noticia.slug }}">
+
 <meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta property="og:description" content="{{ noticia.resumo }}">
 <meta property="og:image" content="{{ noticia.imagem }}">
@@ -18,7 +20,36 @@
 <meta name="twitter:description" content="{{ noticia.resumo }}">
 <meta name="twitter:image" content="{{ noticia.imagem }}">
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": {{ (noticia.titulo_editorial or noticia.titulo) | tojson | safe }},
+  "description": {{ (noticia.resumo or noticia.titulo) | tojson | safe }},
+  "image": {{ noticia.imagem | tojson | safe }},
+  "datePublished": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S') if noticia.criada_em else '' }}",
+  "dateModified": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S') if noticia.criada_em else '' }}",
+  "author": {
+    "@type": "Organization",
+    "name": "Giro Desportivo"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Giro Desportivo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://girodesportivo.com/static/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://girodesportivo.com/noticia/{{ noticia.slug }}"
+  }
+}
+</script>
+
 {% endblock %}
+
 
 {% block content %}
 
