@@ -320,7 +320,8 @@ def atualizar_editorial(
                     titulo_editorial = %s,
                     conteudo_editorial = %s,
                     tags = %s,
-                    categoria = COALESCE(%s, categoria)
+                    categoria = COALESCE(%s, categoria),
+                    editorial_status = 'publicado'  -- AUTO PUBLISH
                 WHERE id = %s;
             """, (
                 titulo_editorial,
@@ -332,7 +333,6 @@ def atualizar_editorial(
         conn.commit()
     finally:
         conn.close()
-
 
 # ======================================================
 # BUSCAR NOTÍCIAS SEM EDITORIAL (worker IA)
