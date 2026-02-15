@@ -609,25 +609,25 @@ def listar_noticias_admin(
 # NOTÍCIAS — CRIAR
 # ======================================================
 def criar_noticia(dados: dict):
-    slug = slugify(dados["titulo"])
-
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO noticias
-                (titulo, linha_fina, slug, conteudo, imagem, categoria_id, tags, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                (titulo_editorial, resumo, conteudo_editorial, imagem,
+                 categoria, tags, editorial_status, slug)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
             """, (
-                dados["titulo"],
-                dados.get("linha_fina"),
-                slug,
-                dados.get("conteudo"),
+                dados.get("titulo_editorial"),
+                dados.get("resumo"),
+                dados.get("conteudo_editorial"),
                 dados.get("imagem"),
-                dados.get("categoria_id"),
+                dados.get("categoria"),
                 dados.get("tags"),
-                dados.get("status", "draft")
+                dados.get("editorial_status", "pendente"),
+                dados.get("slug"),
             ))
         conn.commit()
+
 
 
 # ======================================================
