@@ -4,13 +4,11 @@
 
 {% block content %}
 
-<!-- ================= ADS PROGRAMÁTICA — TOPO HOME ================= -->
+<!-- ================= TOP AD ================= -->
 <section class="home-top-ad">
   <div class="container">
-    <div class="ads-programmatic">
-      <span class="ads-label">Publicidade</span>
-      {{ render_ad("home_top_programmatic", request) | safe }}
-    </div>
+    <span class="ads-label">Publicidade</span>
+    {{ render_ad("home_top_programmatic", request) | safe }}
   </div>
 </section>
 
@@ -20,7 +18,6 @@
 <section class="container content-stack">
   <div class="cards-grid">
 
-    <!-- PRINCIPAL -->
     <a href="/noticia/{{ hero_principal.slug }}" class="card">
       <div class="card-image">
         <img src="{{ hero_principal.imagem }}"
@@ -34,7 +31,6 @@
       </div>
     </a>
 
-    <!-- SECUNDÁRIAS -->
     {% for n in hero_secundarias %}
     <a href="/noticia/{{ n.slug }}" class="card">
       <div class="card-image">
@@ -55,7 +51,16 @@
 {% endif %}
 
 
-<!-- ================= ÚLTIMAS NOTÍCIAS ================= -->
+<!-- ================= MIDDLE AD ================= -->
+<section class="home-ads-horizontal">
+  <div class="container">
+    <span class="ads-label">Publicidade</span>
+    {{ render_ad("home_middle", request) | safe }}
+  </div>
+</section>
+
+
+<!-- ================= FEED ================= -->
 <section class="section-block section-feed">
   <div class="container">
 
@@ -69,9 +74,9 @@
       <div class="latest-news">
         <ul class="latest-news-list">
           {% for n in feed_noticias %}
+
           <li class="latest-news-item">
             <a href="/noticia/{{ n.slug }}">
-
               <img src="{{ n.imagem }}"
                    alt="{{ n.titulo }}"
                    loading="lazy"
@@ -79,22 +84,26 @@
 
               <div class="latest-news-text">
                 <span class="latest-news-category">{{ n.categoria }}</span>
-
-                <h3 class="latest-news-title">
-                  {{ n.titulo }}
-                </h3>
-
+                <h3 class="latest-news-title">{{ n.titulo }}</h3>
                 {% if n.fonte %}
                 <div class="latest-news-meta">{{ n.fonte }}</div>
                 {% endif %}
               </div>
-
             </a>
           </li>
+
+          {% if loop.index == 6 %}
+          <li class="feed-ad">
+            <span class="ads-label">Publicidade</span>
+            {{ render_ad("home_feed_1", request) | safe }}
+          </li>
+          {% endif %}
+
           {% endfor %}
         </ul>
       </div>
 
+      <!-- SIDEBAR STICKY -->
       <aside class="latest-ads">
         <span class="ads-label">Publicidade</span>
         {{ render_ad("home_sidebar", request) | safe }}
@@ -121,63 +130,32 @@
         <div class="brasileirao-cards">
           {% for n in brasileirao %}
           <a href="/noticia/{{ n.slug }}" class="brasileirao-card">
-
             <div class="brasileirao-image">
               <img src="{{ n.imagem }}"
                    alt="{{ n.titulo }}"
                    loading="lazy"
                    onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
             </div>
-
             <div class="brasileirao-body">
               <h3>{{ n.titulo }}</h3>
-              {% if n.fonte %}
-              <span class="brasileirao-meta">{{ n.fonte }}</span>
-              {% endif %}
             </div>
-
           </a>
           {% endfor %}
         </div>
       </div>
 
       <aside class="brasileirao-table">
-        <div class="widget-header">
-          <h3>Tabela</h3>
-        </div>
-
+        <h3>Tabela</h3>
         <table class="table-standings">
-          <thead>
-            <tr>
-              <th>Equipe</th>
-              <th>P</th>
-              <th>J</th>
-              <th>V</th>
-            </tr>
-          </thead>
           <tbody>
             {% for t in tabela_brasileirao %}
             <tr>
-              <td class="team-cell">
-                <img src="{{ t.escudo }}"
-                     alt="{{ t.nome }}"
-                     loading="lazy"
-                     onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
-                <span>{{ t.nome }}</span>
-              </td>
+              <td>{{ t.nome }}</td>
               <td>{{ t.pontos }}</td>
-              <td>{{ t.jogos }}</td>
-              <td>{{ t.vitorias }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-
-        <div class="table-footer">
-          <a href="/classificacao" class="table-more-btn">
-            Ver tabela completa →
-          </a>
-        </div>
       </aside>
 
     </div>
@@ -186,47 +164,26 @@
 </section>
 
 
+<!-- ================= BETWEEN SECTIONS AD ================= -->
+<section class="home-ads-horizontal">
+  <div class="container">
+    <span class="ads-label">Publicidade</span>
+    {{ render_ad("home_between_sections", request) | safe }}
+  </div>
+</section>
+
+
 <!-- ================= MERCADO ================= -->
-<section class="section-block section-internacional">
+<section class="section-block section-mercado">
   <div class="container">
 
     <div class="section-header">
       <h2>Mercado da Bola</h2>
       <span class="section-line"></span>
     </div>
-  
-    <div class="cards-grid">
-    {% for n in mercado %}
-    <a href="/noticia/{{ n.slug }}" class="card">
-      <div class="card-image">
-        <img src="{{ n.imagem }}"
-             alt="{{ n.titulo }}"
-             loading="lazy"
-             onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
-      </div>
-      <div class="card-body">
-        <span class="badge">Mercado</span>
-        <h3 class="card-title">{{ n.titulo }}</h3>
-      </div>
-    </a>
-    {% endfor %}
-  </div>
-
-  </div>
-</section>
-
-
-<!-- ================= INTERNACIONAL ================= -->
-<section class="section-block section-internacional">
-  <div class="container">
-
-    <div class="section-header">
-      <h2>Futebol Internacional</h2>
-      <span class="section-line"></span>
-    </div>
 
     <div class="cards-grid">
-      {% for n in internacional %}
+      {% for n in mercado %}
       <a href="/noticia/{{ n.slug }}" class="card">
         <div class="card-image">
           <img src="{{ n.imagem }}"
@@ -235,7 +192,6 @@
                onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
         </div>
         <div class="card-body">
-          <span class="badge">{{ n.categoria }}</span>
           <h3 class="card-title">{{ n.titulo }}</h3>
         </div>
       </a>
@@ -258,21 +214,10 @@
     <div class="mais-lidas-list">
       {% for n in mais_lidas %}
       <a href="/noticia/{{ n.slug }}" class="mais-lidas-item">
-
-        <span class="mais-lidas-rank">
-          {{ loop.index }}
-        </span>
-
+        <span class="mais-lidas-rank">{{ loop.index }}</span>
         <div class="mais-lidas-content">
-          <span class="mais-lidas-category">
-            {{ n.categoria }}
-          </span>
-
-          <h3 class="mais-lidas-title">
-            {{ n.titulo }}
-          </h3>
+          <h3 class="mais-lidas-title">{{ n.titulo }}</h3>
         </div>
-
       </a>
       {% endfor %}
     </div>
@@ -280,7 +225,8 @@
   </div>
 </section>
 
-<!-- ================= ADS FOOTER ================= -->
+
+<!-- ================= FOOTER AD ================= -->
 <section class="home-ads-horizontal">
   <div class="container">
     <span class="ads-label">Publicidade</span>
