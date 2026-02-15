@@ -4,6 +4,22 @@
 {{ noticia.titulo_editorial or noticia.titulo }} | Giro Desportivo
 {% endblock %}
 
+{% block meta %}
+
+<meta name="description" content="{{ noticia.resumo or noticia.titulo }}">
+<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
+<meta property="og:description" content="{{ noticia.resumo }}">
+<meta property="og:image" content="{{ noticia.imagem }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://girodesportivo.com/noticia/{{ noticia.slug }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
+<meta name="twitter:description" content="{{ noticia.resumo }}">
+<meta name="twitter:image" content="{{ noticia.imagem }}">
+
+{% endblock %}
+
 {% block content %}
 
 <article class="news-article">
