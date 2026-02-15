@@ -417,21 +417,18 @@ async def admin_noticia_criar(
     if auth:
         return auth
 
-    # 🔹 SLUG SEO
     slug_final = slugify(slug if slug else titulo_editorial)
 
-    # 🔹 Upload imagem
     imagem_url = None
 
-if imagem_file and imagem_file.filename:
+    if imagem_file and imagem_file.filename:
+        filename = f"{slug_final}-{imagem_file.filename}"
+        filepath = UPLOAD_DIR / filename
 
-    filename = f"{slug_final}-{imagem_file.filename}"
-    filepath = UPLOAD_DIR / filename
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(imagem_file.file, buffer)
 
-    with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(imagem_file.file, buffer)
-
-    imagem_url = f"/static/uploads/{filename}"
+        imagem_url = f"/static/uploads/{filename}"
 
     criar_noticia({
         "titulo_editorial": titulo_editorial,
@@ -445,7 +442,6 @@ if imagem_file and imagem_file.filename:
     })
 
     return RedirectResponse("/admin/noticias", status_code=302)
-
 
 @app.get("/admin/noticias/{noticia_id}", response_class=HTMLResponse)
 def admin_noticia_editar(noticia_id: int, request: Request):
