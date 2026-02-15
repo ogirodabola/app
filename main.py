@@ -567,30 +567,9 @@ def listar_noticias_view(
         }
     )
 
-from fastapi.responses import Response
-
-@app.get("/sitemap.xml", response_class=Response)
-def sitemap():
-    noticias = listar_noticias_publicadas(limit=1000)
-
-    urls = ""
-    for n in noticias:
-        urls += f"""
-        <url>
-            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
-        </url>
-        """
-
-    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url>
-            <loc>https://girodesportivo.com/</loc>
-        </url>
-        {urls}
-    </urlset>
-    """
-
-    return Response(content=xml, media_type="application/xml")
+# ======================================================
+# ROBOTS
+# ======================================================
 
 @app.get("/robots.txt", response_class=PlainTextResponse)
 def robots():
@@ -601,3 +580,46 @@ Allow: /
 Sitemap: https://girodesportivo.com/sitemap.xml
 """
 
+from fastapi.responses import Response
+from datetime import datetime
+
+# ======================================================
+# SITEMAP
+# ======================================================
+
+@app.get("/sitemap.xml", response_class=Response)
+def sitemap():
+
+    noticias = listar_noticias_publicadas(limit=5000)
+
+    urls = []
+
+    # Home
+    urls.append(f"""
+    <url>
+        <loc>https://girodesportivo.com/</loc>
+        <changefreq>hourly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    """)
+
+    # Notícias
+    for n in noticias:
+        lastmod = n["criada_em"].strftime("%Y-%m-%d") if n.get("criada_em") else datetime.utcnow().strftime("%Y-%m-%d")
+
+        urls.append(f"""
+        <url>
+            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+            <lastmod>{lastmod}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.8</priority>
+        </url>
+        """)
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{''.join(urls)}
+</urlset>
+"""
+
+    return Response(content=xml.strip(), media_type="application/xml")
