@@ -688,9 +688,8 @@ def listar_noticias_publicadas(limit=10):
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
                 LIMIT %s;
-            
+            """, (limit,))
             return cur.fetchall()
-
 
 # ======================================================
 # NOTÍCIA — PÁGINA INDIVIDUAL
