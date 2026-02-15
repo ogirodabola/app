@@ -214,14 +214,30 @@
 <!-- ================= MAIS LIDAS ================= -->
 <section class="container content-stack">
   <h2 class="section-title">Mais Lidas</h2>
-  <ul>
+
+  <div class="mais-lidas-list">
     {% for n in mais_lidas %}
-    <li>
-      <a href="/noticia/{{ n.slug }}">{{ n.titulo }}</a>
-    </li>
+    <a href="/noticia/{{ n.slug }}" class="mais-lidas-item">
+      
+      <span class="mais-lidas-rank">
+        {{ loop.index }}
+      </span>
+
+      <div class="mais-lidas-content">
+        <span class="mais-lidas-category">
+          {{ n.categoria }}
+        </span>
+
+        <h3 class="mais-lidas-title">
+          {{ n.titulo }}
+        </h3>
+      </div>
+
+    </a>
     {% endfor %}
-  </ul>
+  </div>
 </section>
+
 
 
 <!-- ================= ADS FOOTER ================= -->
