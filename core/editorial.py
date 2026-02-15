@@ -172,3 +172,35 @@ Título original:
 
     texto = resp.output_text.strip().replace('"', "")
     return texto or titulo
+
+def gerar_slug_seo(titulo: str) -> str:
+    if USE_MOCK or not _client:
+        from slugify import slugify
+        return slugify(titulo)
+
+    prompt = f"""
+Reescreva o título abaixo em formato de slug SEO.
+
+Regras:
+- Apenas minúsculas
+- Separado por hífen
+- Sem palavras desnecessárias
+- Máximo 8 palavras
+- Não use números aleatórios
+
+Título:
+{titulo}
+
+Retorne APENAS o slug.
+"""
+
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=50,
+    )
+
+    slug = resp.output_text.strip().replace(" ", "-")
+    slug = re.sub(r"[^a-z0-9-]", "", slug.lower())
+
+    return slug
