@@ -878,3 +878,163 @@ def dashboard_status_por_fonte():
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(query)
             return cur.fetchall()
+
+def listar_home_hero():
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT 5;
+            """)
+            return cur.fetchall()
+
+def listar_home_feed(limit=20):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_brasileirao(limit=6):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE categoria = 'Brasileirão'
+                AND editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_mercado(limit=6):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE categoria = 'Mercado da Bola'
+                AND editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_internacional(limit=6):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  categoria,
+                  fonte,
+                  criada_em
+                FROM noticias
+                WHERE categoria NOT IN (
+                    'Brasileirão',
+                    'Mercado da Bola',
+                    'Última Hora'
+                )
+                AND editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_analises(limit=4):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  criada_em
+                FROM noticias
+                WHERE categoria = 'Análises'
+                AND editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_bastidores(limit=4):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  resumo,
+                  imagem,
+                  criada_em
+                FROM noticias
+                WHERE categoria = 'Bastidores'
+                AND editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def listar_home_mais_lidas(limit=8):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                  id,
+                  slug,
+                  COALESCE(titulo_editorial, titulo) AS titulo,
+                  categoria,
+                  criada_em
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
