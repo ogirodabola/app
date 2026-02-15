@@ -572,7 +572,8 @@ from psycopg2.extras import RealDictCursor
 def listar_noticias_admin(
     status: str | None = None,
     categoria: str | None = None,
-    busca: str | None = None
+    busca: str | None = None,
+    fonte: str | None = None
 ):
     query = """
         SELECT
@@ -597,6 +598,10 @@ def listar_noticias_admin(
     if busca and busca.strip():
         query += " AND COALESCE(titulo_editorial, titulo) ILIKE %s"
         params.append(f"%{busca.strip()}%")
+
+    if fonte:
+        query += " AND fonte = %s"
+        params.append(fonte)
 
     query += " ORDER BY criada_em DESC"
 
