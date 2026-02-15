@@ -2166,3 +2166,17 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .home-ads-horizontal * {
   max-width: 100% !important;
 }
+
+.latest-ads {
+  position: sticky;
+  top: 100px;
+}
+
+.home-ads-horizontal {
+  padding: 40px 0;
+  text-align: center;
+}
+
+.page {
+  overflow-x: hidden;
+}
