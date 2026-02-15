@@ -519,12 +519,14 @@ def listar_noticias_view(
     request: Request,
     busca: str | None = None,
     status: str | None = None,
-    categoria: str | None = None
+    categoria: str | None = None,
+    fonte: str | None = None
 ):
     noticias = listar_noticias_admin(
         status=status,
         categoria=categoria,
-        busca=busca
+        busca=busca,
+        fonte=fonte
     )
 
     return templates.TemplateResponse(
@@ -535,5 +537,6 @@ def listar_noticias_view(
             "busca": busca,
             "status": status,
             "categoria": categoria,
+            "fonte": fonte
         }
     )
