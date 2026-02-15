@@ -57,12 +57,15 @@ from fastapi.responses import RedirectResponse
 
 from slugify import slugify
 
+from slugify import slugify
+
 @app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
+    form = await request.form()
+
     titulo = form.get("titulo_editorial")
     slug_form = form.get("slug")
 
-    # Geração segura de slug
     if not slug_form or slug_form.strip() == "":
         slug = slugify(titulo)
     else:
@@ -82,6 +85,7 @@ async def salvar_noticia_admin(id: int, request: Request):
     atualizar_noticia(id, dados)
 
     return RedirectResponse("/admin/noticias", status_code=303)
+
 
 @app.get("/admin/logout")
 def admin_logout(request: Request):
@@ -453,24 +457,6 @@ def admin_noticia_atualizar(
     })
 
     return RedirectResponse("/admin/noticias", status_code=302)
-
-@app.post("/admin/noticias/{id}")
-async def salvar_noticia_admin(id: int, request: Request):
-    form = await request.form()
-
-    dados = {
-        "titulo_editorial": form.get("titulo_editorial"),
-        "resumo": form.get("resumo"),
-        "conteudo_editorial": form.get("conteudo_editorial"),
-        "imagem": form.get("imagem"),
-        "categoria": form.get("categoria"),
-        "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
-        "editorial_status": form.get("editorial_status", "pendente"),
-    }
-
-    atualizar_noticia(id, dados)
-
-    return RedirectResponse("/admin/noticias", status_code=303)
 
 @app.get("/admin/noticias")
 def listar_noticias_view(
