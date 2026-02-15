@@ -31,4 +31,35 @@
   </div>
 
 </div>
+
+<!-- CARD: STATUS EDITORIAL -->
+<div class="admin-card">
+  <h3>Status das Notícias</h3>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px">
+
+    <div><strong>Total:</strong> {{ metricas.total }}</div>
+    <div><strong>Publicadas:</strong> {{ metricas.publicadas }}</div>
+    <div><strong>Pendentes IA:</strong> {{ metricas.pendentes }}</div>
+    <div><strong>Prontas para Publicar:</strong> {{ metricas.prontas_ia }}</div>
+
+  </div>
+
+  <hr style="margin:15px 0">
+
+  <h4>Últimas Criadas</h4>
+  <ul>
+    {% for n in metricas.ultimas %}
+      <li>
+        {{ n.titulo }} 
+        <small style="color:#64748b">({{ n.criada_em.strftime("%d/%m %H:%M") }})</small>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="/admin/noticias" class="btn" style="margin-top:10px">
+    Gerenciar Notícias
+  </a>
+</div>
+
 {% endblock %}
