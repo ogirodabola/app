@@ -566,3 +566,28 @@ def listar_noticias_view(
             "fonte": fonte
         }
     )
+
+from fastapi.responses import Response
+
+@app.get("/sitemap.xml", response_class=Response)
+def sitemap():
+    noticias = listar_noticias_publicadas(limit=1000)
+
+    urls = ""
+    for n in noticias:
+        urls += f"""
+        <url>
+            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+        </url>
+        """
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+            <loc>https://girodesportivo.com/</loc>
+        </url>
+        {urls}
+    </urlset>
+    """
+
+    return Response(content=xml, media_type="application/xml")
