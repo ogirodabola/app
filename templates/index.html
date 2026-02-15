@@ -148,13 +148,19 @@
         <h3>Tabela</h3>
         <table class="table-standings">
           <tbody>
-            {% for t in tabela_brasileirao %}
-            <tr>
-              <td>{{ t.nome }}</td>
-              <td>{{ t.pontos }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
+  {% for t in tabela_brasileirao %}
+  <tr>
+    <td class="team-cell">
+      <img src="{{ t.escudo }}"
+           alt="{{ t.nome }}"
+           loading="lazy"
+           onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
+      <span>{{ t.nome }}</span>
+    </td>
+    <td>{{ t.pontos }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
         </table>
       </aside>
 
