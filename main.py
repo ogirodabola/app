@@ -7,6 +7,7 @@ from core.futebol_api import buscar_jogos_do_dia
 from fastapi.responses import HTMLResponse
 from core.database import listar_noticias_admin
 from core.database import atualizar_ads_slot_dispositivo
+from core.database import obter_metricas_editoriais
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -99,11 +100,14 @@ def admin_dashboard(request: Request):
     if auth:
         return auth
 
+    metricas = obter_metricas_editoriais()
+
     return templates.TemplateResponse(
         "admin/dashboard.html",
         {
             "request": request,
-            "usuario": request.session["admin_user"]
+            "usuario": request.session["admin_user"],
+            "metricas": metricas
         }
     )
 
