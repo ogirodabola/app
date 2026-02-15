@@ -2150,3 +2150,19 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .section-brasileirao {
   background: rgba(59,130,246,0.04);
 }
+
+/* Blindagem universal para qualquer slot */
+.ads-programmatic,
+.latest-ads,
+.home-ads-horizontal {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+
+.ads-programmatic * ,
+.latest-ads * ,
+.home-ads-horizontal * {
+  max-width: 100% !important;
+}
