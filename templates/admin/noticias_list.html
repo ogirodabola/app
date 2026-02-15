@@ -24,6 +24,13 @@
       Publicado
     </option>
   </select>
+  <select name="fonte">
+  <option value="">Todos os Crawlers</option>
+  <option value="goal_brasil" {% if fonte == "goal_brasil" %}selected{% endif %}>Goal</option>
+  <option value="torcedores" {% if fonte == "torcedores" %}selected{% endif %}>Torcedores</option>
+  <option value="gazeta" {% if fonte == "gazeta" %}selected{% endif %}>Gazeta</option>
+  <option value="ge" {% if fonte == "ge" %}selected{% endif %}>GE</option>
+</select>
 
   <select name="categoria">
     <option value="">Todas categorias</option>
