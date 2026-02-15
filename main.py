@@ -591,3 +591,13 @@ def sitemap():
     """
 
     return Response(content=xml, media_type="application/xml")
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+def robots():
+    return """
+User-agent: *
+Allow: /
+
+Sitemap: https://girodesportivo.com/sitemap.xml
+"""
+
