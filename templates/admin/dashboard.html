@@ -62,4 +62,32 @@
   </a>
 </div>
 
+<!-- CARD: STATUS POR CRAWLER -->
+<div class="admin-card">
+  <h3>Status por Crawler</h3>
+
+  <table style="width:100%; margin-top:12px;">
+    <thead>
+      <tr>
+        <th>Fonte</th>
+        <th>Total</th>
+        <th>Pendentes IA</th>
+        <th>Publicadas</th>
+        <th>Prontas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in stats_por_fonte %}
+      <tr>
+        <td>{{ row.fonte }}</td>
+        <td>{{ row.total }}</td>
+        <td>{{ row.pendentes_ia }}</td>
+        <td>{{ row.publicadas }}</td>
+        <td>{{ row.prontas_publicar }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}
