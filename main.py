@@ -98,20 +98,22 @@ def admin_logout(request: Request):
     request.session.clear()
     return RedirectResponse("/admin/login", status_code=302)
 
+from core.database import dashboard_status_por_fonte
+
 @app.get("/admin/dashboard", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
     auth = login_required(request)
     if auth:
         return auth
 
-    metricas = obter_metricas_editoriais()
+    stats = dashboard_status_por_fonte()
 
     return templates.TemplateResponse(
         "admin/dashboard.html",
         {
             "request": request,
             "usuario": request.session["admin_user"],
-            "metricas": metricas
+            "stats_por_fonte": stats
         }
     )
 
