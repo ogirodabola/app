@@ -802,3 +802,50 @@ def atualizar_ads_slot_dispositivo(slot_id: int, dispositivo: str):
             """, (dispositivo, slot_id))
         conn.commit()
 
+# ======================================================
+# DASHBOARD — MÉTRICAS EDITORIAIS
+# ======================================================
+def obter_metricas_editoriais():
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            cur.execute("SELECT COUNT(*) FROM noticias")
+            total = cur.fetchone()["count"]
+
+            cur.execute("""
+                SELECT COUNT(*)
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+            """)
+            publicadas = cur.fetchone()["count"]
+
+            cur.execute("""
+                SELECT COUNT(*)
+                FROM noticias
+                WHERE conteudo_editorial IS NULL
+            """)
+            pendentes = cur.fetchone()["count"]
+
+            cur.execute("""
+                SELECT COUNT(*)
+                FROM noticias
+                WHERE conteudo_editorial IS NOT NULL
+                  AND editorial_status != 'publicado'
+            """)
+            prontas_ia = cur.fetchone()["count"]
+
+            cur.execute("""
+                SELECT id, COALESCE(titulo_editorial, titulo) AS titulo, criada_em
+                FROM noticias
+                ORDER BY criada_em DESC
+                LIMIT 5
+            """)
+            ultimas = cur.fetchall()
+
+            return {
+                "total": total,
+                "publicadas": publicadas,
+                "pendentes": pendentes,
+                "prontas_ia": prontas_ia,
+                "ultimas": ultimas
+            }
