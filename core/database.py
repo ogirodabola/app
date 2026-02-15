@@ -849,3 +849,27 @@ def obter_metricas_editoriais():
                 "prontas_ia": prontas_ia,
                 "ultimas": ultimas
             }
+
+# ======================================================
+# DASHBOARD — STATUS POR FONTE (CRAWLER)
+# ======================================================
+def dashboard_status_por_fonte():
+    query = """
+        SELECT
+            fonte,
+            COUNT(*) AS total,
+            COUNT(*) FILTER (WHERE conteudo_editorial IS NULL) AS pendentes_ia,
+            COUNT(*) FILTER (WHERE editorial_status = 'publicado') AS publicadas,
+            COUNT(*) FILTER (
+                WHERE conteudo_editorial IS NOT NULL
+                AND editorial_status <> 'publicado'
+            ) AS prontas_publicar
+        FROM noticias
+        GROUP BY fonte
+        ORDER BY fonte;
+    """
+
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(query)
+            return cur.fetchall()
