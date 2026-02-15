@@ -586,11 +586,8 @@ from datetime import datetime
 @app.get("/sitemap.xml", response_class=Response)
 def sitemap():
 
-    try:
-        noticias = listar_noticias_publicadas(limit=5000)
-    except Exception as e:
-        print("Erro ao buscar notícias no sitemap:", e)
-        noticias = []
+    noticias = listar_noticias_publicadas(limit=5000)
+    categorias = listar_categorias()
 
     urls = []
 
@@ -603,22 +600,24 @@ def sitemap():
     </url>
     """)
 
+    # Categorias
+    for c in categorias:
+        urls.append(f"""
+        <url>
+            <loc>https://girodesportivo.com/categoria/{c}</loc>
+            <changefreq>daily</changefreq>
+            <priority>0.7</priority>
+        </url>
+        """)
+
+    # Notícias
     for n in noticias:
-        slug = n.get("slug")
-        if not slug:
+        if not n.get("slug"):
             continue
-
-        criada_em = n.get("criada_em")
-
-        if hasattr(criada_em, "strftime"):
-            lastmod = criada_em.strftime("%Y-%m-%d")
-        else:
-            lastmod = datetime.utcnow().strftime("%Y-%m-%d")
 
         urls.append(f"""
         <url>
-            <loc>https://girodesportivo.com/noticia/{slug}</loc>
-            <lastmod>{lastmod}</lastmod>
+            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
             <changefreq>daily</changefreq>
             <priority>0.8</priority>
         </url>
