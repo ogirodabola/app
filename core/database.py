@@ -460,7 +460,7 @@ def buscar_ad_por_slot(nome_slot: str):
                     sc.codigo,
                     sc.ativo AS script_ativo
                 FROM ads_slots s
-                JOIN ads_scripts sc ON sc.slot_id = s.id
+                LEFT JOIN ads_scripts sc ON sc.slot_id = s.id
                 WHERE s.nome = %s
                 LIMIT 1;
             """, (nome_slot,))
