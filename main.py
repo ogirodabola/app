@@ -149,11 +149,29 @@ templates.env.globals["render_ad"] = render_ad
 # ======================================================
 # HOME
 # ======================================================
-
-from core.database import listar_noticias_publicadas
+from core.database import (
+    listar_home_hero,
+    listar_home_feed,
+    listar_home_brasileirao,
+    listar_home_mercado,
+    listar_home_internacional,
+    listar_home_analises,
+    listar_home_bastidores,
+    listar_home_mais_lidas,
+)
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+
+    hero = listar_home_hero()
+    feed = listar_home_feed(limit=20)
+
+    brasileirao = listar_home_brasileirao()
+    mercado = listar_home_mercado()
+    internacional = listar_home_internacional()
+    analises = listar_home_analises()
+    bastidores = listar_home_bastidores()
+    mais_lidas = listar_home_mais_lidas()
 
     tabela_completa = buscar_classificacao_brasileirao()
     jogos_do_dia = buscar_jogos_do_dia()
@@ -163,23 +181,31 @@ def home(request: Request):
         {
             "request": request,
 
-            # blocos editoriais (CMS manda)
-            "ultima_hora": listar_ultima_hora_publicada(limit=6),
-            "ultimas_noticias": listar_editorial_publicado(limit=6),
+            # HERO
+            "hero_principal": hero[0] if hero else None,
+            "hero_secundarias": hero[1:] if len(hero) > 1 else [],
 
+            # FEED
+            "feed_noticias": feed,
 
-            # bloco esportivo específico
-            "brasileirao": listar_por_categoria("Brasileirão", limit=4),
+            # BLOCOS
+            "brasileirao": brasileirao,
+            "mercado": mercado,
+            "internacional": internacional,
+            "analises": analises,
+            "bastidores": bastidores,
+            "mais_lidas": mais_lidas,
 
-            # widgets
+            # WIDGETS
             "tabela_brasileirao": tabela_completa[:8],
             "jogos_do_dia": jogos_do_dia,
 
-            # navegação
+            # NAV
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
     )
+
 
 # ======================================================
 # CLASSIFICAÇÃO COMPLETA
