@@ -16,7 +16,7 @@
       <label>Título editorial</label>
       <input type="text"
              name="titulo_editorial"
-             value="{{ noticia.titulo_editorial if noticia }}"
+             value="{{ noticia.titulo_editorial if noticia else '' }}"
              required>
     </div>
 
@@ -25,14 +25,14 @@
       <label>Slug (URL da página)</label>
       <input type="text"
              name="slug"
-             value="{{ noticia.slug if noticia }}"
+             value="{{ noticia.slug if noticia else '' }}"
              placeholder="ex: harry-kane-brilha-na-semi">
     </div>
 
     <!-- RESUMO -->
     <div class="admin-form-group">
       <label>Resumo</label>
-      <textarea name="resumo" rows="3">{{ noticia.resumo if noticia }}</textarea>
+      <textarea name="resumo" rows="3">{{ noticia.resumo if noticia else '' }}</textarea>
     </div>
 
     <!-- CATEGORIA -->
@@ -40,7 +40,7 @@
       <label>Categoria</label>
       <input type="text"
              name="categoria"
-             value="{{ noticia.categoria if noticia }}"
+             value="{{ noticia.categoria if noticia else '' }}"
              placeholder="Ex: Brasileirão, Libertadores, Última Hora">
     </div>
 
@@ -49,7 +49,7 @@
       <label>Tags (separadas por vírgula)</label>
       <input type="text"
              name="tags"
-             value="{{ noticia.tags | join(', ') if noticia }}">
+             value="{{ noticia.tags | join(', ') if noticia and noticia.tags else '' }}">
     </div>
 
     <!-- IMAGEM -->
@@ -57,7 +57,7 @@
       <label>Imagem (URL)</label>
       <input type="text"
              name="imagem"
-             value="{{ noticia.imagem if noticia }}"
+             value="{{ noticia.imagem if noticia else '' }}"
              placeholder="https://...">
     </div>
 
@@ -73,8 +73,9 @@
     <!-- CONTEÚDO EDITORIAL -->
     <div class="admin-form-group">
       <label>Conteúdo editorial</label>
-      <textarea name="conteudo_editorial">
-{{ noticia.conteudo_editorial if noticia }}
+      <textarea id="conteudo_editorial"
+                name="conteudo_editorial">
+{{ noticia.conteudo_editorial if noticia else '' }}
       </textarea>
     </div>
 
@@ -107,5 +108,24 @@
   </form>
 
 </div>
+
+<!-- TinyMCE CDN COM API KEY -->
+<script src="https://cdn.tiny.cloud/1/skjq2qyvqx3pozohkaymt4ri2zyezho5lkeuh246doz049kr/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+tinymce.init({
+  selector: '#conteudo_editorial',
+
+  height: 500,
+
+  plugins: 'lists link table media code wordcount',
+
+  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link media table | code',
+
+  menubar: false,
+
+  branding: false
+});
+</script>
 
 {% endblock %}
