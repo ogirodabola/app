@@ -678,17 +678,17 @@ def listar_noticias_publicadas(limit=10):
             cur.execute("""
                 SELECT
                   id,
+                  slug,
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   resumo,
                   imagem,
                   categoria,
-                  url,
                   criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
                 LIMIT %s;
-            """, (limit,))
+            
             return cur.fetchall()
 
 
