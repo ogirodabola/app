@@ -411,7 +411,8 @@ async def admin_noticia_criar(
     categoria: str = Form(""),
     tags: str = Form(""),
     editorial_status: str = Form("pendente"),
-    imagem_file: UploadFile = File(None)
+    imagem_file: UploadFile = File(None),
+    imagem_existente: str = Form(None)
 ):
     auth = login_required(request)
     if auth:
@@ -419,21 +420,16 @@ async def admin_noticia_criar(
 
     slug_final = slugify(slug if slug else titulo_editorial)
 
-    imagem_url = None
+    imagem_url = imagem_existente  # 🔥 mantém se existir
 
-if imagem_file and imagem_file.filename:
-    filename = f"{slug_final}-{imagem_file.filename}"
-    filepath = UPLOAD_DIR / filename
+    if imagem_file and imagem_file.filename:
+        filename = f"{slug_final}-{imagem_file.filename}"
+        filepath = UPLOAD_DIR / filename
 
-    with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(imagem_file.file, buffer)
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(imagem_file.file, buffer)
 
-    imagem_url = f"/static/uploads/{filename}"
-
-else:
-    # 🔥 mantém imagem original se existir
-    form = await request.form()
-    imagem_url = form.get("imagem_existente")
+        imagem_url = f"/static/uploads/{filename}"
 
     criar_noticia({
         "titulo_editorial": titulo_editorial,
