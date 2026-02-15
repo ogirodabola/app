@@ -32,28 +32,51 @@ def classificar_editorial(titulo: str, resumo: str) -> Tuple[str, List[str]]:
         return "Última Hora", ["Futebol"]
 
     prompt = f"""
-Você é o editor-chefe de um portal de notícias esportivas focado em futebol.
+Você é o editor-chefe de um grande portal esportivo brasileiro.
 
-Sua tarefa é classificar a notícia abaixo.
+Sua tarefa é classificar a notícia com precisão editorial.
 
 REGRAS OBRIGATÓRIAS:
-- Escolha EXATAMENTE UMA categoria da lista abaixo
-- NUNCA invente novas categorias
-- Se a notícia tratar de contratações, negociações, renovações ou transferências:
-  escolha "Mercado da Bola"
-- Se tratar de jogo, resultado, rodada ou tabela do campeonato brasileiro:
-  escolha "Brasileirão"
-- Se for análise tática, técnica ou opinião aprofundada:
-  escolha "Análises"
-- Se for bastidor, clima interno, polêmica ou comportamento:
-  escolha "Bastidores"
-- Se houver dúvida real:
-  escolha "Última Hora"
+
+1) Escolha EXATAMENTE UMA categoria da lista permitida.
+2) Nunca invente novas categorias.
+3) A decisão deve seguir hierarquia estratégica:
+
+PRIORIDADE DE CLASSIFICAÇÃO:
+
+- Se envolver contratação, transferência, sondagem, renovação ou mercado:
+  -> "Mercado da Bola"
+
+- Se envolver jogo, rodada, tabela, desempenho ou posição no campeonato brasileiro:
+  -> "Brasileirão"
+
+- Se for análise técnica, avaliação tática ou opinião estruturada:
+  -> "Análises"
+
+- Se tratar de bastidores, clima interno, polêmica ou comportamento:
+  -> "Bastidores"
+
+- Se for internacional e não envolver Brasileirão:
+  -> "Internacional"
+
+- Se nenhuma regra for claramente atendida:
+  -> "Última Hora"
+
+IMPORTANTE:
+- Não classifique como "Última Hora" se existir categoria mais específica.
+- Evite usar categoria genérica quando houver específica.
 
 CATEGORIAS PERMITIDAS:
 {", ".join(CATEGORIAS_VALIDAS)}
 
+TAGS:
+- Gere entre 3 e 6 tags relevantes.
+- Use nomes próprios quando possível (clubes, jogadores, técnicos).
+- Não repita palavras da categoria.
+- Não use tags genéricas como "futebol".
+
 RETORNE APENAS JSON NO FORMATO:
+
 {{
   "categoria": "Categoria escolhida",
   "tags": ["tag1", "tag2", "tag3"]
@@ -65,6 +88,7 @@ TÍTULO:
 RESUMO:
 {resumo}
 """
+
     resp = _client.responses.create(
         model=MODEL_NAME,
         input=prompt,
@@ -103,18 +127,34 @@ def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
         return f"<p>{resumo}</p>"
 
     prompt = f"""
-Você é o editorial do portal O Giro da Bola.
+Reescreva a notícia abaixo como matéria de portal esportivo profissional.
 
-Reescreva a notícia com:
-- Linguagem jornalística popular
-- SEO-friendly
-- Lead + desenvolvimento + fechamento
-- HTML puro usando apenas <p> e <h2>
+Regras obrigatórias:
 
-Título: {titulo}
-Resumo: {resumo}
-Categoria: {categoria}
+- Mínimo de 600 palavras
+- Linguagem jornalística neutra
+- Estrutura clara com subtítulos (##)
+- Contextualize o momento atual da equipe
+- Inclua dados recentes (últimos jogos, posição na tabela, estatísticas)
+- Explique impacto futuro da notícia
+- Evite repetição
+- Não use emojis
+- Não use linguagem informal
+- Não invente informações
+- Conteúdos patrocinados de Bets devem ser descartados e nunca publicados
+
+Título:
+{titulo}
+
+Resumo original:
+{resumo}
+
+Categoria:
+{categoria}
+
+Retorne apenas o texto final da matéria.
 """
+
 
     resp = _client.responses.create(
         model=MODEL_NAME,
@@ -149,16 +189,29 @@ def gerar_titulo_editorial(titulo: str) -> str:
         return titulo
 
     prompt = f"""
-Reescreva o título abaixo para um portal esportivo brasileiro.
+Você é editor de títulos de um grande portal esportivo brasileiro.
 
-Regras:
-- Curto
-- Claro
-- Jornalístico
-- Sem clickbait exagerado
-- Máx. 90 caracteres
+Reescreva o título abaixo seguindo padrão profissional de portal.
 
-Retorne APENAS o texto do título.
+REGRAS OBRIGATÓRIAS:
+
+- Máximo 90 caracteres
+- Linguagem jornalística objetiva
+- Priorize clareza e impacto informativo
+- Inclua nome de clube ou jogador se relevante
+- Inclua competição quando aplicável (Brasileirão, Libertadores, etc.)
+- Evite termos vagos como "veja", "confira", "surpreende"
+- Não use emojis
+- Não use clickbait exagerado
+- Não invente informações
+
+ESTRATÉGIA:
+- Se for Mercado → destaque negociação ou valor
+- Se for jogo → destaque resultado + consequência
+- Se for bastidor → destaque fato central
+- Se for internacional → inclua país ou competição
+
+Retorne APENAS o título final.
 
 Título original:
 {titulo}
