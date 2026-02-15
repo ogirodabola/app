@@ -788,3 +788,17 @@ def listar_ultimas_publicadas(limit=10):
     """
     with engine.connect() as conn:
         return conn.execute(text(query), {"limit": limit}).fetchall()
+
+# ======================================================
+# ADS — ATUALIZAR DISPOSITIVO
+# ======================================================
+def atualizar_ads_slot_dispositivo(slot_id: int, dispositivo: str):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE ads_slots
+                SET dispositivo = %s
+                WHERE id = %s;
+            """, (dispositivo, slot_id))
+        conn.commit()
+
