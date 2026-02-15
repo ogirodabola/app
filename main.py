@@ -295,7 +295,8 @@ from core.database import (
     listar_ads_slots,
     buscar_ads_slot,
     salvar_ads_script,
-    atualizar_ads_slot_status
+    atualizar_ads_slot_status,
+    atualizar_ads_slot_dispositivo
 )
 
 @app.get("/admin/ads", response_class=HTMLResponse)
