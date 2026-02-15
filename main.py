@@ -1,4 +1,8 @@
 from fastapi import FastAPI, Request, HTTPException
+from fastapi import UploadFile, File
+import shutil
+import os
+from slugify import slugify
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, PlainTextResponse
@@ -394,31 +398,51 @@ def admin_noticia_nova(request: Request):
     )
 
 @app.post("/admin/noticias/nova")
-def admin_noticia_criar(
+async def admin_noticia_criar(
     request: Request,
-    titulo: str = Form(...),
-    linha_fina: str = Form(""),
-    conteudo: str = Form(""),
-    imagem: str = Form(""),
-    categoria_id: int = Form(None),
+    titulo_editorial: str = Form(...),
+    slug: str = Form(""),
+    resumo: str = Form(""),
+    conteudo_editorial: str = Form(""),
+    categoria: str = Form(""),
     tags: str = Form(""),
-    status: str = Form("draft")
+    editorial_status: str = Form("pendente"),
+    imagem_file: UploadFile = File(None)
 ):
     auth = login_required(request)
     if auth:
         return auth
 
+    # 🔹 SLUG SEO
+    slug_final = slugify(slug if slug else titulo_editorial)
+
+    # 🔹 Upload imagem
+    imagem_url = None
+    if imagem_file and imagem_file.filename:
+        upload_dir = "static/uploads"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        filename = f"{slug_final}-{imagem_file.filename}"
+        filepath = os.path.join(upload_dir, filename)
+
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(imagem_file.file, buffer)
+
+        imagem_url = f"/static/uploads/{filename}"
+
     criar_noticia({
-        "titulo": titulo,
-        "linha_fina": linha_fina,
-        "conteudo": conteudo,
-        "imagem": imagem,
-        "categoria_id": categoria_id,
-        "tags": tags,
-        "status": status
+        "titulo_editorial": titulo_editorial,
+        "resumo": resumo,
+        "conteudo_editorial": conteudo_editorial,
+        "imagem": imagem_url,
+        "categoria": categoria,
+        "tags": [t.strip() for t in tags.split(",") if t.strip()],
+        "editorial_status": editorial_status,
+        "slug": slug_final
     })
 
     return RedirectResponse("/admin/noticias", status_code=302)
+
 
 @app.get("/admin/noticias/{noticia_id}", response_class=HTMLResponse)
 def admin_noticia_editar(noticia_id: int, request: Request):
@@ -439,29 +463,47 @@ def admin_noticia_editar(noticia_id: int, request: Request):
     )
 
 @app.post("/admin/noticias/{noticia_id}")
-def admin_noticia_atualizar(
+async def admin_noticia_atualizar(
     noticia_id: int,
     request: Request,
-    titulo: str = Form(...),
-    linha_fina: str = Form(""),
-    conteudo: str = Form(""),
-    imagem: str = Form(""),
-    categoria_id: int = Form(None),
+    titulo_editorial: str = Form(...),
+    slug: str = Form(""),
+    resumo: str = Form(""),
+    conteudo_editorial: str = Form(""),
+    categoria: str = Form(""),
     tags: str = Form(""),
-    status: str = Form("draft")
+    editorial_status: str = Form("pendente"),
+    imagem_file: UploadFile = File(None)
 ):
     auth = login_required(request)
     if auth:
         return auth
 
+    slug_final = slugify(slug if slug else titulo_editorial)
+
+    imagem_url = None
+
+    if imagem_file and imagem_file.filename:
+        upload_dir = "static/uploads"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        filename = f"{slug_final}-{imagem_file.filename}"
+        filepath = os.path.join(upload_dir, filename)
+
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(imagem_file.file, buffer)
+
+        imagem_url = f"/static/uploads/{filename}"
+
     atualizar_noticia(noticia_id, {
-        "titulo": titulo,
-        "linha_fina": linha_fina,
-        "conteudo": conteudo,
-        "imagem": imagem,
-        "categoria_id": categoria_id,
-        "tags": tags,
-        "status": status
+        "titulo_editorial": titulo_editorial,
+        "resumo": resumo,
+        "conteudo_editorial": conteudo_editorial,
+        "imagem": imagem_url,
+        "categoria": categoria,
+        "tags": [t.strip() for t in tags.split(",") if t.strip()],
+        "editorial_status": editorial_status,
+        "slug": slug_final
     })
 
     return RedirectResponse("/admin/noticias", status_code=302)
