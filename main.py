@@ -6,6 +6,7 @@ from pathlib import Path
 from core.futebol_api import buscar_jogos_do_dia
 from fastapi.responses import HTMLResponse
 from core.database import listar_noticias_admin
+from core.database import atualizar_ads_slot_dispositivo
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
