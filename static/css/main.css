@@ -2067,3 +2067,49 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   background-color: #0b1626; /* fallback elegante */
 }
 
+.mais-lidas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.mais-lidas-item {
+  display: flex;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.mais-lidas-item:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateX(4px);
+}
+
+.mais-lidas-rank {
+  font-size: 28px;
+  font-weight: 700;
+  opacity: 0.4;
+  min-width: 40px;
+}
+
+.mais-lidas-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.mais-lidas-category {
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.mais-lidas-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
