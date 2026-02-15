@@ -189,24 +189,31 @@
 
 
 <!-- ================= INTERNACIONAL ================= -->
-<section class="container content-stack">
-  <h2 class="section-title">Futebol Internacional</h2>
+<section class="section-block section-internacional">
+  <div class="container">
 
-  <div class="cards-grid">
-    {% for n in internacional %}
-    <a href="/noticia/{{ n.slug }}" class="card">
-      <div class="card-image">
-        <img src="{{ n.imagem }}"
-             alt="{{ n.titulo }}"
-             loading="lazy"
-             onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
-      </div>
-      <div class="card-body">
-        <span class="badge">{{ n.categoria }}</span>
-        <h3 class="card-title">{{ n.titulo }}</h3>
-      </div>
-    </a>
-    {% endfor %}
+    <div class="section-header">
+      <h2>Futebol Internacional</h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="cards-grid">
+      {% for n in internacional %}
+      <a href="/noticia/{{ n.slug }}" class="card">
+        <div class="card-image">
+          <img src="{{ n.imagem }}"
+               alt="{{ n.titulo }}"
+               loading="lazy"
+               onerror="this.onerror=null;this.src='/static/img/placeholder.png';">
+        </div>
+        <div class="card-body">
+          <span class="badge">{{ n.categoria }}</span>
+          <h3 class="card-title">{{ n.titulo }}</h3>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
   </div>
 </section>
 
