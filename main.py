@@ -890,3 +890,24 @@ def buscar_artilharia_brasileirao():
         return artilheiros
 
     return []
+
+@app.get("/jogador/{slug}", response_class=HTMLResponse)
+def pagina_jogador(slug: str, request: Request):
+
+    jogador = buscar_jogador_por_slug(slug)
+
+    if not jogador:
+        raise HTTPException(status_code=404, detail="Jogador não encontrado")
+
+    # últimas notícias relacionadas
+    noticias = listar_noticias_por_nome(jogador["nome"], limit=10)
+
+    return templates.TemplateResponse(
+        "jogador.html",
+        {
+            "request": request,
+            "jogador": jogador,
+            "noticias": noticias,
+            "categorias": listar_categorias()
+        }
+    )
