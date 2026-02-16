@@ -589,6 +589,8 @@ def sitemap():
 
     try:
         noticias = listar_noticias_publicadas(limit=5000)
+        print("Noticias no sitemap:", len(noticias))
+        print("Primeira noticia:", noticias[0] if noticias else "Vazio")
     except Exception as e:
         print("Erro ao buscar notícias:", e)
         noticias = []
