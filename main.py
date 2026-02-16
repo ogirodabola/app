@@ -149,6 +149,7 @@ app.mount(
 )
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+templates.env.filters["slugify"] = slugify
 
 from core.ads import render_ad
 templates.env.globals["render_ad"] = render_ad
