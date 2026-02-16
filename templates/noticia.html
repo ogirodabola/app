@@ -28,12 +28,14 @@
   "headline": {{ (noticia.titulo_editorial or noticia.titulo) | tojson | safe }},
   "description": {{ (noticia.resumo or noticia.titulo) | tojson | safe }},
   "image": {{ noticia.imagem | tojson | safe }},
-  "datePublished": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S') if noticia.criada_em else '' }}",
-  "dateModified": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S') if noticia.criada_em else '' }}",
+  "datePublished": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S-03:00') if noticia.criada_em else '' }}",
+  "dateModified": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S-03:00') if noticia.criada_em else '' }}",
+
   "author": {
-    "@type": "Organization",
-    "name": "Giro Desportivo"
-  },
+  "@type": "Person",
+  "name": "Redação Giro Desportivo",
+  "url": "https://girodesportivo.com/sobre"
+},
   "publisher": {
     "@type": "Organization",
     "name": "Giro Desportivo",
