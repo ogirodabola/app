@@ -637,6 +637,8 @@ User-agent: *
 Allow: /
 
 Sitemap: https://girodesportivo.com/sitemap.xml
+Sitemap: https://girodesportivo.com/sitemap-news.xml
+
 """
 
 from fastapi.responses import Response
@@ -738,3 +740,47 @@ def brasileirao_2026(request: Request):
             "categoria_ativa": "Brasileirão"
         }
     )
+
+from fastapi.responses import Response
+from datetime import datetime, timedelta
+
+@app.get("/sitemap-news.xml", response_class=Response)
+def sitemap_news():
+
+    noticias = listar_noticias_publicadas(limit=100)
+
+    limite = datetime.utcnow() - timedelta(days=2)
+
+    urls = []
+
+    for n in noticias:
+        criada = n.get("criada_em")
+
+        if not criada:
+            continue
+
+        if criada < limite:
+            continue
+
+        urls.append(f"""
+        <url>
+            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+            <news:news>
+                <news:publication>
+                    <news:name>Giro Desportivo</news:name>
+                    <news:language>pt</news:language>
+                </news:publication>
+                <news:publication_date>{criada.strftime('%Y-%m-%dT%H:%M:%S-03:00')}</news:publication_date>
+                <news:title><![CDATA[{n['titulo']}]]></news:title>
+            </news:news>
+        </url>
+        """)
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+{''.join(urls)}
+</urlset>
+"""
+
+    return Response(content=xml.strip(), media_type="application/xml")
