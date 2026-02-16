@@ -298,7 +298,8 @@ def noticia(slug: str, request: Request):
     
     breadcrumb = gerar_breadcrumb_schema([
     ("Home", "https://girodesportivo.com/"),
-    (noticia["categoria"], f"https://girodesportivo.com/categoria/{slugify(noticia['categoria'])}"),
+    (categoria_nome,
+     f"https://girodesportivo.com/categoria/{slugify(categoria_nome)}"),
     (noticia["titulo_editorial"] or noticia["titulo"],
      f"https://girodesportivo.com/noticia/{noticia['slug']}")
 ])
