@@ -69,8 +69,6 @@ def gerar_breadcrumb_schema(itens):
 
     return json.dumps(data, ensure_ascii=False)
 
-from slugify import slugify
-
 def normalizar_slug_categoria(categoria: str) -> str:
     return slugify(categoria)
 
@@ -94,8 +92,6 @@ def admin_login(request: Request):
 
 from fastapi import Request
 from fastapi.responses import RedirectResponse
-
-from slugify import slugify
 
 @app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
