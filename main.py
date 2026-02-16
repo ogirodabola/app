@@ -818,6 +818,7 @@ def autor_redacao(request: Request):
 
 @app.get("/artilharia-brasileirao-2026", response_class=HTMLResponse)
 def artilharia(request: Request):
+
     artilharia = buscar_artilharia_brasileirao() or []
 
     return templates.TemplateResponse(
@@ -826,14 +827,11 @@ def artilharia(request: Request):
             "request": request,
             "artilharia": artilharia,
             "categorias": listar_categorias(),
-            "categoria_ativa": "Brasileirão"
+            "categoria_ativa": None
         }
     )
 
 def buscar_artilharia_brasileirao():
-    """
-    Busca a artilharia do Brasileirão Série A 2026 usando a API-Football
-    """
     from core.futebol_api import buscar_artilharia_brasileirao  # seu cliente já configurado
 
     # Ajuste o league_id / season conforme seu uso da API
