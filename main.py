@@ -770,11 +770,8 @@ def sitemap_news():
         if criada_naive < limite:
             continue
 
-        titulo = (
-        n.get("titulo_editorial")
-        or n.get("titulo")
-        or "Notícia Giro Desportivo"
-    )
+        titulo = n.get("titulo") or "Notícia Giro Desportivo"
+
         urls.append(f"""
         <url>
             <loc>https://girodesportivo.com/noticia/{n.get('slug')}</loc>
