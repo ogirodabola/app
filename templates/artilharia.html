@@ -26,6 +26,12 @@ Artilharia do Brasileirão Série A 2026 | Giro Desportivo
   </p>
 </section>
 
+{% if render_ad %}
+<section style="max-width:1100px;margin:20px auto;padding:0 20px;">
+  <span class="ads-label">Publicidade</span>
+  {{ render_ad("content_top", request) | safe }}
+</section>
+{% endif %}
 
 <!-- CARD LÍDER -->
 {% if artilharia and artilharia|length > 0 %}
@@ -44,6 +50,12 @@ Artilharia do Brasileirão Série A 2026 | Giro Desportivo
   box-shadow:0 20px 40px rgba(0,0,0,.4);"
     >
 
+<section style="max-width:1100px;margin:0 auto 40px auto;padding:0 20px;">
+  <span class="ads-label">Publicidade</span>
+  {{ render_ad("content_mid_1", request) | safe }}
+</section>
+
+    
   <!-- LADO ESQUERDO -->
   <div style="display:flex;align-items:center;gap:25px;">
 
@@ -152,6 +164,11 @@ Artilharia do Brasileirão Série A 2026 | Giro Desportivo
 
     </table>
 
+<section style="max-width:1100px;margin:0 auto 40px auto;padding:0 20px;">
+  <span class="ads-label">Publicidade</span>
+  {{ render_ad("content_mid_2", request) | safe }}
+</section>
+    
   </div>
 
 </section>
@@ -193,6 +210,10 @@ Artilharia do Brasileirão Série A 2026 | Giro Desportivo
 
 </section>
 
+<section style="max-width:1100px;margin:0 auto 40px auto;padding:0 20px;">
+  <span class="ads-label">Publicidade</span>
+  {{ render_ad("content_footer", request) | safe }}
+</section>
 
 <!-- BLOCO SEO -->
 <section style="max-width:900px;margin:0 auto 80px auto;padding:0 20px;color:#cbd5e1;line-height:1.7;">
