@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+Brasileirão 2026: Tabela, Classificação e Notícias Atualizadas | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+<meta name="description"
+content="Confira a classificação atualizada do Brasileirão 2026, tabela completa, artilharia e últimas notícias do campeonato brasileiro.">
+
+<link rel="canonical"
+href="https://girodesportivo.com/brasileirao-2026">
+
+<meta property="og:title"
+content="Brasileirão 2026: Classificação e Notícias">
+
+<meta property="og:description"
+content="Acompanhe tudo sobre o Brasileirão 2026 no Giro Desportivo.">
+
+<meta property="og:type" content="website">
+{% endblock %}
+
+{% block content %}
+
+<section class="section-block">
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="section-header">
+      <h1>Brasileirão 2026</h1>
+      <div class="section-line"></div>
+    </div>
+
+    <p style="margin-bottom:40px;">
+      Acompanhe a classificação atualizada, tabela completa, jogos e últimas notícias do Campeonato Brasileiro 2026.
+    </p>
+
+    <!-- CLASSIFICAÇÃO -->
+    <h2 style="margin-bottom:20px;">Classificação Atualizada</h2>
+
+    <div style="overflow-x:auto; margin-bottom:60px;">
+      <table class="tabela-classificacao">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>P</th>
+            <th>J</th>
+            <th>V</th>
+            <th>E</th>
+            <th>D</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for time in classificacao %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ time.nome }}</td>
+            <td>{{ time.pontos }}</td>
+            <td>{{ time.jogos }}</td>
+            <td>{{ time.vitorias }}</td>
+            <td>{{ time.empates }}</td>
+            <td>{{ time.derrotas }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ÚLTIMAS NOTÍCIAS -->
+    <div class="section-header">
+      <h2>Últimas Notícias do Brasileirão</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="cards-grid">
+      {% for n in noticias %}
+      <article class="card">
+
+        {% if n.imagem %}
+        <a href="/noticia/{{ n.slug }}" class="card-image">
+          <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
+        </a>
+        {% endif %}
+
+        <div class="card-body">
+          <h3 class="card-title">
+            <a href="/noticia/{{ n.slug }}">
+              {{ n.titulo }}
+            </a>
+          </h3>
+        </div>
+
+      </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
