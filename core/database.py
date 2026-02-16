@@ -1038,3 +1038,32 @@ def listar_home_mais_lidas(limit=8):
                 LIMIT %s;
             """, (limit,))
             return cur.fetchall()
+
+from slugify import slugify
+
+def criar_ou_buscar_jogador(nome, foto=None, time_atual=None, escudo_time=None):
+    slug = slugify(nome)
+
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            cur.execute("SELECT * FROM jogadores WHERE slug = %s", (slug,))
+            jogador = cur.fetchone()
+
+            if jogador:
+                return jogador
+
+            cur.execute("""
+                INSERT INTO jogadores (nome, slug, foto, time_atual, escudo_time)
+                VALUES (%s, %s, %s, %s, %s)
+                RETURNING *;
+            """, (nome, slug, foto, time_atual, escudo_time))
+
+            conn.commit()
+            return cur.fetchone()
+
+def buscar_jogador_por_slug(slug):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("SELECT * FROM jogadores WHERE slug = %s", (slug,))
+            return cur.fetchone()
