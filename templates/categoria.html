@@ -18,7 +18,7 @@
 
     <nav class="hidden md:flex gap-6 text-sm text-gray-400">
       {% for cat in categorias %}
-        <a href="/categoria/{{ cat }}"
+        <a href="/categoria/{{ cat | slugify }}"
            class="{% if categoria_ativa == cat %}text-white{% else %}hover:text-white{% endif %} transition">
           {{ cat }}
         </a>
