@@ -307,3 +307,44 @@ def buscar_classificacao_brasileirao():
         return tabela
 
     return []
+
+def buscar_artilharia_brasileirao():
+    url = f"{BASE_URL}/players/topscorers"
+
+    for season in [2026, 2025, 2024, 2023]:
+        params = {
+            "league": 71,   # Brasileirão Série A
+            "season": season
+        }
+
+        try:
+            response = requests.get(
+                url,
+                headers=HEADERS,
+                params=params,
+                timeout=10
+            )
+            data = response.json()
+        except Exception:
+            continue
+
+        if not data.get("response"):
+            continue
+
+        artilheiros = []
+
+        for item in data["response"]:
+            player = item.get("player", {})
+            statistics = item.get("statistics", [{}])[0]
+
+            artilheiros.append({
+                "nome": player.get("name"),
+                "foto": player.get("photo"),
+                "time": statistics.get("team", {}).get("name"),
+                "gols": statistics.get("goals", {}).get("total"),
+                "jogos": statistics.get("games", {}).get("appearences"),
+            })
+
+        return artilheiros
+
+    return []
