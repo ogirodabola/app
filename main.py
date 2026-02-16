@@ -97,8 +97,6 @@ from fastapi.responses import RedirectResponse
 
 from slugify import slugify
 
-from slugify import slugify
-
 @app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
     form = await request.form()
@@ -301,17 +299,24 @@ def noticia(slug: str, request: Request):
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
     recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
-
+    
+    breadcrumb = gerar_breadcrumb_schema([
+    ("Home", "https://girodesportivo.com/"),
+    (noticia["categoria"], f"https://girodesportivo.com/categoria/{slugify(noticia['categoria'])}"),
+    (noticia["titulo_editorial"] or noticia["titulo"],
+     f"https://girodesportivo.com/noticia/{noticia['slug']}")
+])
     return templates.TemplateResponse(
-        "noticia.html",
-        {
-            "request": request,
-            "noticia": noticia,
-            "recomendadas": recomendadas,
-            "categorias": listar_categorias(),
-            "categoria_ativa": noticia.get("categoria")
-        }
-    )
+    "noticia.html",
+    {
+        "request": request,
+        "noticia": noticia,
+        "recomendadas": recomendadas,
+        "breadcrumb_schema": breadcrumb,
+        "categorias": listar_categorias(),
+        "categoria_ativa": noticia["categoria"]
+    }
+)
 
 # ======================================================
 # SOBRE
