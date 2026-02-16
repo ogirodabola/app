@@ -815,3 +815,16 @@ def autor_redacao(request: Request):
             "noticias": noticias
         }
     )
+
+@app.get("/artilharia-brasileirao-2026", response_class=HTMLResponse)
+def artilharia(request: Request):
+    artilharia = buscar_artilharia_brasileirao()  # usar API-Football
+    return templates.TemplateResponse(
+        "artilharia.html",
+        {
+            "request": request,
+            "artilharia": artilharia,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
