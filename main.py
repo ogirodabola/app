@@ -295,25 +295,33 @@ def noticia(slug: str, request: Request):
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
     recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
-    
+
+    # 🔹 Garantir que categoria nunca seja None
+    categoria_nome = noticia.get("categoria") or "geral"
+
     breadcrumb = gerar_breadcrumb_schema([
-    ("Home", "https://girodesportivo.com/"),
-    (categoria_nome,
-     f"https://girodesportivo.com/categoria/{slugify(categoria_nome)}"),
-    (noticia["titulo_editorial"] or noticia["titulo"],
-     f"https://girodesportivo.com/noticia/{noticia['slug']}")
-])
+        ("Home", "https://girodesportivo.com/"),
+        (
+            categoria_nome,
+            f"https://girodesportivo.com/categoria/{slugify(categoria_nome)}"
+        ),
+        (
+            noticia.get("titulo_editorial") or noticia.get("titulo"),
+            f"https://girodesportivo.com/noticia/{noticia.get('slug')}"
+        )
+    ])
+
     return templates.TemplateResponse(
-    "noticia.html",
-    {
-        "request": request,
-        "noticia": noticia,
-        "recomendadas": recomendadas,
-        "breadcrumb_schema": breadcrumb,
-        "categorias": listar_categorias(),
-        "categoria_ativa": noticia["categoria"]
-    }
-)
+        "noticia.html",
+        {
+            "request": request,
+            "noticia": noticia,
+            "recomendadas": recomendadas,
+            "breadcrumb_schema": breadcrumb,
+            "categorias": listar_categorias(),
+            "categoria_ativa": categoria_nome
+        }
+    )
 
 # ======================================================
 # SOBRE
