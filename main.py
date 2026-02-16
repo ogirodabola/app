@@ -834,7 +834,7 @@ def buscar_artilharia_brasileirao():
     """
     Busca a artilharia do Brasileirão Série A 2026 usando a API-Football
     """
-    from core.futebol_api import api_football_client  # seu cliente já configurado
+    from core.futebol_api import buscar_artilharia_brasileirao  # seu cliente já configurado
 
     # Ajuste o league_id / season conforme seu uso da API
     league_id = 71  # exemplo Brasileiro Série A
