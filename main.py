@@ -831,32 +831,62 @@ def artilharia(request: Request):
         }
     )
 
+import requests
+import os
+
 def buscar_artilharia_brasileirao():
-    from core.futebol_api import buscar_artilharia_brasileirao  # seu cliente já configurado
 
-    # Ajuste o league_id / season conforme seu uso da API
-    league_id = 71  # exemplo Brasileiro Série A
-    season = 2026
+    BASE_URL = "https://v3.football.api-sports.io"
+    API_KEY = os.getenv("API_FOOTBALL_KEY")
 
-    resp = api_football_client.players_topscorers(
-        league=league_id,
-        season=season
-    )
-
-    if not resp or "response" not in resp:
+    if not API_KEY:
+        print("API_FOOTBALL_KEY não encontrada")
         return []
 
-    artilharia = []
+    headers = {
+        "x-apisports-key": API_KEY
+    }
 
-    for p in resp["response"]:
-        jogador_info = p.get("player") or {}
-        team_info = p.get("team") or {}
-        stats = p.get("statistics")[0] if p.get("statistics") else {}
+    url = f"{BASE_URL}/players/topscorers"
 
-        artilharia.append({
-            "nome": jogador_info.get("name"),
-            "time": team_info.get("name"),
-            "gols": stats.get("goals", {}).get("total") or 0
-        })
+    for season in [2026, 2025, 2024, 2023]:
 
-    return artilharia
+        params = {
+            "league": 71,
+            "season": season
+        }
+
+        try:
+            response = requests.get(
+                url,
+                headers=headers,
+                params=params,
+                timeout=10
+            )
+
+            data = response.json()
+
+        except Exception as e:
+            print("Erro API:", e)
+            continue
+
+        if not data.get("response"):
+            continue
+
+        artilheiros = []
+
+        for item in data["response"]:
+            player = item.get("player", {})
+            statistics = item.get("statistics", [{}])[0]
+
+            artilheiros.append({
+                "nome": player.get("name"),
+                "foto": player.get("photo"),
+                "time": statistics.get("team", {}).get("name"),
+                "gols": statistics.get("goals", {}).get("total"),
+                "jogos": statistics.get("games", {}).get("appearences"),
+            })
+
+        return artilheiros
+
+    return []
