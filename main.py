@@ -239,7 +239,7 @@ def home(request: Request):
 # ======================================================
 # CLASSIFICAÇÃO COMPLETA
 # ======================================================
-@app.get("/classificacao", response_class=HTMLResponse)
+@app.get("/classificacao-brasileirao-2026", response_class=HTMLResponse)
 def classificacao(request: Request):
 
     return templates.TemplateResponse(
