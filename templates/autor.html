@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+Redação Giro Desportivo | Perfil Editorial
+{% endblock %}
+
+{% block meta %}
+<meta name="description"
+content="Conheça a Redação do Giro Desportivo, responsável pela cobertura de futebol nacional e internacional.">
+
+<link rel="canonical"
+href="https://girodesportivo.com/autor/redacao-giro-desportivo">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Redação Giro Desportivo",
+  "url": "https://girodesportivo.com/autor/redacao-giro-desportivo",
+  "description": "Equipe editorial especializada em futebol nacional e internacional.",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Giro Desportivo"
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<section class="section-block">
+  <div class="container">
+
+    <div class="section-header">
+      <h1>{{ autor_nome }}</h1>
+      <div class="section-line"></div>
+    </div>
+
+    <div style="max-width:700px; margin-bottom:50px;">
+      <p>{{ autor_bio }}</p>
+    </div>
+
+    <h2 style="margin-bottom:20px;">Últimas matérias publicadas</h2>
+
+    <div class="cards-grid">
+      {% for n in noticias %}
+      <article class="card">
+        {% if n.imagem %}
+        <a href="/noticia/{{ n.slug }}" class="card-image">
+          <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
+        </a>
+        {% endif %}
+        <div class="card-body">
+          <h3 class="card-title">
+            <a href="/noticia/{{ n.slug }}">
+              {{ n.titulo }}
+            </a>
+          </h3>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
