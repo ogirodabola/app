@@ -818,13 +818,47 @@ def autor_redacao(request: Request):
 
 @app.get("/artilharia-brasileirao-2026", response_class=HTMLResponse)
 def artilharia(request: Request):
-    artilharia = buscar_artilharia_brasileirao()  # usar API-Football
+    artilharia = buscar_artilharia_brasileirao() or []
+
     return templates.TemplateResponse(
         "artilharia.html",
         {
             "request": request,
             "artilharia": artilharia,
             "categorias": listar_categorias(),
-            "categoria_ativa": None
+            "categoria_ativa": "Brasileirão"
         }
     )
+
+def buscar_artilharia_brasileirao():
+    """
+    Busca a artilharia do Brasileirão Série A 2026 usando a API-Football
+    """
+    from core.futebol_api import api_football_client  # seu cliente já configurado
+
+    # Ajuste o league_id / season conforme seu uso da API
+    league_id = 71  # exemplo Brasileiro Série A
+    season = 2026
+
+    resp = api_football_client.players_topscorers(
+        league=league_id,
+        season=season
+    )
+
+    if not resp or "response" not in resp:
+        return []
+
+    artilharia = []
+
+    for p in resp["response"]:
+        jogador_info = p.get("player") or {}
+        team_info = p.get("team") or {}
+        stats = p.get("statistics")[0] if p.get("statistics") else {}
+
+        artilharia.append({
+            "nome": jogador_info.get("name"),
+            "time": team_info.get("name"),
+            "gols": stats.get("goals", {}).get("total") or 0
+        })
+
+    return artilharia
