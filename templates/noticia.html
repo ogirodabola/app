@@ -20,6 +20,7 @@
 <meta name="twitter:description" content="{{ noticia.resumo }}">
 <meta name="twitter:image" content="{{ noticia.imagem }}">
 
+<!-- Schema NewsArticle -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,7 +49,13 @@
 }
 </script>
 
+<!-- Schema Breadcrumb -->
+<script type="application/ld+json">
+{{ breadcrumb_schema | safe }}
+</script>
+
 {% endblock %}
+
 
 
 {% block content %}
