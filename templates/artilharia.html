@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+Artilharia do Brasileirão 2026 – Ranking Atualizado | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+<meta name="description"
+content="Veja a artilharia atualizada do Brasileirão 2026. Ranking completo dos maiores goleadores da Série A com número de gols e estatísticas.">
+
+<link rel="canonical"
+href="https://girodesportivo.com/artilharia-brasileirao-2026">
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SportsEvent",
+ "name": "Artilharia Campeonato Brasileiro Série A 2026",
+ "sport": "Soccer"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<header class="page-hero classificacao-hero">
+  <div class="container">
+    <h1>Artilharia do Brasileirão Série A 2026</h1>
+    <p>
+      Confira o ranking atualizado dos principais goleadores do Campeonato Brasileiro 2026.
+      Veja quem lidera a corrida pela artilharia.
+    </p>
+  </div>
+</header>
+
+<section class="section-block">
+  <div class="container">
+
+    <div class="table-wrapper">
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jogador</th>
+            <th>Clube</th>
+            <th>Gols</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for jogador in artilharia %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ jogador.nome }}</td>
+            <td>{{ jogador.time }}</td>
+            <td><strong>{{ jogador.gols }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="container editorial-box">
+
+    <h2>Como funciona a artilharia do Brasileirão?</h2>
+
+    <p>
+      A artilharia do Campeonato Brasileiro considera o número total de gols
+      marcados por cada jogador ao longo das 38 rodadas.
+    </p>
+
+    <h3>Critérios de desempate</h3>
+    <ul>
+      <li>Número de assistências</li>
+      <li>Menor número de partidas disputadas</li>
+      <li>Menor número de minutos em campo</li>
+    </ul>
+
+    <h3>Perguntas Frequentes</h3>
+
+    <p><strong>Qual foi o maior artilheiro da história do Brasileirão?</strong><br>
+    Roberto Dinamite é o maior goleador da história da competição.</p>
+
+    <p><strong>Quantos gols costumam garantir a artilharia?</strong><br>
+    Normalmente entre 18 e 25 gols garantem o topo da tabela.</p>
+
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="container content-stack">
+    <h2>Veja também</h2>
+    <ul>
+      <li><a href="/classificacao-brasileirao-2026">Classificação do Brasileirão 2026</a></li>
+      <li><a href="/categoria/brasileirao">Últimas notícias do Brasileirão</a></li>
+      <li><a href="/">Últimas notícias esportivas</a></li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}
