@@ -27,8 +27,10 @@ from core.database import (
     atualizar_noticia,
     listar_categorias,
     listar_ultima_hora_publicada,
-    listar_editorial_publicado
+    listar_editorial_publicado,
+    listar_noticias_publicadas
 )
+
 
 # ✅ CRIA O APP UMA ÚNICA VEZ
 app = FastAPI()
