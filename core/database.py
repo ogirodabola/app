@@ -679,6 +679,11 @@ def listar_noticias_publicadas(limit=10):
                 SELECT
                   id,
                   slug,
+                  titulo,
+                  titulo_editorial,
+                  resumo,
+                  imagem,
+                  categoria,
                   criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
