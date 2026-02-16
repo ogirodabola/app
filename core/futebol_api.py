@@ -358,12 +358,14 @@ def buscar_artilharia_brasileirao():
             statistics = item.get("statistics", [{}])[0]
 
             artilheiros.append({
-                "nome": player.get("name", "Desconhecido"),
-                "foto": player.get("photo", ""),
-                "time": statistics.get("team", {}).get("name", ""),
-                "gols": statistics.get("goals", {}).get("total") or 0,
-                "jogos": statistics.get("games", {}).get("appearences") or 0,
-            })
+            "nome": player.get("name"),
+            "foto": player.get("photo"),
+            "time": statistics.get("team", {}).get("name"),
+            "escudo": statistics.get("team", {}).get("logo"),
+            "gols": statistics.get("goals", {}).get("total"),
+            "jogos": statistics.get("games", {}).get("appearences"),
+        })
+
 
         # Ordena por gols desc
         artilheiros.sort(key=lambda x: x["gols"], reverse=True)
