@@ -308,12 +308,22 @@ def buscar_classificacao_brasileirao():
 
     return []
 
+import requests
+import logging
+
 def buscar_artilharia_brasileirao():
+    BASE_URL = "https://v3.football.api-sports.io"
+    HEADERS = {
+        "x-apisports-key": os.getenv("API_FOOTBALL_KEY")
+    }
+
     url = f"{BASE_URL}/players/topscorers"
 
+    # Tenta temporadas recentes primeiro
     for season in [2026, 2025, 2024, 2023]:
+
         params = {
-            "league": 71,   # Brasileirão Série A
+            "league": 71,  # Brasileirão Série A
             "season": season
         }
 
@@ -324,27 +334,41 @@ def buscar_artilharia_brasileirao():
                 params=params,
                 timeout=10
             )
+
+            # Se API devolver erro HTTP, pula temporada
+            if response.status_code != 200:
+                logging.warning(f"API status {response.status_code} temporada {season}")
+                continue
+
             data = response.json()
-        except Exception:
+
+        except Exception as e:
+            logging.error(f"Erro ao buscar artilharia {season}: {e}")
             continue
 
+        # Se não vier resposta válida, tenta próxima temporada
         if not data.get("response"):
             continue
 
         artilheiros = []
 
         for item in data["response"]:
+
             player = item.get("player", {})
             statistics = item.get("statistics", [{}])[0]
 
             artilheiros.append({
-                "nome": player.get("name"),
-                "foto": player.get("photo"),
-                "time": statistics.get("team", {}).get("name"),
-                "gols": statistics.get("goals", {}).get("total"),
-                "jogos": statistics.get("games", {}).get("appearences"),
+                "nome": player.get("name", "Desconhecido"),
+                "foto": player.get("photo", ""),
+                "time": statistics.get("team", {}).get("name", ""),
+                "gols": statistics.get("goals", {}).get("total") or 0,
+                "jogos": statistics.get("games", {}).get("appearences") or 0,
             })
+
+        # Ordena por gols desc
+        artilheiros.sort(key=lambda x: x["gols"], reverse=True)
 
         return artilheiros
 
+    # Se nenhuma temporada retornar dados
     return []
