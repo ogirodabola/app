@@ -42,6 +42,33 @@ app.add_middleware(
     secret_key="MUDE_ESSA_CHAVE_SUPER_SECRETA"
 )
 
+import json
+
+def gerar_breadcrumb_schema(itens):
+    """
+    itens = lista de tuplas:
+    [
+        ("Home", "https://girodesportivo.com/"),
+        ("Brasileirão 2026", "https://girodesportivo.com/brasileirao-2026")
+    ]
+    """
+
+    data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": []
+    }
+
+    for index, (nome, url) in enumerate(itens, start=1):
+        data["itemListElement"].append({
+            "@type": "ListItem",
+            "position": index,
+            "name": nome,
+            "item": url
+        })
+
+    return json.dumps(data, ensure_ascii=False)
+
 from slugify import slugify
 
 def normalizar_slug_categoria(categoria: str) -> str:
@@ -686,12 +713,18 @@ def brasileirao_2026(request: Request):
     classificacao = buscar_classificacao_brasileirao()
     noticias = listar_por_categoria("Brasileirão", 12)
 
+    breadcrumb = gerar_breadcrumb_schema([
+        ("Home", "https://girodesportivo.com/"),
+        ("Brasileirão 2026", "https://girodesportivo.com/brasileirao-2026")
+    ])
+
     return templates.TemplateResponse(
         "brasileirao_2026.html",
         {
             "request": request,
             "classificacao": classificacao,
             "noticias": noticias,
+            "breadcrumb_schema": breadcrumb,
             "categoria_ativa": "Brasileirão"
         }
     )
