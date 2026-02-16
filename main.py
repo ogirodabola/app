@@ -747,9 +747,10 @@ from datetime import datetime, timedelta
 @app.get("/sitemap-news.xml", response_class=Response)
 def sitemap_news():
 
-    noticias = listar_noticias_publicadas(limit=100)
+    noticias = listar_noticias_publicadas(limit=200)
 
-    limite = datetime.utcnow() - timedelta(days=2)
+    agora = datetime.utcnow()
+    limite = agora - timedelta(days=2)
 
     urls = []
 
@@ -759,19 +760,28 @@ def sitemap_news():
         if not criada:
             continue
 
-        if criada < limite:
+        # Se vier como string, ignora
+        if not hasattr(criada, "strftime"):
             continue
+
+        # Remove timezone se existir
+        criada_naive = criada.replace(tzinfo=None)
+
+        if criada_naive < limite:
+            continue
+
+        titulo = n.get("titulo") or ""
 
         urls.append(f"""
         <url>
-            <loc>https://girodesportivo.com/noticia/{n['slug']}</loc>
+            <loc>https://girodesportivo.com/noticia/{n.get('slug')}</loc>
             <news:news>
                 <news:publication>
                     <news:name>Giro Desportivo</news:name>
                     <news:language>pt</news:language>
                 </news:publication>
-                <news:publication_date>{criada.strftime('%Y-%m-%dT%H:%M:%S-03:00')}</news:publication_date>
-                <news:title><![CDATA[{n['titulo']}]]></news:title>
+                <news:publication_date>{criada_naive.strftime('%Y-%m-%dT%H:%M:%S-03:00')}</news:publication_date>
+                <news:title><![CDATA[{titulo}]]></news:title>
             </news:news>
         </url>
         """)
