@@ -25,8 +25,8 @@
 
 {% block content %}
 
-<section class="category-wrapper py-12">
-  <div class="container mx-auto px-6">
+<section class="py-12">
+  <div class="max-w-6xl mx-auto px-6">
 
     <h1 class="text-3xl font-bold mb-10">
       {{ categoria }}
@@ -81,7 +81,7 @@
     </div>
 
     <!-- AD FOOTER -->
-    <div class="mt-12">
+    <div class="mt-16">
       <span class="ads-label">Publicidade</span>
       {{ render_ad("categoria_footer", request) | safe }}
     </div>
@@ -90,3 +90,4 @@
 </section>
 
 {% endblock %}
+
