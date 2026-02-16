@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ jogador.nome }} | Estatísticas, Notícias e Perfil | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Confira perfil completo de {{ jogador.nome }}, estatísticas atualizadas, clube atual e últimas notícias no Giro Desportivo.">
+<link rel="canonical" href="https://girodesportivo.com/jogador/{{ jogador.slug }}">
+
+<meta property="og:title" content="{{ jogador.nome }} | Giro Desportivo">
+<meta property="og:description" content="Estatísticas e últimas notícias de {{ jogador.nome }}.">
+<meta property="og:image" content="{{ jogador.foto }}">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://girodesportivo.com/jogador/{{ jogador.slug }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ jogador.nome }}">
+<meta name="twitter:description" content="Perfil e estatísticas de {{ jogador.nome }}.">
+<meta name="twitter:image" content="{{ jogador.foto }}">
+
+<!-- SCHEMA ATHLETE -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ jogador.nome }}",
+  "image": "{{ jogador.foto }}",
+  "nationality": "{{ jogador.nacionalidade or '' }}",
+  "birthDate": "{{ jogador.data_nascimento if jogador.data_nascimento else '' }}",
+  "affiliation": {
+    "@type": "SportsTeam",
+    "name": "{{ jogador.time_atual or '' }}"
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section style="
+  background: linear-gradient(135deg,#0f2233,#142f47);
+  padding:80px 20px;
+  color:white;
+">
+
+  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:40px;">
+
+    {% if jogador.foto %}
+    <img src="{{ jogador.foto }}"
+         alt="{{ jogador.nome }}"
+         style="width:160px;height:160px;border-radius:50%;object-fit:cover;border:5px solid #22c55e;">
+    {% endif %}
+
+    <div style="flex:1;min-width:250px;">
+      <h1 style="font-size:38px;font-weight:900;margin-bottom:10px;">
+        {{ jogador.nome }}
+      </h1>
+
+      <div style="font-size:18px;color:#cbd5e1;">
+        {{ jogador.posicao or "Jogador profissional" }}
+      </div>
+
+      {% if jogador.time_atual %}
+      <div style="margin-top:15px;display:flex;align-items:center;gap:12px;">
+        {% if jogador.escudo_time %}
+        <img src="{{ jogador.escudo_time }}"
+             alt="{{ jogador.time_atual }}"
+             style="width:40px;height:40px;object-fit:contain;">
+        {% endif %}
+        <span style="font-weight:600;font-size:18px;">
+          {{ jogador.time_atual }}
+        </span>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- AD TOPO PERFIL -->
+<section style="max-width:1100px;margin:30px auto;padding:0 20px;">
+  {{ render_ad("jogador_topo", request) | safe }}
+</section>
+
+
+<!-- ÚLTIMAS NOTÍCIAS -->
+<section style="max-width:1100px;margin:0 auto 60px auto;padding:0 20px;">
+
+  <h2 style="font-size:26px;font-weight:800;margin-bottom:25px;">
+    Últimas notícias sobre {{ jogador.nome }}
+  </h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;">
+
+    {% for n in noticias %}
+    <article style="
+      background:#0f2233;
+      border-radius:16px;
+      overflow:hidden;
+      transition:.2s;
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+    ">
+
+      {% if n.imagem %}
+      <a href="/noticia/{{ n.slug }}">
+        <img src="{{ n.imagem }}"
+             alt="{{ n.titulo }}"
+             style="width:100%;height:180px;object-fit:cover;">
+      </a>
+      {% endif %}
+
+      <div style="padding:20px;">
+
+        <h3 style="font-size:17px;font-weight:700;line-height:1.4;">
+          <a href="/noticia/{{ n.slug }}" style="color:white;text-decoration:none;">
+            {{ n.titulo }}
+          </a>
+        </h3>
+
+        <div style="font-size:12px;color:#94a3b8;margin-top:8px;">
+          {{ n.criada_em.strftime("%d/%m/%Y") if n.criada_em }}
+        </div>
+
+      </div>
+
+    </article>
+    {% endfor %}
+
+  </div>
+
+</section>
+
+
+<!-- AD FOOTER PERFIL -->
+<section style="max-width:1100px;margin:0 auto 60px auto;padding:0 20px;">
+  {{ render_ad("jogador_footer", request) | safe }}
+</section>
+
+
+<!-- BLOCO SEO -->
+<section style="max-width:900px;margin:0 auto 80px auto;padding:0 20px;color:#cbd5e1;line-height:1.7;">
+
+  <h2 style="font-size:24px;font-weight:800;margin-bottom:15px;color:white;">
+    Perfil de {{ jogador.nome }}
+  </h2>
+
+  <p>
+    {{ jogador.nome }} é um jogador profissional de futebol
+    {% if jogador.time_atual %}
+    que atua atualmente pelo {{ jogador.time_atual }}.
+    {% endif %}
+  </p>
+
+  <p style="margin-top:15px;">
+    No Giro Desportivo você acompanha notícias atualizadas,
+    estatísticas e informações completas sobre a carreira do atleta.
+  </p>
+
+</section>
+
+{% endblock %}
