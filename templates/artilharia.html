@@ -36,6 +36,7 @@ href="https://girodesportivo.com/artilharia-brasileirao-2026">
 <section class="section-block">
   <div class="container">
 
+    {% if artilharia %}
     <div class="table-wrapper">
       <table class="standings-table">
         <thead>
@@ -58,6 +59,9 @@ href="https://girodesportivo.com/artilharia-brasileirao-2026">
         </tbody>
       </table>
     </div>
+    {% else %}
+    <p class="text-gray-500">Nenhuma informação de artilharia disponível no momento.</p>
+    {% endif %}
 
   </div>
 </section>
@@ -68,8 +72,7 @@ href="https://girodesportivo.com/artilharia-brasileirao-2026">
     <h2>Como funciona a artilharia do Brasileirão?</h2>
 
     <p>
-      A artilharia do Campeonato Brasileiro considera o número total de gols
-      marcados por cada jogador ao longo das 38 rodadas.
+      A artilharia no Brasileirão considera o total de gols marcados por cada jogador ao longo das 38 rodadas do campeonato.
     </p>
 
     <h3>Critérios de desempate</h3>
