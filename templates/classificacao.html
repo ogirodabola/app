@@ -1,16 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Classificação do Brasileirão Série A{% endblock %}
+{% block title %}
+Classificação do Brasileirão 2026 – Tabela Atualizada Série A | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+<meta name="description"
+content="Veja a classificação atualizada do Brasileirão 2026. Confira tabela completa da Série A, pontuação, jogos, saldo de gols e zona de Libertadores e rebaixamento.">
+
+<link rel="canonical"
+href="https://girodesportivo.com/classificacao-brasileirao-2026">
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SportsEvent",
+ "name": "Campeonato Brasileiro Série A 2026",
+ "sport": "Soccer",
+ "startDate": "2026-04-01",
+ "endDate": "2026-12-01",
+ "eventStatus": "EventScheduled"
+}
+</script>
+{% endblock %}
 
 {% block content %}
 
 <header class="page-hero classificacao-hero">
   <div class="container">
-    <h1>Tabela do Brasileirão Série A 2026</h1>
+    <h1>Classificação do Brasileirão Série A 2026</h1>
     <p>
-      Confira a classificação atualizada do Campeonato Brasileiro.
-      Veja pontuação, jogos, vitórias e desempenho geral das equipes,
-      além das zonas de Libertadores, Sul-Americana e Rebaixamento.
+      Acompanhe a tabela atualizada do Campeonato Brasileiro 2026.
+      Veja pontuação, jogos, vitórias, saldo de gols e zona de
+      Libertadores, Sul-Americana e rebaixamento.
+    </p>
+    <p style="opacity:.7;font-size:.9rem;margin-top:10px">
+      Atualizado automaticamente após cada rodada.
     </p>
   </div>
 </header>
@@ -84,17 +109,37 @@
 
   <!-- CONTEÚDO EDITORIAL -->
   <section class="editorial-box">
-    <h2>Como funciona a classificação do Brasileirão?</h2>
-    <p>
-      O Campeonato Brasileiro Série A é disputado por 20 clubes em sistema
-      de pontos corridos. Cada equipe joga 38 partidas.
-    </p>
-    <ul>
-      <li>Os <strong>6 primeiros</strong> vão à Libertadores</li>
-      <li>Do <strong>7º ao 12º</strong> à Sul-Americana</li>
-      <li>Os <strong>4 últimos</strong> são rebaixados</li>
-    </ul>
-  </section>
+
+<h2>Como funciona a classificação do Brasileirão?</h2>
+
+<p>
+O Campeonato Brasileiro Série A 2026 é disputado por 20 clubes
+em sistema de pontos corridos. Cada equipe realiza 38 partidas,
+em turno e returno.
+</p>
+
+<h3>Critérios de desempate</h3>
+<ul>
+  <li>Maior número de vitórias</li>
+  <li>Maior saldo de gols</li>
+  <li>Maior número de gols marcados</li>
+  <li>Confronto direto</li>
+</ul>
+
+<h3>Distribuição de vagas</h3>
+<ul>
+  <li><strong>1º ao 6º lugar:</strong> Libertadores</li>
+  <li><strong>7º ao 12º lugar:</strong> Sul-Americana</li>
+  <li><strong>17º ao 20º lugar:</strong> Rebaixamento</li>
+</ul>
+
+<h3>Perguntas Frequentes</h3>
+
+<p><strong>Quantos pontos precisa para ser campeão?</strong><br>
+Normalmente entre 70 e 80 pontos garantem o título.</p>
+
+<p><strong>Quantos pontos evitam o rebaixamento?</strong><br>
+Historicamente, 45 pontos costumam garantir permanência.</p>
 
 </section>
 <div class="ads-block">
@@ -102,5 +147,15 @@
     ADS
   </div>
 </div>
+
+<section class="content-stack">
+  <h2>Veja também</h2>
+  <ul>
+    <li><a href="/onde-assistir">Onde assistir aos jogos do Brasileirão</a></li>
+    <li><a href="/categoria/brasileirao">Últimas notícias do Brasileirão</a></li>
+    <li><a href="/">Últimas notícias esportivas</a></li>
+  </ul>
+</section>
+
 
 {% endblock %}
