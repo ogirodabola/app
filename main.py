@@ -799,3 +799,19 @@ def sitemap_news():
 """
 
     return Response(content=xml.strip(), media_type="application/xml")
+
+@app.get("/autor/redacao-giro-desportivo", response_class=HTMLResponse)
+def autor_redacao(request: Request):
+
+    noticias = listar_noticias_publicadas(limit=20)
+
+    return templates.TemplateResponse(
+        "autor.html",
+        {
+            "request": request,
+            "autor_nome": "Redação Giro Desportivo",
+            "autor_slug": "redacao-giro-desportivo",
+            "autor_bio": "A Redação do Giro Desportivo é especializada na cobertura de futebol nacional e internacional, com foco em Campeonato Brasileiro, mercado da bola e grandes competições mundiais.",
+            "noticias": noticias
+        }
+    )
