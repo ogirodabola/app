@@ -679,3 +679,19 @@ def sitemap():
 """
 
     return Response(content=xml.strip(), media_type="application/xml")
+
+@app.get("/brasileirao-2026", response_class=HTMLResponse)
+def brasileirao_2026(request: Request):
+
+    classificacao = buscar_classificacao_brasileirao()
+    noticias = listar_por_categoria("Brasileirão", 12)
+
+    return templates.TemplateResponse(
+        "brasileirao_2026.html",
+        {
+            "request": request,
+            "classificacao": classificacao,
+            "noticias": noticias,
+            "categoria_ativa": "Brasileirão"
+        }
+    )
