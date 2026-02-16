@@ -42,6 +42,11 @@ app.add_middleware(
     secret_key="MUDE_ESSA_CHAVE_SUPER_SECRETA"
 )
 
+from slugify import slugify
+
+def normalizar_slug_categoria(categoria: str) -> str:
+    return slugify(categoria)
+
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
@@ -228,17 +233,31 @@ def classificacao(request: Request):
 # ======================================================
 # LISTAGEM POR CATEGORIA
 # ======================================================
-@app.get("/categoria/{categoria}", response_class=HTMLResponse)
-def pagina_categoria(request: Request, categoria: str):
+@app.get("/categoria/{categoria_slug}", response_class=HTMLResponse)
+def pagina_categoria(request: Request, categoria_slug: str):
+
+    categorias = listar_categorias()
+
+    categoria_real = None
+
+    for c in categorias:
+        if slugify(c) == categoria_slug:
+            categoria_real = c
+            break
+
+    if not categoria_real:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+
+    noticias = listar_por_categoria(categoria_real, 50)
 
     return templates.TemplateResponse(
         "categoria.html",
         {
             "request": request,
-            "categoria": categoria,
-            "noticias": listar_por_categoria(categoria, 50),
-            "categorias": listar_categorias(),
-            "categoria_ativa": categoria
+            "categoria": categoria_real,
+            "noticias": noticias,
+            "categorias": categorias,
+            "categoria_ativa": categoria_real
         }
     )
 
