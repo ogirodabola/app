@@ -1,66 +1,122 @@
 {% extends "base.html" %}
 
-{% block title %}Política Editorial{% endblock %}
+{% block title %}
+Política Editorial | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+<meta name="description"
+content="Conheça a política editorial do Giro Desportivo, nossos critérios de produção de conteúdo, uso de inteligência artificial e compromisso com a informação esportiva de qualidade.">
+
+<link rel="canonical"
+href="https://girodesportivo.com/politica-editorial">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Giro Desportivo",
+  "url": "https://girodesportivo.com",
+  "logo": "https://girodesportivo.com/static/img/giro-desportivo-logo.png",
+  "sameAs": [],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Editorial",
+    "email": "contato@girodesportivo.com"
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 
-<article class="news-article">
+<section class="section-block">
+  <div class="container">
 
-  <section class="news-hero" style="background-image: url('/static/img/hero-editorial.jpg');">
-    <div class="news-hero-overlay"></div>
-
-    <div class="news-hero-content container">
-      <span class="news-category">Institucional</span>
-      <h1 class="news-title">Política Editorial</h1>
+    <div class="section-header">
+      <h1>Política Editorial</h1>
+      <div class="section-line"></div>
     </div>
-  </section>
 
-  <section class="news-content-wrapper">
-    <div class="container">
+    <div style="max-width: 800px; line-height: 1.8;">
 
-      <article class="news-content editorial-content">
+      <h2>1. Missão Editorial</h2>
+      <p>
+        O <strong>Giro Desportivo</strong> tem como missão oferecer cobertura esportiva clara,
+        objetiva e atualizada, com foco em futebol nacional e internacional,
+        incluindo Campeonato Brasileiro, grandes ligas europeias,
+        competições continentais e mercado da bola.
+      </p>
+      <p>
+        Nosso compromisso é fornecer informação relevante, contextualizada
+        e baseada em fontes públicas confiáveis.
+      </p>
 
-        <p>
-          O Giro Desportivo adota princípios editoriais baseados em
-          <strong>credibilidade, imparcialidade e responsabilidade</strong> com a informação.
-        </p>
+      <h2>2. Processo de Produção de Conteúdo</h2>
+      <p>O conteúdo publicado no Giro Desportivo segue as seguintes etapas:</p>
+      <ul>
+        <li>Levantamento de informações a partir de fontes públicas e dados oficiais.</li>
+        <li>Estruturação do conteúdo priorizando clareza e objetividade.</li>
+        <li>Revisão editorial para verificação de coerência e consistência factual.</li>
+        <li>Atualizações sempre que novas informações oficiais são divulgadas.</li>
+      </ul>
+      <p>
+        Buscamos garantir precisão e transparência em todas as publicações.
+      </p>
 
-        <h2>Nossos compromissos editoriais</h2>
+      <h2>3. Uso de Inteligência Artificial</h2>
+      <p>
+        O Giro Desportivo utiliza ferramentas de inteligência artificial
+        como apoio na organização, estruturação e síntese de informações públicas.
+      </p>
+      <ul>
+        <li>A IA não substitui o critério editorial humano.</li>
+        <li>A IA não cria fatos ou altera informações oficiais.</li>
+        <li>Todo conteúdo passa por revisão antes da publicação.</li>
+      </ul>
 
-        <ul>
-          <li>Publicar informações de interesse público relacionadas ao esporte</li>
-          <li>Priorizar fontes confiáveis e conteúdos verificados</li>
-          <li>Diferenciar claramente notícias, opiniões e conteúdos opinativos</li>
-          <li>Corrigir eventuais erros de forma transparente</li>
-        </ul>
+      <h2>4. Fontes e Referências</h2>
+      <p>
+        As matérias podem utilizar informações provenientes de:
+      </p>
+      <ul>
+        <li>Clubes oficiais</li>
+        <li>Federações e ligas</li>
+        <li>Entrevistas públicas</li>
+        <li>Coletivas de imprensa</li>
+        <li>Dados estatísticos oficiais</li>
+        <li>Veículos esportivos reconhecidos</li>
+      </ul>
 
-        <h2>Fontes de informação</h2>
+      <h2>5. Correções e Atualizações</h2>
+      <p>
+        Caso identifique qualquer erro factual ou inconsistência,
+        solicitamos que entre em contato pelo e-mail:
+      </p>
+      <p><strong>contato@girodesportivo.com</strong></p>
+      <p>
+        Correções são analisadas e implementadas quando confirmadas.
+      </p>
 
-        <p>O conteúdo publicado pode ser produzido pela equipe editorial ou ter como base informações de:</p>
+      <h2>6. Independência Editorial</h2>
+      <p>
+        O Giro Desportivo mantém independência editorial.
+        Conteúdo jornalístico não é influenciado por anunciantes
+        ou interesses comerciais.
+      </p>
+      <p>
+        Publicidade é claramente identificada quando presente.
+      </p>
 
-        <ul>
-          <li>Assessorias de imprensa</li>
-          <li>Fontes oficiais</li>
-          <li>Entidades esportivas</li>
-          <li>Dados públicos e APIs esportivas</li>
-          <li>Veículos jornalísticos amplamente reconhecidos</li>
-        </ul>
-
-        <p>Sempre que aplicável, as fontes são devidamente citadas.</p>
-
-        <h2>Independência editorial</h2>
-
-        <p>
-          O Giro Desportivo mantém independência editorial.
-          Anunciantes, parceiros comerciais ou patrocinadores
-          não interferem no conteúdo jornalístico publicado.
-        </p>
-
-      </article>
+      <h2>7. Transparência</h2>
+      <p>
+        Nosso compromisso é com clareza, objetividade,
+        atualização constante e responsabilidade informativa.
+      </p>
 
     </div>
-  </section>
 
-</article>
+  </div>
+</section>
 
 {% endblock %}
