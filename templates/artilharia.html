@@ -1,244 +1,189 @@
 {% extends "base.html" %}
 
 {% block title %}
-Artilharia do Brasileirão 2026 – Ranking Atualizado | Giro Desportivo
+Artilharia do Brasileirão Série A 2026 | Giro Desportivo
 {% endblock %}
 
 {% block meta %}
-<meta name="description"
-content="Veja a artilharia atualizada do Brasileirão 2026. Ranking completo dos maiores goleadores da Série A com número de gols e estatísticas.">
-
-<link rel="canonical"
-href="https://girodesportivo.com/artilharia-brasileirao-2026">
-
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "SportsEvent",
- "name": "Artilharia Campeonato Brasileiro Série A 2026",
- "sport": "Soccer"
-}
-</script>
+<meta name="description" content="Confira a artilharia atualizada do Campeonato Brasileiro Série A 2026. Veja os jogadores com mais gols na competição.">
+<link rel="canonical" href="https://girodesportivo.com/artilharia-brasileirao-2026">
 {% endblock %}
 
 {% block content %}
 
-<header class="page-hero classificacao-hero">
-  <div class="container">
-    <h1>Artilharia do Brasileirão Série A 2026</h1>
-    <p>
-      Confira o ranking atualizado dos principais goleadores do Campeonato Brasileiro 2026.
-      Veja quem lidera a corrida pela artilharia.
-    </p>
-  </div>
-</header>
-
-<section class="section-block">
-  <div class="container">
-
-    {% if artilharia %}
-    <div class="table-wrapper">
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Jogador</th>
-            <th>Clube</th>
-            <th>Gols</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for jogador in artilharia %}
-          <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ jogador.nome }}</td>
-            <td>{{ jogador.time }}</td>
-            <td><strong>{{ jogador.gols }}</strong></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% else %}
-    <p class="text-gray-500">Nenhuma informação de artilharia disponível no momento.</p>
-    {% endif %}
-
-  </div>
-</section>
-<!-- ================= SEO CONTENT ================= -->
-<section class="container mx-auto px-6 py-16 max-w-4xl">
-
-  <h1 class="text-3xl font-bold mb-6">
-    Artilharia do Brasileirão 2026 – Lista Atualizada de Gols
+<!-- HERO -->
+<section style="
+  background: linear-gradient(135deg,#0d2c44,#123d5e);
+  padding: 80px 20px;
+  text-align: center;
+  color: white;
+">
+  <h1 style="font-size: 36px; font-weight: 800;">
+    Artilharia do Brasileirão Série A 2026
   </h1>
-
-  <p class="mb-6 text-gray-300 leading-relaxed">
-    Confira a artilharia atualizada do Campeonato Brasileiro Série A 2026.
-    A lista mostra os jogadores com mais gols na competição, seus respectivos clubes
-    e o número de partidas disputadas.
+  <p style="margin-top: 10px; opacity: .8;">
+    Lista atualizada dos principais goleadores do Campeonato Brasileiro.
   </p>
+</section>
 
-  <h2 class="text-2xl font-semibold mt-12 mb-4">
-    Quem é o artilheiro do Brasileirão 2026?
-  </h2>
 
-  <p class="mb-6 text-gray-300 leading-relaxed">
-    O artilheiro do Brasileirão 2026 é o jogador que lidera o ranking de gols
-    na temporada atual da Série A. A disputa pela artilharia é um dos destaques
-    da competição e pode mudar rodada após rodada.
-  </p>
+<!-- CARD LÍDER -->
+{% if artilharia and artilharia|length > 0 %}
+<section style="max-width:1100px;margin:-60px auto 40px auto;padding:0 20px;">
 
-  <h2 class="text-2xl font-semibold mt-12 mb-4">
-    Como funciona o critério de artilharia?
-  </h2>
+  <div style="
+    background: linear-gradient(135deg,#16a34a,#22c55e);
+    border-radius:20px;
+    padding:30px;
+    color:white;
+    display:flex;
+    align-items:center;
+    gap:25px;
+    box-shadow:0 20px 40px rgba(0,0,0,.4);
+  ">
 
-  <p class="mb-6 text-gray-300 leading-relaxed">
-    A artilharia do Campeonato Brasileiro é definida pelo número total de gols
-    marcados ao longo da temporada. Em caso de empate, podem ser considerados
-    critérios como número de assistências, menor número de jogos ou menos gols
-    marcados em cobranças de pênalti.
-  </p>
-
-  <h2 class="text-2xl font-semibold mt-12 mb-4">
-    Histórico recente de artilheiros do Brasileirão
-  </h2>
-
-  <p class="mb-6 text-gray-300 leading-relaxed">
-    Nas últimas temporadas, grandes nomes do futebol brasileiro se destacaram
-    na artilharia do Brasileirão, consolidando campanhas históricas e marcas
-    expressivas de gols. A cada ano, a disputa pelo topo do ranking movimenta
-    torcedores e especialistas.
-  </p>
-
-  <!-- ================= FAQ ================= -->
-
-  <h2 class="text-2xl font-semibold mt-12 mb-6">
-    Perguntas Frequentes sobre a Artilharia do Brasileirão
-  </h2>
-
-  <div class="space-y-6 text-gray-300">
+    <img src="{{ artilharia[0].foto }}"
+         alt="{{ artilharia[0].nome }}"
+         style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid white;">
 
     <div>
-      <h3 class="font-semibold text-lg mb-2">
-        Quem é o artilheiro do Brasileirão 2026?
-      </h3>
-      <p>
-        O artilheiro do Brasileirão 2026 é o jogador que possui o maior número
-        de gols marcados na temporada atual da Série A.
-      </p>
+      <div style="font-size:14px;opacity:.9;">🔥 Artilheiro da competição</div>
+      <h2 style="font-size:28px;font-weight:800;margin-top:5px;">
+        {{ artilharia[0].nome }}
+      </h2>
+      <div style="opacity:.9;">{{ artilharia[0].time }}</div>
+      <div style="font-size:42px;font-weight:900;margin-top:8px;">
+        {{ artilharia[0].gols }} gols
+      </div>
     </div>
 
-    <div>
-      <h3 class="font-semibold text-lg mb-2">
-        Quantos gols tem o líder da artilharia?
-      </h3>
-      <p>
-        O número de gols do líder da artilharia é atualizado a cada rodada,
-        conforme os resultados dos jogos do Campeonato Brasileiro.
-      </p>
+  </div>
+
+</section>
+{% endif %}
+
+
+<!-- TABELA -->
+<section style="max-width:1100px;margin:0 auto 60px auto;padding:0 20px;">
+
+  <div style="
+    background:#0f2233;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+  ">
+
+    <table style="width:100%;border-collapse:collapse;color:white;">
+
+      <thead style="background:#142f47;text-transform:uppercase;font-size:13px;letter-spacing:1px;">
+        <tr>
+          <th style="padding:16px;text-align:left;">#</th>
+          <th style="padding:16px;text-align:left;">Jogador</th>
+          <th style="padding:16px;text-align:left;">Clube</th>
+          <th style="padding:16px;text-align:center;">Gols</th>
+          <th style="padding:16px;text-align:center;">Jogos</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {% for jogador in artilharia %}
+        <tr style="border-top:1px solid #1e3a52;transition:.2s;"
+            onmouseover="this.style.background='#163952'"
+            onmouseout="this.style.background='transparent'">
+
+          <td style="padding:16px;font-weight:600;">
+            {{ loop.index }}
+          </td>
+
+          <td style="padding:16px;display:flex;align-items:center;gap:12px;">
+            <img src="{{ jogador.foto }}"
+                 alt="{{ jogador.nome }}"
+                 style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+            <span style="font-weight:600;">
+              {{ jogador.nome }}
+            </span>
+          </td>
+
+          <td style="padding:16px;color:#cbd5e1;">
+            {{ jogador.time }}
+          </td>
+
+          <td style="padding:16px;text-align:center;font-weight:800;color:#22c55e;">
+            {{ jogador.gols }}
+          </td>
+
+          <td style="padding:16px;text-align:center;color:#94a3b8;">
+            {{ jogador.jogos or "-" }}
+          </td>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- ESTATÍSTICAS RÁPIDAS -->
+<section style="max-width:1100px;margin:0 auto 60px auto;padding:0 20px;">
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;">
+
+    <div style="background:#10293f;padding:25px;border-radius:16px;text-align:center;color:white;">
+      <div style="font-size:13px;opacity:.7;text-transform:uppercase;">
+        Total de Artilheiros
+      </div>
+      <div style="font-size:32px;font-weight:800;margin-top:8px;">
+        {{ artilharia|length }}
+      </div>
     </div>
 
-    <div>
-      <h3 class="font-semibold text-lg mb-2">
-        Qual é o recorde de gols em uma edição do Brasileirão?
-      </h3>
-      <p>
-        O recorde de gols em uma edição do Campeonato Brasileiro depende do
-        formato da competição e da temporada específica, podendo variar ao
-        longo da história.
-      </p>
+    <div style="background:#10293f;padding:25px;border-radius:16px;text-align:center;color:white;">
+      <div style="font-size:13px;opacity:.7;text-transform:uppercase;">
+        Maior número de gols
+      </div>
+      <div style="font-size:32px;font-weight:800;margin-top:8px;">
+        {{ artilharia[0].gols if artilharia }}
+      </div>
     </div>
 
-    <div>
-      <h3 class="font-semibold text-lg mb-2">
-        Onde acompanhar a artilharia atualizada?
-      </h3>
-      <p>
-        A artilharia atualizada do Brasileirão pode ser acompanhada nesta
-        página, com dados oficiais atualizados periodicamente.
-      </p>
+    <div style="background:#10293f;padding:25px;border-radius:16px;text-align:center;color:white;">
+      <div style="font-size:13px;opacity:.7;text-transform:uppercase;">
+        Competição
+      </div>
+      <div style="font-size:32px;font-weight:800;margin-top:8px;">
+        Série A 2026
+      </div>
     </div>
 
   </div>
 
 </section>
 
-<section class="section-block">
-  <div class="container editorial-box">
 
-    <h2>Como funciona a artilharia do Brasileirão?</h2>
+<!-- BLOCO SEO -->
+<section style="max-width:900px;margin:0 auto 80px auto;padding:0 20px;color:#cbd5e1;line-height:1.7;">
 
-    <p>
-      A artilharia no Brasileirão considera o total de gols marcados por cada jogador ao longo das 38 rodadas do campeonato.
-    </p>
+  <h2 style="font-size:24px;font-weight:800;margin-bottom:15px;color:white;">
+    Artilharia do Brasileirão 2026
+  </h2>
 
-    <h3>Critérios de desempate</h3>
-    <ul>
-      <li>Número de assistências</li>
-      <li>Menor número de partidas disputadas</li>
-      <li>Menor número de minutos em campo</li>
-    </ul>
+  <p>
+    A artilharia do Campeonato Brasileiro Série A 2026 reúne os jogadores
+    que mais marcaram gols na competição. A disputa pelo topo da lista
+    é sempre intensa e costuma definir grandes protagonistas da temporada.
+  </p>
 
-    <h3>Perguntas Frequentes</h3>
+  <p style="margin-top:15px;">
+    Aqui você acompanha a lista atualizada de artilheiros,
+    com número de gols e partidas disputadas.
+  </p>
 
-    <p><strong>Qual foi o maior artilheiro da história do Brasileirão?</strong><br>
-    Roberto Dinamite é o maior goleador da história da competição.</p>
-
-    <p><strong>Quantos gols costumam garantir a artilharia?</strong><br>
-    Normalmente entre 18 e 25 gols garantem o topo da tabela.</p>
-
-  </div>
 </section>
-
-<section class="section-block">
-  <div class="container content-stack">
-    <h2>Veja também</h2>
-    <ul>
-      <li><a href="/classificacao-brasileirao-2026">Classificação do Brasileirão 2026</a></li>
-      <li><a href="/categoria/brasileirao">Últimas notícias do Brasileirão</a></li>
-      <li><a href="/">Últimas notícias esportivas</a></li>
-    </ul>
-  </div>
-</section>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Quem é o artilheiro do Brasileirão 2026?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "O artilheiro do Brasileirão 2026 é o jogador com o maior número de gols marcados na temporada atual da Série A."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Quantos gols tem o líder da artilharia?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "O número de gols do líder da artilharia é atualizado rodada a rodada conforme os resultados do Campeonato Brasileiro."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Qual é o recorde de gols em uma edição do Brasileirão?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "O recorde de gols em uma edição do Campeonato Brasileiro varia conforme o formato e a temporada da competição."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Onde acompanhar a artilharia atualizada?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A artilharia atualizada do Brasileirão pode ser acompanhada nesta página com dados oficiais atualizados periodicamente."
-      }
-    }
-  ]
-}
-</script>
 
 {% endblock %}
