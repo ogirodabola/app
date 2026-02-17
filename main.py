@@ -952,7 +952,7 @@ def pagina_jogador(slug: str, request: Request):
     jogador = buscar_jogador_por_slug(slug)
 
     if not jogador:
-        raise HTTPException(status_code=404)
+        raise HTTPException(status_code=404, detail="Jogador não encontrado")
 
     noticias = listar_noticias_por_jogador(jogador["id"])
 
@@ -967,20 +967,3 @@ def pagina_jogador(slug: str, request: Request):
         }
     )
 
-@app.get("/jogador/{slug}", response_class=HTMLResponse)
-def jogador(slug: str, request: Request):
-
-    jogador = buscar_jogador_por_slug(slug)
-
-    if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
-
-    return templates.TemplateResponse(
-        "jogador.html",
-        {
-            "request": request,
-            "jogador": jogador,
-            "categorias": listar_categorias(),
-            "categoria_ativa": None
-        }
-    )
