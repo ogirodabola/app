@@ -1101,10 +1101,13 @@ def buscar_jogador_por_slug(slug: str):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute(
-                "SELECT * FROM jogadores WHERE slug = %s",
-                (slug,)
-            )
+            cur.execute("""
+                SELECT 
+                    *,
+                    DATE_PART('year', AGE(data_nascimento)) AS idade
+                FROM jogadores
+                WHERE slug = %s
+            """, (slug,))
             return cur.fetchone()
     finally:
         conn.close()
@@ -1325,13 +1328,18 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
 # ============================================
 
 def listar_jogadores_por_noticia(noticia_id: int):
-    with get_conn() as conn:
+    conn = get_conn()
+    try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-                SELECT j.*
+                SELECT 
+                    j.*,
+                    DATE_PART('year', AGE(j.data_nascimento)) AS idade
                 FROM jogadores j
                 JOIN noticia_jogadores nj ON nj.jogador_id = j.id
                 WHERE nj.noticia_id = %s
-                ORDER BY j.nome;
             """, (noticia_id,))
             return cur.fetchall()
+    finally:
+        conn.close()
+
