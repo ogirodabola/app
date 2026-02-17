@@ -130,20 +130,91 @@
     </div>
   </section>
 
-  {% if jogadores_relacionados %}
-<section class="jogadores-relacionados">
-  <h3>Jogadores citados nesta matéria</h3>
+  <!-- ================= JOGADORES RELACIONADOS ================= -->
 
-  <div class="grid-jogadores">
-    {% for j in jogadores_relacionados %}
-      <a href="/jogador/{{ j.slug }}" class="card-jogador">
-        {% if j.foto %}
-          <img src="{{ j.foto }}" alt="{{ j.nome }}">
-        {% endif %}
-        <span>{{ j.nome }}</span>
-      </a>
+  {% if jogadores_relacionados %}
+<section style="max-width:1100px;margin:60px auto;padding:0 20px;">
+
+  <h3 style="color:white;font-size:20px;font-weight:800;margin-bottom:20px;">
+    Jogadores citados nesta matéria
+  </h3>
+
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+  ">
+
+    {% for jogador in jogadores_relacionados %}
+    <a href="/jogador/{{ jogador.slug }}"
+       style="
+         background:#10293f;
+         border-radius:18px;
+         padding:20px;
+         display:flex;
+         gap:15px;
+         text-decoration:none;
+         color:white;
+         transition:.2s;
+       "
+       onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 15px 30px rgba(0,0,0,.4)'"
+       onmouseout="this.style.transform='none';this.style.boxShadow='none'"
+    >
+
+      <!-- FOTO -->
+      <img src="{{ jogador.foto }}"
+           alt="{{ jogador.nome }}"
+           style="
+             width:70px;
+             height:70px;
+             border-radius:50%;
+             object-fit:cover;
+             border:3px solid #1e3a52;
+           ">
+
+      <!-- INFO -->
+      <div style="flex:1;">
+
+        <div style="font-weight:700;font-size:16px;">
+          {{ jogador.nome }}
+        </div>
+
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:6px;
+          margin-top:5px;
+          font-size:14px;
+          color:#cbd5e1;
+        ">
+          {% if jogador.escudo_time %}
+          <img src="{{ jogador.escudo_time }}"
+               alt="{{ jogador.time_atual }}"
+               style="width:18px;height:18px;object-fit:contain;">
+          {% endif %}
+          {{ jogador.time_atual or "Clube não informado" }}
+        </div>
+
+        <div style="
+          font-size:13px;
+          margin-top:6px;
+          color:#94a3b8;
+        ">
+          {% if jogador.data_nascimento %}
+            {{ (2026 - jogador.data_nascimento.year) }} anos
+          {% endif %}
+          {% if jogador.altura %}
+            • {{ jogador.altura }}
+          {% endif %}
+        </div>
+
+      </div>
+
+    </a>
     {% endfor %}
+
   </div>
+
 </section>
 {% endif %}
 
