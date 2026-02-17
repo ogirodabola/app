@@ -897,10 +897,9 @@ def pagina_jogador(slug: str, request: Request):
     jogador = buscar_jogador_por_slug(slug)
 
     if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
+        raise HTTPException(status_code=404)
 
-    # últimas notícias relacionadas
-    noticias = listar_noticias_por_nome(jogador["nome"], limit=10)
+    noticias = listar_noticias_por_jogador(jogador["id"])
 
     return templates.TemplateResponse(
         "jogador.html",
@@ -908,6 +907,8 @@ def pagina_jogador(slug: str, request: Request):
             "request": request,
             "jogador": jogador,
             "noticias": noticias,
-            "categorias": listar_categorias()
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
         }
     )
+
