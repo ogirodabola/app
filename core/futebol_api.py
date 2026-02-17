@@ -115,6 +115,10 @@ BLACKLIST_KEYWORDS = [
     "Reserve"
 ]
 
+# ======================================================
+# JOGADOR – BUSCA COMPLETA NA API
+# ======================================================
+
 def buscar_jogador_api_por_nome(nome: str):
     url = f"{BASE_URL}/players"
 
@@ -138,13 +142,32 @@ def buscar_jogador_api_por_nome(nome: str):
         if not data.get("response"):
             return None
 
-        return data["response"][0]
+        # Escolhe jogador mais relevante (primeiro retorno)
+        jogador = data["response"][0]
+
+        player = jogador.get("player", {})
+        statistics = jogador.get("statistics", [])
+
+        stats = statistics[0] if statistics else {}
+
+        birth = player.get("birth", {})
+        team = stats.get("team", {})
+        games = stats.get("games", {})
+
+        return {
+            "nome": player.get("name"),
+            "foto": player.get("photo"),
+            "posicao": games.get("position"),
+            "time_atual": team.get("name"),
+            "escudo_time": team.get("logo"),
+            "nacionalidade": player.get("nationality"),
+            "data_nascimento": birth.get("date"),
+            "altura": player.get("height"),
+        }
 
     except Exception:
         return None
 
-def is_blacklisted(text: str) -> bool:
-    return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
 
 
 def normalizar_nome(nome: str) -> str:
