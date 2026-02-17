@@ -130,6 +130,23 @@
     </div>
   </section>
 
+  {% if jogadores_relacionados %}
+<section class="jogadores-relacionados">
+  <h3>Jogadores citados nesta matéria</h3>
+
+  <div class="grid-jogadores">
+    {% for j in jogadores_relacionados %}
+      <a href="/jogador/{{ j.slug }}" class="card-jogador">
+        {% if j.foto %}
+          <img src="{{ j.foto }}" alt="{{ j.nome }}">
+        {% endif %}
+        <span>{{ j.nome }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
   <!-- ================= RECOMENDADAS ================= -->
   {% if recomendadas %}
   <section class="news-related">
