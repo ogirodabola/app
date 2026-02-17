@@ -30,7 +30,11 @@ from core.database import (
     listar_editorial_publicado,
     listar_noticias_publicadas,
     buscar_ou_criar_jogador,
-    salvar_relacao_noticia_jogador
+    salvar_relacao_noticia_jogador,
+    limpar_vinculos_jogadores_noticia,
+    buscar_jogador_por_slug,
+    criar_jogador_basico,
+    vincular_jogador_noticia
 )
 
 
