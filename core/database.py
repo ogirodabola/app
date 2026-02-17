@@ -1343,3 +1343,14 @@ def listar_jogadores_por_noticia(noticia_id: int):
     finally:
         conn.close()
 
+def atualizar_jogador(jogador_id, **kwargs):
+    # Atualiza apenas campos passados
+    set_clauses = []
+    params = []
+    for key, value in kwargs.items():
+        set_clauses.append(f"{key} = %s")
+        params.append(value)
+    params.append(jogador_id)
+
+    query = f"UPDATE jogadores SET {', '.join(set_clauses)}, ultima_sync = NOW() WHERE id = %s"
+    execute_query(query, params)
