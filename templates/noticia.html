@@ -200,12 +200,14 @@
           margin-top:6px;
           color:#94a3b8;
         ">
-          {% if jogador.data_nascimento %}
-            {{ (2026 - jogador.data_nascimento.year) }} anos
-          {% endif %}
-          {% if jogador.altura %}
-            • {{ jogador.altura }}
-          {% endif %}
+          {% if jogador.idade %}
+          {{ jogador.idade }} anos
+        {% endif %}
+        
+        {% if jogador.altura %}
+          • {{ jogador.altura }}
+        {% endif %}
+
         </div>
 
       </div>
