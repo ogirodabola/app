@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from slugify import slugify
 
 from core.database import (
@@ -14,6 +14,7 @@ TTL_DIAS = 7
 
 
 def jogador_completo(jogador: dict) -> bool:
+
     if not jogador:
         return False
 
@@ -29,6 +30,7 @@ def jogador_completo(jogador: dict) -> bool:
 
 
 def precisa_sincronizar(jogador: dict) -> bool:
+
     if not jogador:
         return True
 
@@ -37,20 +39,19 @@ def precisa_sincronizar(jogador: dict) -> bool:
     if not ultima_sync:
         return True
 
-    from datetime import timezone
+    limite = datetime.now(timezone.utc) - timedelta(days=TTL_DIAS)
 
-limite = datetime.now(timezone.utc) - timedelta(days=TTL_DIAS)
+    # Se vier naive do banco
+    if ultima_sync.tzinfo is None:
+        ultima_sync = ultima_sync.replace(tzinfo=timezone.utc)
 
-if ultima_sync.tzinfo is None:
-    ultima_sync = ultima_sync.replace(tzinfo=timezone.utc)
+    return ultima_sync < limite
 
-return ultima_sync < limite
 
 def buscar_ou_sincronizar_jogador(slug: str):
 
     jogador = buscar_jogador_por_slug(slug)
 
-    # 1️⃣ Existe e está completo e dentro do TTL
     if jogador and jogador_completo(jogador) and not precisa_sincronizar(jogador):
         return jogador
 
@@ -58,7 +59,6 @@ def buscar_ou_sincronizar_jogador(slug: str):
 
     api_data = buscar_jogador_api_por_nome(nome)
 
-    # 2️⃣ Se API falhar → nunca quebra página
     if not api_data:
         return jogador
 
