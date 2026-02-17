@@ -967,5 +967,3 @@ def pagina_jogador(slug: str, request: Request):
             "categoria_ativa": None
         }
     )
-    )
-
