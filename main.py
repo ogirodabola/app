@@ -145,17 +145,12 @@ async def salvar_noticia_admin(id: int, request: Request):
 
         from core.jogador_service import buscar_ou_sincronizar_jogador
 
-    jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+jogador = buscar_ou_sincronizar_jogador(slug_jogador)
 
 if jogador:
     jogador_id = jogador["id"]
 else:
     continue
-
-
-    vincular_jogador_noticia(id, jogador_id)
-
-    return RedirectResponse("/admin/noticias", status_code=303)
 
     # ============================================
     # VINCULAR JOGADOR À NOTÍCIA (SISTEMA HÍBRIDO)
