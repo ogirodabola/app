@@ -10,7 +10,7 @@
 
 <meta property="og:title" content="{{ jogador.nome }} | Giro Desportivo">
 <meta property="og:description" content="Estatísticas e últimas notícias de {{ jogador.nome }}.">
-<meta property="og:image" content="{{ jogador.foto }}">
+<meta property="og:image" content="{{ jogador.foto or 'https://girodesportivo.com/static/img/player-placeholder.png' }}">
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://girodesportivo.com/jogador/{{ jogador.slug }}">
 
