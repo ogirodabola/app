@@ -252,32 +252,31 @@ from core.database import (
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
-    hero = listar_home_hero()
-    feed = listar_home_feed(limit=20)
+    hero = listar_home_hero() or []
+    feed = listar_home_feed(limit=20) or []
 
-    brasileirao = listar_home_brasileirao()
-    mercado = listar_home_mercado()
-    internacional = listar_home_internacional()
-    analises = listar_home_analises()
-    bastidores = listar_home_bastidores()
-    mais_lidas = listar_home_mais_lidas()
+    brasileirao = listar_home_brasileirao() or []
+    mercado = listar_home_mercado() or []
+    internacional = listar_home_internacional() or []
+    analises = listar_home_analises() or []
+    bastidores = listar_home_bastidores() or []
+    mais_lidas = listar_home_mais_lidas() or []
 
-    tabela_completa = buscar_classificacao_brasileirao()
-    jogos_do_dia = buscar_jogos_do_dia()
+    tabela_completa = buscar_classificacao_brasileirao() or []
+    jogos_do_dia = buscar_jogos_do_dia() or []
+
+    categorias = listar_categorias() or []
 
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
 
-            # HERO
             "hero_principal": hero[0] if hero else None,
             "hero_secundarias": hero[1:] if len(hero) > 1 else [],
 
-            # FEED
             "feed_noticias": feed,
 
-            # BLOCOS
             "brasileirao": brasileirao,
             "mercado": mercado,
             "internacional": internacional,
@@ -285,12 +284,10 @@ def home(request: Request):
             "bastidores": bastidores,
             "mais_lidas": mais_lidas,
 
-            # WIDGETS
             "tabela_brasileirao": tabela_completa[:8],
             "jogos_do_dia": jogos_do_dia,
 
-            # NAV
-            "categorias": listar_categorias(),
+            "categorias": categorias,
             "categoria_ativa": None
         }
     )
