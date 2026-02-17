@@ -100,6 +100,7 @@ def admin_login(request: Request):
 
 from slugify import slugify
 from fastapi.responses import RedirectResponse
+from core.jogador_service import buscar_ou_sincronizar_jogador
 
 @app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
@@ -139,17 +140,17 @@ async def salvar_noticia_admin(id: int, request: Request):
     # Limpar vínculos antigos antes de inserir novos
     limpar_vinculos_jogadores_noticia(id)
 
-    for nome in nomes_jogadores:
+for nome in nomes_jogadores:
 
-        slug_jogador = slugify(nome)
+    slug_jogador = slugify(nome)
 
-        from core.jogador_service import buscar_ou_sincronizar_jogador
+    jogador = buscar_ou_sincronizar_jogador(slug_jogador)
 
-jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+    if not jogador:
+        continue
 
-if jogador:
-    jogador_id = jogador["id"]
-else:
+    vincular_jogador_noticia(id, jogador["id"])
+
     continue
 
     # ============================================
