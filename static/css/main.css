@@ -560,13 +560,39 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   max-width: 900px;
 }
 
+.news-category {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: .85;
+}
+
+.news-title {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin: 15px 0 20px;
+}
 
 .news-dek {
-  margin-top: 16px;
-  font-size: 18px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.85);
-  max-width: 720px;
+    font-size: 20px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.news-meta {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.news-grid {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 2fr 320px;
+    gap: 60px;
 }
 
 /* ================= CONTEÚDO ================= */
@@ -663,13 +689,17 @@ PÁGINA DE NOTÍCIA – EDITORIAL
 NOTÍCIA – HERO
 ====================================================== */
 .news-hero {
-  position: relative;
-  min-height: 420px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: flex-end;
-  z-index: 1;
+    position: relative;
+    height: 520px;
+    background-size: cover;
+    background-position: center;
+}
+
+.news-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.85));
 }
 
 .news-hero-overlay {
@@ -685,10 +715,11 @@ NOTÍCIA – HERO
 }
 
 .news-hero-content {
-  position: relative;
-  z-index: 2;
-  padding: 64px 0 48px;
-  max-width: 900px;
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 20px 60px 20px;
+    color: white;
 }
 
 /* ======================================================
@@ -702,35 +733,34 @@ BLOCO DE CONTEÚDO
 }
 
 .news-content {
-  background: linear-gradient(
-    to bottom,
-    #0b1626,
-    #08111f
-  );
-  border-radius: 20px;
-  padding: 48px 56px;
-  max-width: 900px;
-  margin: 0 auto;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    font-size: 21px;
+    line-height: 1.9;
+    color: #0f172a;
+}
+
+.news-sidebar {
+    position: sticky;
+    top: 120px;
 }
 
 /* ======================================================
 RESPONSIVO
 ====================================================== */
-@media (max-width: 768px) {
-  .news-title {
-    font-size: 28px;
-  }
 
-  .news-content {
-    padding: 32px 24px;
-    border-radius: 16px;
-  }
+@media(max-width: 1000px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
 
-  .news-content-wrapper {
-    margin-top: -48px;
-  }
+    .news-card {
+        padding: 35px 25px;
+    }
+
+    .news-title {
+        font-size: 32px;
+    }
 }
+
 /* ======================================================
 BLOCO EDITORIAL – CONTEÚDO DA NOTÍCIA
 ====================================================== */
@@ -1457,13 +1487,11 @@ HOME — BLOCO SECUNDÁRIO
 }
 
 .news-card {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 16px;
-  padding: 12px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 12px;
-  transition: background 0.2s ease;
+    background: white;
+    margin-top: -120px;
+    border-radius: 20px;
+    padding: 50px 60px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.15);
 }
 
 .news-card:hover {
