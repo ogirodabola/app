@@ -1097,7 +1097,7 @@ from psycopg2.extras import RealDictCursor
 # BUSCAR JOGADOR POR SLUG
 # ----------------------------------------------------------
 
-ddef buscar_jogador_por_slug(slug: str):
+def buscar_jogador_por_slug(slug: str):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
