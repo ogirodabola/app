@@ -1328,71 +1328,82 @@ def listar_jogadores_por_noticia(noticia_id: int):
 # ======================================================
 
 def buscar_jogador_por_slug(slug: str):
-    with get_conn() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT *,
-                COALESCE(DATE_PART('year', AGE(data_nascimento)), 0) AS idade
-                FROM jogadores
-                WHERE slug = %s
-                LIMIT 1
-            """, (slug,))
-            return cur.fetchone()
+    try:
+        with get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("""
+                    SELECT *,
+                    COALESCE(DATE_PART('year', AGE(data_nascimento)), 0) AS idade
+                    FROM jogadores
+                    WHERE slug = %s
+                    LIMIT 1
+                """, (slug,))
+                return cur.fetchone()
+    except Exception:
+        return None
 
 
 def inserir_jogador(dados: dict):
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                INSERT INTO jogadores (
-                    nome,
-                    slug,
-                    foto,
-                    time_atual,
-                    escudo_time,
-                    posicao,
-                    nacionalidade,
-                    data_nascimento,
-                    altura
-                )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                ON CONFLICT (slug) DO NOTHING
-            """, (
-                dados.get("nome"),
-                dados.get("slug"),
-                dados.get("foto"),
-                dados.get("time_atual"),
-                dados.get("escudo_time"),
-                dados.get("posicao"),
-                dados.get("nacionalidade"),
-                dados.get("data_nascimento"),
-                dados.get("altura"),
-            ))
-        conn.commit()
+    try:
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO jogadores (
+                        nome,
+                        slug,
+                        foto,
+                        time_atual,
+                        escudo_time,
+                        posicao,
+                        nacionalidade,
+                        data_nascimento,
+                        altura,
+                        ultima_sync
+                    )
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,NOW())
+                    ON CONFLICT (slug) DO NOTHING
+                """, (
+                    dados.get("nome"),
+                    dados.get("slug"),
+                    dados.get("foto"),
+                    dados.get("time_atual"),
+                    dados.get("escudo_time"),
+                    dados.get("posicao"),
+                    dados.get("nacionalidade"),
+                    dados.get("data_nascimento"),
+                    dados.get("altura"),
+                ))
+            conn.commit()
+    except Exception:
+        pass
 
 
 def atualizar_jogador(jogador_id: int, dados: dict):
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                UPDATE jogadores SET
-                    foto = %s,
-                    time_atual = %s,
-                    escudo_time = %s,
-                    posicao = %s,
-                    nacionalidade = %s,
-                    data_nascimento = %s,
-                    altura = %s,
-                    atualizado_em = NOW()
-                WHERE id = %s
-            """, (
-                dados.get("foto"),
-                dados.get("time_atual"),
-                dados.get("escudo_time"),
-                dados.get("posicao"),
-                dados.get("nacionalidade"),
-                dados.get("data_nascimento"),
-                dados.get("altura"),
-                jogador_id
-            ))
-        conn.commit()
+    try:
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE jogadores SET
+                        foto = %s,
+                        time_atual = %s,
+                        escudo_time = %s,
+                        posicao = %s,
+                        nacionalidade = %s,
+                        data_nascimento = %s,
+                        altura = %s,
+                        atualizado_em = NOW(),
+                        ultima_sync = NOW()
+                    WHERE id = %s
+                """, (
+                    dados.get("foto"),
+                    dados.get("time_atual"),
+                    dados.get("escudo_time"),
+                    dados.get("posicao"),
+                    dados.get("nacionalidade"),
+                    dados.get("data_nascimento"),
+                    dados.get("altura"),
+                    jogador_id
+                ))
+            conn.commit()
+    except Exception:
+        pass
