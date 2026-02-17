@@ -45,6 +45,24 @@
              placeholder="Ex: Brasileirão, Libertadores, Última Hora">
     </div>
 
+    <!-- JOGADOR RELACIONADO -->
+<div class="admin-form-group">
+  <label>Jogador relacionado (opcional)</label>
+  <input type="text"
+         name="jogador_nome"
+         value="{{ noticia.jogador_nome if noticia and noticia.jogador_nome else '' }}"
+         placeholder="Ex: Neymar">
+</div>
+
+<!-- TIME RELACIONADO -->
+<div class="admin-form-group">
+  <label>Time relacionado (opcional)</label>
+  <input type="text"
+         name="time_nome"
+         value="{{ noticia.time_nome if noticia and noticia.time_nome else '' }}"
+         placeholder="Ex: Santos">
+</div>
+
     <!-- TAGS -->
     <div class="admin-form-group">
       <label>Tags (separadas por vírgula)</label>
