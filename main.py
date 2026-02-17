@@ -143,12 +143,15 @@ async def salvar_noticia_admin(id: int, request: Request):
 
         slug_jogador = slugify(nome)
 
-        jogador = buscar_jogador_por_slug(slug_jogador)
+        from core.jogador_service import buscar_ou_sincronizar_jogador
 
-        if not jogador:
-            jogador_id = criar_jogador_basico(nome)
-        else:
-            jogador_id = jogador["id"]
+jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+
+if jogador:
+    jogador_id = jogador["id"]
+else:
+    continue
+
 
         vincular_jogador_noticia(id, jogador_id)
 
