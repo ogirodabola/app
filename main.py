@@ -335,6 +335,8 @@ def pagina_categoria(request: Request, categoria_slug: str):
 # ======================================================
 # NOTÍCIA INDIVIDUAL
 # ======================================================
+from core.database import listar_jogadores_por_noticia
+
 @app.get("/noticia/{slug}", response_class=HTMLResponse)
 def noticia(slug: str, request: Request):
 
@@ -343,9 +345,11 @@ def noticia(slug: str, request: Request):
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
+    # 🔹 Agora sim é seguro buscar jogadores
+    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
+
     recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
 
-    # 🔹 Garantir que categoria nunca seja None
     categoria_nome = noticia.get("categoria") or "geral"
 
     breadcrumb = gerar_breadcrumb_schema([
@@ -368,6 +372,7 @@ def noticia(slug: str, request: Request):
             "recomendadas": recomendadas,
             "breadcrumb_schema": breadcrumb,
             "categorias": listar_categorias(),
+            "jogadores_relacionados": jogadores_relacionados,
             "categoria_ativa": categoria_nome
         }
     )
