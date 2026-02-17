@@ -2,63 +2,36 @@
 
 {% block content %}
 
-<!-- HERO -->
-<section class="news-hero" style="background-image:url('{{ noticia.imagem }}');"></section>
+<section class="hero" style="background-image:url('{{ noticia.imagem }}');"></section>
 
-<div class="news-wrapper">
+<div class="wrapper">
 
-    <!-- CARD SOBREPOSTO -->
-    <div class="news-header-wrapper">
-        <div class="news-header-card">
+    <div class="header-card">
+        <div class="news-category">{{ noticia.categoria }}</div>
 
-            {% if noticia.categoria %}
-            <div class="news-category">
-                {{ noticia.categoria }}
-            </div>
-            {% endif %}
+        <h1 class="news-title">
+            {{ noticia.titulo_editorial or noticia.titulo }}
+        </h1>
 
-            <h1 class="news-title">
-                {{ noticia.titulo_editorial or noticia.titulo }}
-            </h1>
-
-            {% if noticia.linha_fina %}
-            <div class="news-dek">
-                {{ noticia.linha_fina }}
-            </div>
-            {% endif %}
-
-            <div class="news-meta">
-                {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
-            </div>
-
+        <div class="news-meta">
+            {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
         </div>
     </div>
 
-    <!-- GRID CONTEÚDO + SIDEBAR -->
-    <div class="news-grid">
+    <div class="content-grid">
 
-        <article class="news-content">
-            {{ render_ad("noticia_topo", request) | safe }}
-
-            {% set partes = noticia.conteudo_editorial.split('</p>') %}
-            {% for parte in partes %}
-                {{ parte|safe }}</p>
-
-                {% if loop.index == 3 %}
-                    {{ render_ad("noticia_inline_1", request) | safe }}
-                {% endif %}
-            {% endfor %}
-
-            {{ render_ad("noticia_footer", request) | safe }}
+        <article class="content">
+            {{ noticia.conteudo_editorial | safe }}
         </article>
 
-        <aside class="news-sidebar">
+        <aside class="sidebar">
             {{ render_ad("noticia_sidebar", request) | safe }}
         </aside>
 
     </div>
 
 </div>
+
 
 
     <!-- JOGADORES -->
