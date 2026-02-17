@@ -115,6 +115,15 @@ BLACKLIST_KEYWORDS = [
     "Reserve"
 ]
 
+def is_blacklisted(text: str) -> bool:
+    if not text:
+        return False
+
+    return any(
+        word.lower() in text.lower()
+        for word in BLACKLIST_KEYWORDS
+    )
+
 # ======================================================
 # JOGADOR – BUSCA COMPLETA NA API
 # ======================================================
