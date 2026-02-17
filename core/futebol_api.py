@@ -115,6 +115,33 @@ BLACKLIST_KEYWORDS = [
     "Reserve"
 ]
 
+def buscar_jogador_api_por_nome(nome: str):
+    url = f"{BASE_URL}/players"
+
+    params = {
+        "search": nome
+    }
+
+    try:
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            params=params,
+            timeout=10
+        )
+
+        if response.status_code != 200:
+            return None
+
+        data = response.json()
+
+        if not data.get("response"):
+            return None
+
+        return data["response"][0]
+
+    except Exception:
+        return None
 
 def is_blacklisted(text: str) -> bool:
     return any(word.lower() in text.lower() for word in BLACKLIST_KEYWORDS)
