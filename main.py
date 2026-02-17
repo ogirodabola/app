@@ -12,6 +12,7 @@ from fastapi.responses import HTMLResponse
 from core.database import listar_noticias_admin
 from core.database import atualizar_ads_slot_dispositivo
 from core.database import obter_metricas_editoriais
+from core.database import listar_jogadores_por_noticia
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -966,3 +967,20 @@ def pagina_jogador(slug: str, request: Request):
         }
     )
 
+@app.get("/jogador/{slug}", response_class=HTMLResponse)
+def jogador(slug: str, request: Request):
+
+    jogador = buscar_jogador_por_slug(slug)
+
+    if not jogador:
+        raise HTTPException(status_code=404, detail="Jogador não encontrado")
+
+    return templates.TemplateResponse(
+        "jogador.html",
+        {
+            "request": request,
+            "jogador": jogador,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
