@@ -101,9 +101,14 @@ def admin_login(request: Request):
 from slugify import slugify
 from fastapi.responses import RedirectResponse
 from core.jogador_service import buscar_ou_sincronizar_jogador
+from fastapi import UploadFile
+from uuid import uuid4
+import os
+import shutil
 
 @app.post("/admin/noticias/{id}")
 async def salvar_noticia_admin(id: int, request: Request):
+
     form = await request.form()
 
     titulo = form.get("titulo_editorial")
@@ -114,30 +119,53 @@ async def salvar_noticia_admin(id: int, request: Request):
     else:
         slug = slugify(slug_form)
 
+    # =============================
+    # 1️⃣ TRATAR IMAGEM
+    # =============================
+
+    imagem_atual = form.get("imagem_atual")  # hidden field opcional
+    file: UploadFile = form.get("imagem")
+
+    imagem_url = imagem_atual
+
+    if file and file.filename:
+        ext = file.filename.split(".")[-1]
+        nome_arquivo = f"{uuid4().hex}.{ext}"
+
+        pasta_upload = "static/uploads"
+        os.makedirs(pasta_upload, exist_ok=True)
+
+        caminho = f"{pasta_upload}/{nome_arquivo}"
+
+        with open(caminho, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        imagem_url = f"/{caminho}"
+
+    # =============================
+    # 2️⃣ DADOS DA NOTÍCIA
+    # =============================
+
     dados = {
         "titulo_editorial": titulo,
         "resumo": form.get("resumo"),
         "conteudo_editorial": form.get("conteudo_editorial"),
-        "imagem": form.get("imagem"),
+        "imagem": imagem_url,
         "categoria": form.get("categoria"),
         "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
         "editorial_status": form.get("editorial_status", "pendente"),
         "slug": slug,
     }
 
-    # =============================
-    # 1️⃣ Atualiza notícia
-    # =============================
     atualizar_noticia(id, dados)
 
     # =============================
-    # 2️⃣ Processar jogadores
+    # 3️⃣ PROCESSAR JOGADORES
     # =============================
 
     jogadores_raw = form.get("jogador_nome", "") or ""
     nomes_jogadores = [j.strip() for j in jogadores_raw.split(",") if j.strip()]
 
-    # Limpar vínculos antigos antes de inserir novos
     limpar_vinculos_jogadores_noticia(id)
 
     from core.jogador_service import buscar_ou_sincronizar_jogador
@@ -146,16 +174,12 @@ async def salvar_noticia_admin(id: int, request: Request):
     for nome in nomes_jogadores:
 
         slug_jogador = slugify(nome)
-
         jogador = buscar_ou_sincronizar_jogador(slug_jogador)
 
-        if not jogador:
-            continue
-
-        vincular_jogador_noticia(id, jogador["id"])
+        if jogador:
+            vincular_jogador_noticia(id, jogador["id"])
 
     return RedirectResponse("/admin/noticias", status_code=303)
-
 
     # ============================================
     # VINCULAR JOGADOR À NOTÍCIA (SISTEMA HÍBRIDO)
