@@ -13,6 +13,7 @@ from core.database import listar_noticias_admin
 from core.database import atualizar_ads_slot_dispositivo
 from core.database import obter_metricas_editoriais
 from core.database import listar_jogadores_por_noticia
+from core.jogador_service import buscar_ou_sincronizar_jogador
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -949,10 +950,10 @@ def buscar_artilharia_brasileirao():
 @app.get("/jogador/{slug}", response_class=HTMLResponse)
 def pagina_jogador(slug: str, request: Request):
 
-    jogador = buscar_jogador_por_slug(slug)
+    jogador = buscar_ou_sincronizar_jogador(slug)
 
     if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
+        raise HTTPException(status_code=404)
 
     noticias = listar_noticias_por_jogador(jogador["id"])
 
@@ -965,5 +966,6 @@ def pagina_jogador(slug: str, request: Request):
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
+    )
     )
 
