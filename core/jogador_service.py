@@ -37,10 +37,14 @@ def precisa_sincronizar(jogador: dict) -> bool:
     if not ultima_sync:
         return True
 
-    limite = datetime.utcnow() - timedelta(days=TTL_DIAS)
+    from datetime import timezone
 
-    return ultima_sync < limite
+limite = datetime.now(timezone.utc) - timedelta(days=TTL_DIAS)
 
+if ultima_sync.tzinfo is None:
+    ultima_sync = ultima_sync.replace(tzinfo=timezone.utc)
+
+return ultima_sync < limite
 
 def buscar_ou_sincronizar_jogador(slug: str):
 
