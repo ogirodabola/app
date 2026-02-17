@@ -1097,14 +1097,14 @@ from psycopg2.extras import RealDictCursor
 # BUSCAR JOGADOR POR SLUG
 # ----------------------------------------------------------
 
-def buscar_jogador_por_slug(slug: str):
+ddef buscar_jogador_por_slug(slug: str):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT 
                     *,
-                    DATE_PART('year', AGE(data_nascimento)) AS idade
+                    COALESCE(DATE_PART('year', AGE(data_nascimento)), 0) AS idade
                 FROM jogadores
                 WHERE slug = %s
             """, (slug,))
@@ -1334,7 +1334,7 @@ def listar_jogadores_por_noticia(noticia_id: int):
             cur.execute("""
                 SELECT 
                     j.*,
-                    DATE_PART('year', AGE(j.data_nascimento)) AS idade
+                    COALESCE(DATE_PART('year', AGE(j.data_nascimento)), 0) AS idade
                 FROM jogadores j
                 JOIN noticia_jogadores nj ON nj.jogador_id = j.id
                 WHERE nj.noticia_id = %s
