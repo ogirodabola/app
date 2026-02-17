@@ -554,33 +554,12 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   );
 }
 
-
-.news-category {
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    opacity: .85;
-}
-
-.news-title {
-    font-size: 44px;
-    font-weight: 900;
-    line-height: 1.15;
-    margin: 15px 0 20px;
-}
-
 .news-dek {
     font-size: 20px;
     color: #475569;
     line-height: 1.6;
     margin-bottom: 20px;
 }
-
-.news-meta {
-    font-size: 14px;
-    color: #64748b;
-}
-
 
 /* ================= CONTEÚDO ================= */
 
@@ -590,20 +569,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   font-size: 24px;
 }
 
-.news-tags {
-  margin-top: 48px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.news-tags span {
-  font-size: 12px;
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 999px;
-  color: #9ca3af;
-}
 
 /* ================= RECOMENDADAS ================= */
 
@@ -2130,7 +2095,7 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 /* HERO */
-.article-page .hero {
+.article-page {
     height: 520px;
     background-size: cover;
     background-position: center;
@@ -2145,14 +2110,14 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 /* WRAPPER LARGO */
-.article-page .wrapper {
+.article-page {
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 24px;
 }
 
 /* CARD SOBREPOSTO */
-.article-page .header-card {
+.article-page {
     width: 72%;
     margin-top: -140px;
     background: #fff;
@@ -2195,3 +2160,127 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     }
 }
 
+/* =========================
+   NOTÍCIA NOVO LAYOUT
+========================= */
+
+.hero {
+    width: 100%;
+    height: 480px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: -120px auto 60px auto;
+    padding: 0 20px;
+}
+
+.header-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    margin-bottom: 40px;
+}
+
+.news-category {
+    font-size: 13px;
+    font-weight: 700;
+    color: #16a34a;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+}
+
+.news-title {
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 20px;
+}
+
+.news-meta {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* GRID */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 40px;
+    align-items: start;
+}
+
+.content {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+/* TIPOGRAFIA CONTEÚDO */
+
+.content p {
+    font-size: 19px;
+    line-height: 1.8;
+    color: #1e293b;
+    margin-bottom: 24px;
+}
+
+.content h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 40px 0 20px;
+    color: #0f172a;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: sticky;
+    top: 120px;
+}
+
+/* TAGS */
+
+.news-tags {
+    margin-top: 40px;
+}
+
+.news-tags span {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1024px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        top: auto;
+    }
+
+    .wrapper {
+        margin-top: -80px;
+    }
+
+    .news-title {
+        font-size: 32px;
+    }
+}
