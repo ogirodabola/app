@@ -28,7 +28,10 @@ from core.database import (
     listar_categorias,
     listar_ultima_hora_publicada,
     listar_editorial_publicado,
-    listar_noticias_publicadas
+    listar_noticias_publicadas,
+    buscar_ou_criar_jogador,
+    salvar_relacao_noticia_jogador
+)
 )
 
 
@@ -116,9 +119,25 @@ async def salvar_noticia_admin(id: int, request: Request):
         "slug": slug,
     }
 
+    # Atualiza notícia
     atualizar_noticia(id, dados)
 
+    # ============================================
+    # VINCULAR JOGADOR À NOTÍCIA (SISTEMA HÍBRIDO)
+    # ============================================
+
+    jogador_nome = form.get("jogador_nome")
+
+    if jogador_nome and jogador_nome.strip():
+        from core.database import buscar_ou_criar_jogador, salvar_relacao_noticia_jogador
+
+        jogador = buscar_ou_criar_jogador(jogador_nome.strip())
+
+        if jogador:
+            salvar_relacao_noticia_jogador(id, jogador["id"])
+
     return RedirectResponse("/admin/noticias", status_code=303)
+
 
 
 @app.get("/admin/logout")
