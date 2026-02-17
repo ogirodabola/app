@@ -4,42 +4,49 @@ from core.database import (
     atualizar_jogador
 )
 
+from core.futebol_api import buscar_jogador_api_por_nome
+
+
 def buscar_ou_sincronizar_jogador(slug: str):
 
+    # 1️⃣ Busca no banco primeiro
     jogador = buscar_jogador_por_slug(slug)
 
-    # Se já existe e já tem foto/time, retorna
+    # Se já existe e tem dados completos → retorna
     if jogador and jogador.get("foto"):
         return jogador
 
-    # Se não tem ou está incompleto → busca na API
+    # 2️⃣ Se não existe ou está incompleto → buscar na API
     nome = slug.replace("-", " ")
 
-    try:
-        response = api_football_client.players_search(nome=nome)
-    except Exception:
-        return jogador
+    api_data = buscar_jogador_api_por_nome(nome)
 
-    if not response.get("response"):
-        return jogador
+    if not api_data:
+        return jogador  # Retorna o que tiver no banco (ou None)
 
-    data = response["response"][0]
+    # Estrutura defensiva (evita quebrar se vier campo faltando)
+    player = api_data.get("player", {})
+    statistics = api_data.get("statistics", [{}])
+    stats = statistics[0] if statistics else {}
 
-    # Monta dicionário
+    birth = player.get("birth", {})
+
     dados = {
-        "nome": data["player"]["name"],
+        "nome": player.get("name"),
         "slug": slug,
-        "foto": data["player"]["photo"],
-        "posicao": data["statistics"][0]["games"]["position"],
-        "time_atual": data["statistics"][0]["team"]["name"],
-        "escudo_time": data["statistics"][0]["team"]["logo"],
-        "data_nascimento": data["player"]["birth"]["date"],
-        "altura": data["player"]["height"],
+        "foto": player.get("photo"),
+        "posicao": stats.get("games", {}).get("position"),
+        "time_atual": stats.get("team", {}).get("name"),
+        "escudo_time": stats.get("team", {}).get("logo"),
+        "data_nascimento": birth.get("date"),
+        "altura": player.get("height"),
     }
 
+    # 3️⃣ Atualiza ou insere
     if jogador:
         atualizar_jogador(jogador["id"], dados)
     else:
         inserir_jogador(dados)
 
+    # 4️⃣ Retorna versão atualizada do banco
     return buscar_jogador_por_slug(slug)
