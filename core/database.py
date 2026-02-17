@@ -1084,18 +1084,191 @@ def criar_ou_buscar_jogador(nome, foto=None, time_atual=None, escudo_time=None):
             conn.commit()
             return cur.fetchone()
 
-def buscar_jogador_por_slug(slug: str):
+# ==========================================================
+# JOGADORES (SISTEMA HÍBRIDO API + CACHE LOCAL)
+# ==========================================================
+
+from datetime import datetime, timedelta
+from slugify import slugify
+from psycopg2.extras import RealDictCursor
+
+
+# ----------------------------------------------------------
+# BUSCAR JOGADOR POR SLUG
+# ----------------------------------------------------------
+
+def buscar_jogador_por_slug(slug):
     with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT *
-                FROM jogadores
-                WHERE slug = %s
-                LIMIT 1;
-            """, (slug,))
+            cur.execute(
+                "SELECT * FROM jogadores WHERE slug = %s",
+                (slug,)
+            )
             return cur.fetchone()
 
-def listar_noticias_por_jogador(jogador_id: int, limit=20):
+
+# ----------------------------------------------------------
+# BUSCAR JOGADOR NA API-FOOTBALL
+# ----------------------------------------------------------
+
+def buscar_jogador_na_api(nome):
+    """
+    Busca jogador na API-Football.
+    Retorna dict normalizado ou None.
+    """
+
+    try:
+        from core.futebol_api import api_football_client
+
+        resp = api_football_client.players_search(nome=nome)
+
+        if not resp or not resp.get("response"):
+            return None
+
+        jogador = resp["response"][0]
+        player = jogador.get("player", {})
+        stats = jogador.get("statistics", [{}])[0]
+
+        return {
+            "api_id": player.get("id"),
+            "nome": player.get("name"),
+            "foto": player.get("photo"),
+            "time_atual": stats.get("team", {}).get("name"),
+            "escudo_time": stats.get("team", {}).get("logo"),
+            "posicao": stats.get("games", {}).get("position"),
+            "nacionalidade": player.get("nationality"),
+            "data_nascimento": player.get("birth", {}).get("date"),
+        }
+
+    except Exception:
+        return None
+
+
+# ----------------------------------------------------------
+# BUSCAR OU CRIAR JOGADOR (CACHE INTELIGENTE)
+# ----------------------------------------------------------
+
+def buscar_ou_criar_jogador(nome):
+    """
+    Estratégia:
+    1. Busca no banco
+    2. Se existir e última sync < 7 dias, retorna
+    3. Se não existir ou estiver desatualizado, atualiza via API
+    """
+
+    slug = slugify(nome)
+
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            # 1️⃣ Verifica se já existe
+            cur.execute(
+                "SELECT * FROM jogadores WHERE slug = %s",
+                (slug,)
+            )
+            jogador = cur.fetchone()
+
+            if jogador:
+
+                # 2️⃣ Verifica última sincronização
+                ultima_sync = jogador.get("ultima_sync")
+
+                if ultima_sync and ultima_sync > datetime.utcnow() - timedelta(days=7):
+                    return jogador
+
+                # 3️⃣ Atualiza via API
+                dados_api = buscar_jogador_na_api(nome)
+                if not dados_api:
+                    return jogador
+
+                cur.execute("""
+                    UPDATE jogadores
+                    SET foto = %s,
+                        time_atual = %s,
+                        escudo_time = %s,
+                        posicao = %s,
+                        nacionalidade = %s,
+                        data_nascimento = %s,
+                        ultima_sync = %s
+                    WHERE slug = %s
+                """, (
+                    dados_api["foto"],
+                    dados_api["time_atual"],
+                    dados_api["escudo_time"],
+                    dados_api["posicao"],
+                    dados_api["nacionalidade"],
+                    dados_api["data_nascimento"],
+                    datetime.utcnow(),
+                    slug
+                ))
+
+                conn.commit()
+
+                cur.execute(
+                    "SELECT * FROM jogadores WHERE slug = %s",
+                    (slug,)
+                )
+                return cur.fetchone()
+
+            # 4️⃣ NÃO EXISTE → Criar
+            dados_api = buscar_jogador_na_api(nome)
+            if not dados_api:
+                return None
+
+            cur.execute("""
+                INSERT INTO jogadores (
+                    nome,
+                    slug,
+                    api_id,
+                    foto,
+                    time_atual,
+                    escudo_time,
+                    posicao,
+                    nacionalidade,
+                    data_nascimento,
+                    ultima_sync
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                RETURNING *
+            """, (
+                dados_api["nome"],
+                slug,
+                dados_api["api_id"],
+                dados_api["foto"],
+                dados_api["time_atual"],
+                dados_api["escudo_time"],
+                dados_api["posicao"],
+                dados_api["nacionalidade"],
+                dados_api["data_nascimento"],
+                datetime.utcnow()
+            ))
+
+            novo = cur.fetchone()
+            conn.commit()
+
+            return novo
+
+
+# ----------------------------------------------------------
+# RELACIONAR NOTÍCIA ↔ JOGADOR
+# ----------------------------------------------------------
+
+def salvar_relacao_noticia_jogador(noticia_id, jogador_id):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO noticia_jogador (noticia_id, jogador_id)
+                VALUES (%s, %s)
+                ON CONFLICT DO NOTHING
+            """, (noticia_id, jogador_id))
+            conn.commit()
+
+
+# ----------------------------------------------------------
+# LISTAR NOTÍCIAS POR JOGADOR
+# ----------------------------------------------------------
+
+def listar_noticias_por_jogador(jogador_id, limit=20):
     with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
@@ -1105,128 +1278,8 @@ def listar_noticias_por_jogador(jogador_id: int, limit=20):
                 WHERE nj.jogador_id = %s
                 AND n.editorial_status = 'publicado'
                 ORDER BY n.criada_em DESC
-                LIMIT %s;
+                LIMIT %s
             """, (jogador_id, limit))
+
             return cur.fetchall()
 
-from slugify import slugify
-from datetime import datetime, timedelta
-from core.futebol_api import api_football_client
-
-
-def buscar_ou_criar_jogador(nome: str):
-    slug = slugify(nome)
-
-    with get_conn() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-
-            # 1️⃣ Verifica se já existe
-            cur.execute("""
-                SELECT * FROM jogadores
-                WHERE slug = %s
-                LIMIT 1;
-            """, (slug,))
-            jogador = cur.fetchone()
-
-            if jogador:
-                # 2️⃣ Verifica se precisa atualizar
-                if jogador.get("ultima_sync"):
-                    if jogador["ultima_sync"] > datetime.utcnow() - timedelta(days=7):
-                        return jogador
-
-                # Atualiza se passou 7 dias
-                jogador_api = buscar_jogador_na_api(nome)
-
-                if jogador_api:
-                    cur.execute("""
-                        UPDATE jogadores
-                        SET foto=%s,
-                            time_atual=%s,
-                            escudo_time=%s,
-                            posicao=%s,
-                            nacionalidade=%s,
-                            ultima_sync=%s
-                        WHERE id=%s
-                        RETURNING *;
-                    """, (
-                        jogador_api["foto"],
-                        jogador_api["time"],
-                        jogador_api["escudo"],
-                        jogador_api["posicao"],
-                        jogador_api["nacionalidade"],
-                        datetime.utcnow(),
-                        jogador["id"]
-                    ))
-                    conn.commit()
-                    return cur.fetchone()
-
-                return jogador
-
-            # 3️⃣ Não existe → buscar na API
-            jogador_api = buscar_jogador_na_api(nome)
-
-            if not jogador_api:
-                return None
-
-            # 4️⃣ Salvar no banco
-            cur.execute("""
-                INSERT INTO jogadores (
-                    nome, slug, foto, time_atual,
-                    escudo_time, posicao, nacionalidade,
-                    api_id, ultima_sync
-                )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                RETURNING *;
-            """, (
-                nome,
-                slug,
-                jogador_api["foto"],
-                jogador_api["time"],
-                jogador_api["escudo"],
-                jogador_api["posicao"],
-                jogador_api["nacionalidade"],
-                jogador_api["api_id"],
-                datetime.utcnow()
-            ))
-
-            conn.commit()
-            return cur.fetchone()
-
-def buscar_jogador_na_api(nome: str):
-
-    try:
-        resp = api_football_client.players(
-            search=nome,
-            league=71,
-            season=2026
-        )
-
-        if not resp.get("response"):
-            return None
-
-        item = resp["response"][0]
-
-        player = item.get("player", {})
-        statistics = item.get("statistics", [{}])[0]
-
-        return {
-            "api_id": player.get("id"),
-            "foto": player.get("photo"),
-            "time": statistics.get("team", {}).get("name"),
-            "escudo": statistics.get("team", {}).get("logo"),
-            "posicao": statistics.get("games", {}).get("position"),
-            "nacionalidade": player.get("nationality"),
-        }
-
-    except Exception:
-        return None
-
-def salvar_relacao_noticia_jogador(noticia_id, jogador_id):
-    with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                INSERT INTO noticia_jogador (noticia_id, jogador_id)
-                VALUES (%s, %s)
-                ON CONFLICT DO NOTHING;
-            """, (noticia_id, jogador_id))
-            conn.commit()
