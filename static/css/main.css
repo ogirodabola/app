@@ -689,17 +689,25 @@ PÁGINA DE NOTÍCIA – EDITORIAL
 NOTÍCIA – HERO
 ====================================================== */
 .news-hero {
-    position: relative;
     height: 520px;
     background-size: cover;
     background-position: center;
+    position: relative;
 }
 
 .news-hero::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.85));
+    background: linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.7));
+}
+
+.news-header-wrapper {
+    max-width: 1100px;
+    margin: -140px auto 60px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 5;
 }
 
 .news-hero-overlay {
@@ -714,13 +722,13 @@ NOTÍCIA – HERO
   z-index: 1;
 }
 
-.news-hero-content {
-    position: relative;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 80px 20px 60px 20px;
-    color: white;
+.news-header-card {
+    background: white;
+    padding: 50px 60px;
+    border-radius: 20px;
+    box-shadow: 0 30px 70px rgba(0,0,0,.18);
 }
+
 
 /* ======================================================
 BLOCO DE CONTEÚDO
@@ -1484,14 +1492,6 @@ HOME — BLOCO SECUNDÁRIO
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.news-card {
-    background: white;
-    margin-top: -120px;
-    border-radius: 20px;
-    padding: 50px 60px;
-    box-shadow: 0 25px 60px rgba(0,0,0,.15);
 }
 
 .news-card:hover {
