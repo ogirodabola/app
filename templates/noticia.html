@@ -20,7 +20,6 @@
 <meta name="twitter:description" content="{{ noticia.resumo }}">
 <meta name="twitter:image" content="{{ noticia.imagem }}">
 
-<!-- Schema NewsArticle -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -30,13 +29,10 @@
   "image": {{ noticia.imagem | tojson | safe }},
   "datePublished": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S-03:00') if noticia.criada_em else '' }}",
   "dateModified": "{{ noticia.criada_em.strftime('%Y-%m-%dT%H:%M:%S-03:00') if noticia.criada_em else '' }}",
-
   "author": {
-  "@type": "Person",
-  "name": "Redação Giro Desportivo",
-  "url": "https://girodesportivo.com/autor/redacao-giro-desportivo"
-},
-  
+    "@type": "Person",
+    "name": "Redação Giro Desportivo"
+  },
   "publisher": {
     "@type": "Organization",
     "name": "Giro Desportivo",
@@ -52,206 +48,181 @@
 }
 </script>
 
-<!-- Schema Breadcrumb -->
-<script type="application/ld+json">
-{{ breadcrumb_schema | safe }}
-</script>
-
 {% endblock %}
-
-
 
 {% block content %}
 
-<article class="news-article">
-
-  <!-- ================= HERO ================= -->
-  {% if noticia.imagem %}
-  <section class="news-hero" style="background-image: url('{{ noticia.imagem }}');">
-    <div class="news-hero-overlay"></div>
-
-    <div class="news-hero-content container">
+<!-- ================= HERO FULL WIDTH ================= -->
+{% if noticia.imagem %}
+<section style="
+  position:relative;
+  height:520px;
+  background:url('{{ noticia.imagem }}') center/cover no-repeat;
+  display:flex;
+  align-items:flex-end;
+">
+  <div style="
+    width:100%;
+    background:linear-gradient(transparent,rgba(0,0,0,.9));
+    padding:60px 20px;
+  ">
+    <div style="max-width:1200px;margin:0 auto;color:white;">
       {% if noticia.categoria %}
-        <span class="news-category">{{ noticia.categoria }}</span>
+      <span style="font-size:14px;font-weight:700;letter-spacing:.5px;">
+        {{ noticia.categoria }}
+      </span>
       {% endif %}
 
-      <h1 class="news-title">
+      <h1 style="
+        font-size:44px;
+        font-weight:900;
+        line-height:1.2;
+        margin-top:10px;
+        max-width:900px;
+      ">
         {{ noticia.titulo_editorial or noticia.titulo }}
       </h1>
 
-      {% if noticia.linha_fina %}
-      <p class="news-dek">{{ noticia.linha_fina }}</p>
-      {% endif %}
-
-      <div class="news-meta">
-        {% if noticia.fonte %}
-          <span>{{ noticia.fonte }}</span>
-          <span>•</span>
-        {% endif %}
-        <time datetime="{{ noticia.criada_em }}">
-          {{ noticia.criada_em.strftime("%d/%m/%Y %H:%M") }}
-        </time>
+      <div style="margin-top:15px;font-size:14px;opacity:.8;">
+        {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") if noticia.criada_em }}
       </div>
     </div>
-  </section>
-  {% endif %}
+  </div>
+</section>
+{% endif %}
 
-  <!-- ================= CONTEÚDO ================= -->
-  <section class="news-content-wrapper">
-    <div class="container">
 
-      <article class="news-content editorial-content">
-        {{ noticia.conteudo_editorial | safe }}
-      </article>
+<!-- ================= CONTAINER PRINCIPAL ================= -->
+<section style="max-width:1200px;margin:60px auto;padding:0 20px;">
 
-      <!-- ===== AD INLINE ===== -->
-      <div class="news-ad-inline">
-        <span class="ads-label">Publicidade</span>
-        {{ render_ad("noticia_inline_1", request) | safe }}
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:60px;">
+
+    <!-- ================= CONTEÚDO ================= -->
+    <article>
+
+      <!-- JOGADORES -->
+      {% if jogadores_relacionados %}
+      <div style="margin-bottom:30px;">
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:15px;">
+          Jogadores citados nesta matéria
+        </h3>
+
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          {% for jogador in jogadores_relacionados %}
+          <a href="/jogador/{{ jogador.slug }}" style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 14px;
+            background:#0f2233;
+            border-radius:30px;
+            text-decoration:none;
+            color:white;
+          ">
+            <img src="{{ jogador.foto or '/static/img/player-placeholder.png' }}"
+                 style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
+            <span style="font-weight:600;font-size:14px;">
+              {{ jogador.nome }}
+            </span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- AD TOPO -->
+      <div style="margin:30px 0;">
+        {{ render_ad("noticia_topo", request) | safe }}
+      </div>
+
+      <!-- CONTEÚDO COM ADS INLINE -->
+      {% set partes = noticia.conteudo_editorial.split('</p>') %}
+
+      <div style="
+        font-size:20px;
+        line-height:1.8;
+        color:#1e293b;
+      ">
+
+        {% for parte in partes %}
+            {{ parte|safe }}</p>
+
+            {% if loop.index == 3 %}
+            <div style="margin:40px 0;">
+              {{ render_ad("noticia_inline_1", request) | safe }}
+            </div>
+            {% endif %}
+
+            {% if loop.index == 6 %}
+            <div style="margin:40px 0;">
+              {{ render_ad("noticia_inline_2", request) | safe }}
+            </div>
+            {% endif %}
+        {% endfor %}
       </div>
 
       <!-- TAGS -->
       {% if noticia.tags %}
-      <div class="news-tags">
+      <div style="margin-top:40px;">
         {% for tag in noticia.tags %}
-          <span class="news-tag">#{{ tag }}</span>
+          <span style="
+            display:inline-block;
+            margin:5px;
+            padding:6px 12px;
+            background:#e2e8f0;
+            border-radius:20px;
+            font-size:13px;
+          ">
+            #{{ tag }}
+          </span>
         {% endfor %}
       </div>
       {% endif %}
 
-    </div>
-  </section>
+      <!-- AD FOOTER -->
+      <div style="margin:60px 0;">
+        {{ render_ad("noticia_footer", request) | safe }}
+      </div>
 
-  <!-- ===== AD FOOTER ===== -->
-  <section class="news-ad-bottom">
-    <div class="container">
-      <span class="ads-label">Publicidade</span>
-      {{ render_ad("noticia_footer", request) | safe }}
-    </div>
-  </section>
+    </article>
 
-  <!-- ================= JOGADORES RELACIONADOS ================= -->
+    <!-- ================= SIDEBAR ================= -->
+    <aside>
 
-  {% if jogadores_relacionados %}
-<section style="max-width:1100px;margin:60px auto;padding:0 20px;">
+      <div style="position:sticky;top:100px;">
 
-  <h3 style="color:white;font-size:20px;font-weight:800;margin-bottom:20px;">
-    Jogadores citados nesta matéria
-  </h3>
+        <h3 style="font-size:20px;font-weight:900;margin-bottom:20px;">
+          Mais lidas
+        </h3>
 
-  <div style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-  ">
-
-    {% for jogador in jogadores_relacionados %}
-    <a href="/jogador/{{ jogador.slug }}"
-       style="
-         background:#10293f;
-         border-radius:18px;
-         padding:20px;
-         display:flex;
-         gap:15px;
-         text-decoration:none;
-         color:white;
-         transition:.2s;
-       "
-       onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 15px 30px rgba(0,0,0,.4)'"
-       onmouseout="this.style.transform='none';this.style.boxShadow='none'"
-    >
-
-      <!-- FOTO -->
-      <img src="{{ jogador.foto }}"
-           alt="{{ jogador.nome }}"
-           style="
-             width:70px;
-             height:70px;
-             border-radius:50%;
-             object-fit:cover;
-             border:3px solid #1e3a52;
-           ">
-
-      <!-- INFO -->
-      <div style="flex:1;">
-
-        <div style="font-weight:700;font-size:16px;">
-          {{ jogador.nome }}
+        {% for n in recomendadas[:5] %}
+        <div style="margin-bottom:20px;">
+          <a href="/noticia/{{ n.slug }}" style="
+            display:flex;
+            gap:12px;
+            text-decoration:none;
+            color:#0f172a;
+          ">
+            {% if n.imagem %}
+            <img src="{{ n.imagem }}"
+                 style="width:90px;height:70px;object-fit:cover;border-radius:8px;">
+            {% endif %}
+            <div style="font-weight:600;font-size:14px;">
+              {{ n.titulo_editorial or n.titulo }}
+            </div>
+          </a>
         </div>
+        {% endfor %}
 
-        <div style="
-          display:flex;
-          align-items:center;
-          gap:6px;
-          margin-top:5px;
-          font-size:14px;
-          color:#cbd5e1;
-        ">
-          {% if jogador.escudo_time %}
-          <img src="{{ jogador.escudo_time }}"
-               alt="{{ jogador.time_atual }}"
-               style="width:18px;height:18px;object-fit:contain;">
-          {% endif %}
-          {{ jogador.time_atual or "Clube não informado" }}
-        </div>
-
-        <div style="
-          font-size:13px;
-          margin-top:6px;
-          color:#94a3b8;
-        ">
-          {% if jogador.idade %}
-          {{ jogador.idade }} anos
-        {% endif %}
-        
-        {% if jogador.altura %}
-          • {{ jogador.altura }}
-        {% endif %}
-
+        <div style="margin-top:40px;">
+          {{ render_ad("noticia_sidebar", request) | safe }}
         </div>
 
       </div>
 
-    </a>
-    {% endfor %}
+    </aside>
 
   </div>
-
 </section>
-{% endif %}
-
-  <!-- ================= RECOMENDADAS ================= -->
-  {% if recomendadas %}
-  <section class="news-related">
-    <div class="container">
-      <h2 class="section-title">Você também pode gostar</h2>
-
-      <div class="news-related-grid">
-        {% for n in recomendadas[:3] %}
-        <a href="/noticia/{{ n.slug }}" class="related-card">
-
-          {% if n.imagem %}
-          <div class="related-image">
-            <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
-          </div>
-          {% endif %}
-
-          <div class="related-body">
-            <span class="related-category">{{ n.categoria }}</span>
-            <h3>{{ n.titulo_editorial or n.titulo }}</h3>
-            {% if n.fonte %}
-              <p>{{ n.fonte }}</p>
-            {% endif %}
-          </div>
-
-        </a>
-        {% endfor %}
-      </div>
-
-    </div>
-  </section>
-  {% endif %}
-
-</article>
 
 {% endblock %}
