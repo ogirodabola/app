@@ -1,63 +1,65 @@
 {% extends "base.html" %}
-{% block body_class %}page-noticia{% endblock %}
+
 {% block content %}
 
-<!-- HERO -->
-<section class="hero" style="background-image:url('{{ noticia.imagem }}');"></section>
+<section class="article-hero"
+    {% if noticia.imagem %}
+        style="background-image:url('{{ noticia.imagem }}');"
+    {% endif %}
+></section>
 
-<div class="wrapper">
+<div class="article-container">
 
-    <!-- HEADER SOBREPOSTO -->
-    <div class="header-card">
+    <header class="article-header">
 
         {% if noticia.categoria %}
-        <div class="news-category">
+        <span class="article-category">
             {{ noticia.categoria }}
-        </div>
+        </span>
         {% endif %}
 
-        <h1 class="news-title">
+        <h1 class="article-title">
             {{ noticia.titulo_editorial or noticia.titulo }}
         </h1>
 
-        <div class="news-meta">
+        <div class="article-meta">
             {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
         </div>
 
-    </div>
+    </header>
 
-    <!-- GRID PRINCIPAL -->
-    <div class="content-grid">
+    <div class="article-grid">
 
-        <!-- COLUNA CONTEÚDO -->
-        <article class="content">
+        <main class="article-content">
 
             {{ render_ad("noticia_topo", request) | safe }}
 
             {{ noticia.conteudo_editorial | safe }}
 
-            <!-- JOGADORES -->
+            {{ render_ad("noticia_inline_1", request) | safe }}
+
             {% if jogadores_relacionados %}
-            <div class="related-players">
+            <section class="article-players">
+
                 <h3>Jogadores citados nesta matéria</h3>
 
                 <div class="players-grid">
                     {% for jogador in jogadores_relacionados %}
                     <a href="/jogador/{{ jogador.slug }}" class="player-card">
-                        <img src="{{ jogador.foto }}" alt="{{ jogador.nome }}">
+                        <img src="{{ jogador.foto or '/static/placeholder-player.png' }}">
                         <div>
-                            <div class="player-name">{{ jogador.nome }}</div>
-                            <div class="player-team">{{ jogador.time_atual }}</div>
+                            <strong>{{ jogador.nome }}</strong>
+                            <span>{{ jogador.time_atual }}</span>
                         </div>
                     </a>
                     {% endfor %}
                 </div>
-            </div>
+
+            </section>
             {% endif %}
 
-            <!-- TAGS -->
             {% if noticia.tags %}
-            <div class="news-tags">
+            <div class="article-tags">
                 {% for tag in noticia.tags %}
                     <span>#{{ tag }}</span>
                 {% endfor %}
@@ -66,10 +68,9 @@
 
             {{ render_ad("noticia_footer", request) | safe }}
 
-        </article>
+        </main>
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+        <aside class="article-sidebar">
             {{ render_ad("noticia_sidebar", request) | safe }}
         </aside>
 
