@@ -73,16 +73,21 @@
 
     <!-- IMAGEM ATUAL -->
     {% if noticia and noticia.imagem %}
-    <div class="admin-form-group">
-      <label>Imagem atual</label>
-      <img src="{{ noticia.imagem }}"
-           alt="Preview"
-           style="max-width: 300px; border-radius: 6px; display:block; margin-bottom:8px;">
-      <small style="color:#64748b;">
-        {{ noticia.imagem }}
-      </small>
-    </div>
-    {% endif %}
+<div class="admin-form-group">
+  <label>Imagem atual</label>
+
+  <img src="{{ noticia.imagem }}"
+       alt="Preview"
+       style="max-width: 300px; border-radius: 6px; display:block; margin-bottom:8px;">
+
+  <small style="color:#64748b;">
+    {{ noticia.imagem }}
+  </small>
+
+  <!-- 🔥 ESSA LINHA VOCÊ PRECISA ADICIONAR -->
+  <input type="hidden" name="imagem_atual" value="{{ noticia.imagem }}">
+</div>
+{% endif %}
 
     <!-- SUBSTITUIR IMAGEM -->
     <div class="admin-form-group">
