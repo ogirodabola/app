@@ -1092,26 +1092,6 @@ from datetime import datetime, timedelta
 from slugify import slugify
 from psycopg2.extras import RealDictCursor
 
-
-# ----------------------------------------------------------
-# BUSCAR JOGADOR POR SLUG
-# ----------------------------------------------------------
-
-def buscar_jogador_por_slug(slug: str):
-    conn = get_conn()
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("""
-                SELECT 
-                    *,
-                    COALESCE(DATE_PART('year', AGE(data_nascimento)), 0) AS idade
-                FROM jogadores
-                WHERE slug = %s
-            """, (slug,))
-            return cur.fetchone()
-    finally:
-        conn.close()
-
 # ----------------------------------------------------------
 # BUSCAR JOGADOR NA API-FOOTBALL
 # ----------------------------------------------------------
@@ -1343,14 +1323,76 @@ def listar_jogadores_por_noticia(noticia_id: int):
     finally:
         conn.close()
 
-def atualizar_jogador(jogador_id, **kwargs):
-    # Atualiza apenas campos passados
-    set_clauses = []
-    params = []
-    for key, value in kwargs.items():
-        set_clauses.append(f"{key} = %s")
-        params.append(value)
-    params.append(jogador_id)
+# ======================================================
+# JOGADORES
+# ======================================================
 
-    query = f"UPDATE jogadores SET {', '.join(set_clauses)}, ultima_sync = NOW() WHERE id = %s"
-    execute_query(query, params)
+def buscar_jogador_por_slug(slug: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT *,
+                COALESCE(DATE_PART('year', AGE(data_nascimento)), 0) AS idade
+                FROM jogadores
+                WHERE slug = %s
+                LIMIT 1
+            """, (slug,))
+            return cur.fetchone()
+
+
+def inserir_jogador(dados: dict):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO jogadores (
+                    nome,
+                    slug,
+                    foto,
+                    time_atual,
+                    escudo_time,
+                    posicao,
+                    nacionalidade,
+                    data_nascimento,
+                    altura
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (slug) DO NOTHING
+            """, (
+                dados.get("nome"),
+                dados.get("slug"),
+                dados.get("foto"),
+                dados.get("time_atual"),
+                dados.get("escudo_time"),
+                dados.get("posicao"),
+                dados.get("nacionalidade"),
+                dados.get("data_nascimento"),
+                dados.get("altura"),
+            ))
+        conn.commit()
+
+
+def atualizar_jogador(jogador_id: int, dados: dict):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE jogadores SET
+                    foto = %s,
+                    time_atual = %s,
+                    escudo_time = %s,
+                    posicao = %s,
+                    nacionalidade = %s,
+                    data_nascimento = %s,
+                    altura = %s,
+                    atualizado_em = NOW()
+                WHERE id = %s
+            """, (
+                dados.get("foto"),
+                dados.get("time_atual"),
+                dados.get("escudo_time"),
+                dados.get("posicao"),
+                dados.get("nacionalidade"),
+                dados.get("data_nascimento"),
+                dados.get("altura"),
+                jogador_id
+            ))
+        conn.commit()
