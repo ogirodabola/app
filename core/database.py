@@ -1097,15 +1097,17 @@ from psycopg2.extras import RealDictCursor
 # BUSCAR JOGADOR POR SLUG
 # ----------------------------------------------------------
 
-def buscar_jogador_por_slug(slug):
-    with get_conn() as conn:
+def buscar_jogador_por_slug(slug: str):
+    conn = get_conn()
+    try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 "SELECT * FROM jogadores WHERE slug = %s",
                 (slug,)
             )
             return cur.fetchone()
-
+    finally:
+        conn.close()
 
 # ----------------------------------------------------------
 # BUSCAR JOGADOR NA API-FOOTBALL
