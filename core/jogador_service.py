@@ -3,8 +3,6 @@ from core.database import (
     inserir_jogador,
     atualizar_jogador
 )
-from core.futebol_api import api_football_client
-
 
 def buscar_ou_sincronizar_jogador(slug: str):
 
