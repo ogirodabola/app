@@ -1062,8 +1062,27 @@ def criar_ou_buscar_jogador(nome, foto=None, time_atual=None, escudo_time=None):
             conn.commit()
             return cur.fetchone()
 
-def buscar_jogador_por_slug(slug):
+def buscar_jogador_por_slug(slug: str):
     with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("SELECT * FROM jogadores WHERE slug = %s", (slug,))
+            cur.execute("""
+                SELECT *
+                FROM jogadores
+                WHERE slug = %s
+                LIMIT 1;
+            """, (slug,))
             return cur.fetchone()
+
+def listar_noticias_por_jogador(jogador_id: int, limit=20):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT n.*
+                FROM noticias n
+                JOIN noticia_jogador nj ON nj.noticia_id = n.id
+                WHERE nj.jogador_id = %s
+                AND n.editorial_status = 'publicado'
+                ORDER BY n.criada_em DESC
+                LIMIT %s;
+            """, (jogador_id, limit))
+            return cur.fetchall()
