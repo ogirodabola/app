@@ -375,13 +375,29 @@ def buscar_artilharia_brasileirao():
     # Se nenhuma temporada retornar dados
     return []
 
-    def fetch_player_from_api(nome):
-    from core.futebol_api import api_football_client
+def fetch_player_from_api(nome: str):
+    BASE_URL = "https://v3.football.api-sports.io"
+    HEADERS = {
+        "x-apisports-key": os.getenv("API_FOOTBALL_KEY")
+    }
 
     try:
-        response = api_football_client.players_search(nome=nome)
-        if not response.get("response"):
+        response = requests.get(
+            f"{BASE_URL}/players?search={nome}",
+            headers=HEADERS,
+            timeout=10
+        )
+
+        if response.status_code != 200:
             return None
-        return response["response"][0]
-    except Exception:
+
+        data = response.json()
+
+        if not data.get("response"):
+            return None
+
+        return data["response"][0]
+
+    except Exception as e:
+        logging.error(f"Erro ao buscar jogador {nome}: {e}")
         return None
