@@ -1317,3 +1317,19 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
                 ON CONFLICT DO NOTHING
             """, (noticia_id, jogador_id))
             conn.commit()
+
+# ============================================
+# JOGADORES RELACIONADOS À NOTÍCIA
+# ============================================
+
+def listar_jogadores_por_noticia(noticia_id: int):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT j.*
+                FROM jogadores j
+                JOIN noticia_jogadores nj ON nj.jogador_id = j.id
+                WHERE nj.noticia_id = %s
+                ORDER BY j.nome;
+            """, (noticia_id,))
+            return cur.fetchall()
