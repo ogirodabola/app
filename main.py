@@ -92,7 +92,7 @@ def admin_login(request: Request):
         {"request": request, "erro": None}
     )
 
-from fastapi import Request
+from slugify import slugify
 from fastapi.responses import RedirectResponse
 
 @app.post("/admin/noticias/{id}")
@@ -118,8 +118,35 @@ async def salvar_noticia_admin(id: int, request: Request):
         "slug": slug,
     }
 
-    # Atualiza notícia
+    # =============================
+    # 1️⃣ Atualiza notícia
+    # =============================
     atualizar_noticia(id, dados)
+
+    # =============================
+    # 2️⃣ Processar jogadores
+    # =============================
+
+    jogadores_raw = form.get("jogador_nome", "") or ""
+    nomes_jogadores = [j.strip() for j in jogadores_raw.split(",") if j.strip()]
+
+    # Limpar vínculos antigos antes de inserir novos
+    limpar_vinculos_jogadores_noticia(id)
+
+    for nome in nomes_jogadores:
+
+        slug_jogador = slugify(nome)
+
+        jogador = buscar_jogador_por_slug(slug_jogador)
+
+        if not jogador:
+            jogador_id = criar_jogador_basico(nome)
+        else:
+            jogador_id = jogador["id"]
+
+        vincular_jogador_noticia(id, jogador_id)
+
+    return RedirectResponse("/admin/noticias", status_code=303)
 
     # ============================================
     # VINCULAR JOGADOR À NOTÍCIA (SISTEMA HÍBRIDO)
