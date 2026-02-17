@@ -124,7 +124,7 @@ async def salvar_noticia_admin(id: int, request: Request):
     # =============================
 
     imagem_atual = form.get("imagem_atual")  # hidden field opcional
-    file: UploadFile = form.get("imagem")
+    file: UploadFile = form.get("imagem_file")
 
     imagem_url = imagem_atual
 
