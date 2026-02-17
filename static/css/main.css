@@ -2284,3 +2284,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
         font-size: 32px;
     }
 }
+
+/* ===================================
+   OVERRIDE APENAS PARA NOTÍCIA
+=================================== */
+
+.page-noticia {
+  background-color: #f5f7fa;
+  color: #0f172a;
+}
