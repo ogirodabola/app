@@ -160,16 +160,22 @@ for nome in nomes_jogadores:
     jogador_nome = form.get("jogador_nome")
 
     if jogador_nome and jogador_nome.strip():
-        from core.database import buscar_ou_criar_jogador, salvar_relacao_noticia_jogador
 
-        jogador = buscar_ou_criar_jogador(jogador_nome.strip())
+        from core.jogador_service import buscar_ou_sincronizar_jogador
+        from core.database import vincular_jogador_noticia
 
-        if jogador:
-            salvar_relacao_noticia_jogador(id, jogador["id"])
+        nomes = [j.strip() for j in jogador_nome.split(",") if j.strip()]
+
+        for nome in nomes:
+
+            slug_jogador = slugify(nome)
+
+            jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+
+            if jogador:
+                vincular_jogador_noticia(id, jogador["id"])
 
     return RedirectResponse("/admin/noticias", status_code=303)
-
-
 
 @app.get("/admin/logout")
 def admin_logout(request: Request):
