@@ -1283,3 +1283,37 @@ def listar_noticias_por_jogador(jogador_id, limit=20):
 
             return cur.fetchall()
 
+def limpar_vinculos_jogadores_noticia(noticia_id):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM noticia_jogadores WHERE noticia_id = %s",
+                (noticia_id,)
+            )
+            conn.commit()
+
+def criar_jogador_basico(nome):
+    slug_jogador = slugify(nome)
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO jogadores (nome, slug)
+                VALUES (%s, %s)
+                RETURNING id
+            """, (nome, slug_jogador))
+
+            jogador_id = cur.fetchone()[0]
+            conn.commit()
+
+            return jogador_id
+
+def vincular_jogador_noticia(noticia_id, jogador_id):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO noticia_jogadores (noticia_id, jogador_id)
+                VALUES (%s, %s)
+                ON CONFLICT DO NOTHING
+            """, (noticia_id, jogador_id))
+            conn.commit()
