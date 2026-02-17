@@ -554,11 +554,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   );
 }
 
-.news-hero-content {
-  position: relative;
-  padding-bottom: 48px;
-  max-width: 900px;
-}
 
 .news-category {
     font-size: 14px;
@@ -702,24 +697,19 @@ NOTÍCIA – HERO
     background: linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.7));
 }
 
-.news-header-wrapper {
-    max-width: 1100px;
-    margin: -140px auto 60px auto;
+/* Container principal mais largo */
+.news-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
     padding: 0 20px;
-    position: relative;
-    z-index: 5;
 }
 
-.news-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(3, 10, 20, 0.35),
-      rgba(3, 10, 20, 0.85)
-    );
-  z-index: 1;
+/* Card sobreposto */
+.news-header-wrapper {
+    margin-top: -140px;
+    position: relative;
+    z-index: 5;
+    display: flex;
 }
 
 .news-header-card {
@@ -727,7 +717,39 @@ NOTÍCIA – HERO
     padding: 50px 60px;
     border-radius: 20px;
     box-shadow: 0 30px 70px rgba(0,0,0,.18);
+    width: 70%;
 }
+
+/* GRID conteúdo */
+.news-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 60px;
+    margin-top: 60px;
+}
+
+.news-content {
+    font-size: 21px;
+    line-height: 1.9;
+    color: #0f172a;
+}
+
+.news-sidebar {
+    position: sticky;
+    top: 120px;
+}
+
+/* Mobile */
+@media(max-width: 1100px) {
+    .news-header-card {
+        width: 100%;
+    }
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 
 /* ======================================================
@@ -740,11 +762,6 @@ BLOCO DE CONTEÚDO
   padding-bottom: 80px;
 }
 
-.news-content {
-    font-size: 21px;
-    line-height: 1.9;
-    color: #0f172a;
-}
 
 .news-sidebar {
     position: sticky;
@@ -1925,69 +1942,6 @@ HOME — ADS PROGRAMÁTICA TOPO
   }
 }
 
-/* ======================================================
-NOTÍCIA — ESTILO EDITORIAL PREMIUM (ISOLADO)
-====================================================== */
-
-.news-article .news-hero {
-  min-height: 70vh;
-  display: flex;
-  align-items: flex-end;
-}
-
-.news-article .news-hero-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.15),
-    rgba(8,17,31,0.95)
-  );
-}
-
-.news-article .news-category {
-  display: inline-block;
-  margin-bottom: 14px;
-
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-
-  color: #7cff00;
-}
-
-.news-article .news-title {
-  font-size: clamp(34px, 4.5vw, 48px);
-  line-height: 1.12;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-
-  max-width: 860px;
-}
-
-.news-article .news-dek {
-  margin-top: 18px;
-  max-width: 760px;
-
-  font-size: 18px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.88);
-}
-
-.news-article .news-meta {
-  margin-top: 22px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.65);
-}
-
-/* ===============================
-NOTÍCIA — REFORÇO DE LEITURA NO TÍTULO
-=============================== */
-
-.news-article .news-title {
-  text-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.65),
-    0 0 1px rgba(0, 0, 0, 0.9);
-}
 
 /* ===============================
 NOTÍCIA — ADS (ESTRUTURA FINAL)
