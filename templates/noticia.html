@@ -1,218 +1,111 @@
 {% extends "base.html" %}
 
-{% block title %}
-{{ noticia.titulo_editorial or noticia.titulo }} | Giro Desportivo
-{% endblock %}
-
-{% block meta %}
-
-<meta name="description" content="{{ noticia.resumo or noticia.titulo }}">
-<link rel="canonical" href="https://girodesportivo.com/noticia/{{ noticia.slug }}">
-
-<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta property="og:description" content="{{ noticia.resumo }}">
-<meta property="og:image" content="{{ noticia.imagem }}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://girodesportivo.com/noticia/{{ noticia.slug }}">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta name="twitter:description" content="{{ noticia.resumo }}">
-<meta name="twitter:image" content="{{ noticia.imagem }}">
-
-{% endblock %}
-
 {% block content %}
 
-<!-- ================= TÍTULO ================= -->
+<!-- HERO -->
+<section class="news-hero" style="background-image:url('{{ noticia.imagem }}');">
 
-<section style="max-width:900px;margin:60px auto 30px auto;padding:0 20px;">
+  <div class="news-hero-content">
 
-  <h1 style="
-    font-size:42px;
-    font-weight:900;
-    line-height:1.2;
-    margin-bottom:15px;
-  ">
-    {{ noticia.titulo_editorial or noticia.titulo }}
-  </h1>
+    <div class="news-card">
 
-  {% if noticia.linha_fina %}
-  <p style="
-    font-size:20px;
-    color:#475569;
-    line-height:1.6;
-    margin-bottom:20px;
-  ">
-    {{ noticia.linha_fina }}
-  </p>
-  {% endif %}
+      {% if noticia.categoria %}
+      <div class="news-category">
+        {{ noticia.categoria }}
+      </div>
+      {% endif %}
 
-  <div style="font-size:14px;color:#64748b;">
-    {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") if noticia.criada_em }}
+      <h1 class="news-title">
+        {{ noticia.titulo_editorial or noticia.titulo }}
+      </h1>
+
+      {% if noticia.linha_fina %}
+      <div class="news-dek">
+        {{ noticia.linha_fina }}
+      </div>
+      {% endif %}
+
+      <div class="news-meta">
+        {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
+      </div>
+
+    </div>
+
   </div>
 
 </section>
 
 
-<!-- ================= HERO ================= -->
+<!-- GRID CONTEÚDO + SIDEBAR -->
+<section class="news-grid">
 
-{% if noticia.imagem %}
-<section style="max-width:1200px;margin:0 auto 50px auto;padding:0 20px;">
-  <img src="{{ noticia.imagem }}"
-       alt="{{ noticia.titulo }}"
-       style="
-         width:100%;
-         border-radius:18px;
-         object-fit:cover;
-       ">
-</section>
-{% endif %}
+  <article class="news-content">
 
-
-<!-- ================= CONTEÚDO CENTRAL ================= -->
-
-<section style="max-width:800px;margin:0 auto;padding:0 20px;">
-
-  <!-- AD TOPO -->
-  <div style="margin:40px 0;">
     {{ render_ad("noticia_topo", request) | safe }}
-  </div>
 
-  {% set partes = noticia.conteudo_editorial.split('</p>') %}
-
-  <div style="
-    font-size:21px;
-    line-height:1.9;
-    color:#0f172a;
-  ">
+    {% set partes = noticia.conteudo_editorial.split('</p>') %}
 
     {% for parte in partes %}
         {{ parte|safe }}</p>
 
         {% if loop.index == 3 %}
-        <div style="margin:40px 0;">
-          {{ render_ad("noticia_inline_1", request) | safe }}
-        </div>
+            {{ render_ad("noticia_inline_1", request) | safe }}
         {% endif %}
+    {% endfor %}
 
-        {% if loop.index == 5 %}
-        <!-- ================= JOGADORES CITADOS ================= -->
-        {% if jogadores_relacionados %}
-        <div style="margin:60px 0 30px 0;">
-
-          <h3 style="font-size:18px;font-weight:800;margin-bottom:20px;">
+    <!-- JOGADORES -->
+    {% if jogadores_relacionados %}
+    <div style="margin:60px 0;">
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:20px;">
             Jogadores citados nesta matéria
-          </h3>
+        </h3>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        {% for jogador in jogadores_relacionados %}
+            <a href="/jogador/{{ jogador.slug }}" style="
+                display:flex;
+                gap:15px;
+                padding:18px;
+                border-radius:16px;
+                background:#f1f5f9;
+                text-decoration:none;
+                color:#0f172a;
+            ">
+                <img src="{{ jogador.foto }}"
+                     style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
 
-            {% for jogador in jogadores_relacionados %}
-            <a href="/jogador/{{ jogador.slug }}"
-               style="
-                 display:flex;
-                 gap:15px;
-                 padding:18px;
-                 border-radius:16px;
-                 background:#f1f5f9;
-                 text-decoration:none;
-                 color:#0f172a;
-                 transition:.2s;
-               "
-               onmouseover="this.style.transform='translateY(-3px)'"
-               onmouseout="this.style.transform='none'"
-            >
-
-              <img src="{{ jogador.foto or '/static/img/player-placeholder.png' }}"
-                   style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
-
-              <div>
-                <div style="font-weight:700;">
-                  {{ jogador.nome }}
+                <div>
+                    <div style="font-weight:700;">
+                        {{ jogador.nome }}
+                    </div>
+                    <div style="font-size:14px;color:#64748b;">
+                        {{ jogador.time_atual }}
+                    </div>
                 </div>
-
-                <div style="font-size:14px;color:#64748b;margin-top:4px;">
-                  {{ jogador.time_atual or "Clube não informado" }}
-                </div>
-
-                <div style="font-size:13px;color:#94a3b8;margin-top:4px;">
-                  {% if jogador.idade %}{{ jogador.idade }} anos{% endif %}
-                  {% if jogador.altura %} • {{ jogador.altura }}{% endif %}
-                </div>
-              </div>
-
             </a>
-            {% endfor %}
-
-          </div>
+        {% endfor %}
         </div>
-        {% endif %}
-        {% endif %}
+    </div>
+    {% endif %}
 
-    {% endfor %}
-  </div>
+    <!-- TAGS -->
+    {% if noticia.tags %}
+    <div class="news-tags">
+        {% for tag in noticia.tags %}
+            <span>#{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-  <!-- TAGS -->
-  {% if noticia.tags %}
-  <div style="margin-top:50px;">
-    {% for tag in noticia.tags %}
-      <span style="
-        display:inline-block;
-        margin:6px;
-        padding:8px 14px;
-        background:#e2e8f0;
-        color:#0f172a;
-        border-radius:20px;
-        font-size:13px;
-        font-weight:600;
-      ">
-        #{{ tag }}
-      </span>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  <!-- AD FOOTER -->
-  <div style="margin:60px 0;">
     {{ render_ad("noticia_footer", request) | safe }}
-  </div>
+
+  </article>
+
+  <!-- SIDEBAR ADS -->
+  <aside class="news-sidebar">
+      {{ render_ad("noticia_sidebar", request) | safe }}
+  </aside>
 
 </section>
-
-
-<!-- ================= RECOMENDADAS ABAIXO ================= -->
-
-{% if recomendadas %}
-<section style="max-width:1100px;margin:80px auto;padding:0 20px;">
-
-  <h2 style="font-size:24px;font-weight:900;margin-bottom:30px;">
-    Você também pode gostar
-  </h2>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;">
-
-    {% for n in recomendadas[:3] %}
-    <a href="/noticia/{{ n.slug }}"
-       style="
-         text-decoration:none;
-         color:#0f172a;
-       ">
-
-      {% if n.imagem %}
-      <img src="{{ n.imagem }}"
-           style="width:100%;height:180px;object-fit:cover;border-radius:14px;">
-      {% endif %}
-
-      <div style="margin-top:10px;font-weight:700;">
-        {{ n.titulo_editorial or n.titulo }}
-      </div>
-
-    </a>
-    {% endfor %}
-
-  </div>
-
-</section>
-{% endif %}
 
 {% endblock %}
