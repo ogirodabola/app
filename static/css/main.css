@@ -581,14 +581,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
     color: #64748b;
 }
 
-.news-grid {
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: 2fr 320px;
-    gap: 60px;
-}
 
 /* ================= CONTEÚDO ================= */
 
@@ -673,13 +665,6 @@ PÁGINA DE NOTÍCIA – EDITORIAL
   color: #9ca3af;
 }
 
-.editorial-content {
-  max-width: 720px;
-  margin: 0 auto;
-  font-size: 18px;
-  line-height: 1.75;
-}
-
 /* ======================================================
 NOTÍCIA – HERO
 ====================================================== */
@@ -755,13 +740,6 @@ NOTÍCIA – HERO
 /* ======================================================
 BLOCO DE CONTEÚDO
 ====================================================== */
-.news-content-wrapper {
-  position: relative;
-  z-index: 2;
-  padding-top: 48px;
-  padding-bottom: 80px;
-}
-
 
 .news-sidebar {
     position: sticky;
@@ -2009,17 +1987,6 @@ NOTÍCIA — ADS (ESTRUTURA FINAL)
 /* ===============================
 NOTÍCIA — PADRÃO EDITORIAL DE TEXTO
 =============================== */
-
-.news-article .editorial-content {
-  max-width: 720px;
-  margin: 0 auto;
-
-  font-size: 19px;
-  line-height: 1.75;
-  font-weight: 400;
-
-  color: rgba(255, 255, 255, 0.95);
-}
 
 .news-article .editorial-content p {
   margin-bottom: 22px;
