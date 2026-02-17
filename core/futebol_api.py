@@ -374,3 +374,14 @@ def buscar_artilharia_brasileirao():
 
     # Se nenhuma temporada retornar dados
     return []
+
+    def fetch_player_from_api(nome):
+    from core.futebol_api import api_football_client
+
+    try:
+        response = api_football_client.players_search(nome=nome)
+        if not response.get("response"):
+            return None
+        return response["response"][0]
+    except Exception:
+        return None
