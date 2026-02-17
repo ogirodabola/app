@@ -140,18 +140,22 @@ async def salvar_noticia_admin(id: int, request: Request):
     # Limpar vínculos antigos antes de inserir novos
     limpar_vinculos_jogadores_noticia(id)
 
-for nome in nomes_jogadores:
+    from core.jogador_service import buscar_ou_sincronizar_jogador
+    from core.database import vincular_jogador_noticia
 
-    slug_jogador = slugify(nome)
+    for nome in nomes_jogadores:
 
-    jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+        slug_jogador = slugify(nome)
 
-    if not jogador:
-        continue
+        jogador = buscar_ou_sincronizar_jogador(slug_jogador)
 
-    vincular_jogador_noticia(id, jogador["id"])
+        if not jogador:
+            continue
 
-    continue
+        vincular_jogador_noticia(id, jogador["id"])
+
+    return RedirectResponse("/admin/noticias", status_code=303)
+
 
     # ============================================
     # VINCULAR JOGADOR À NOTÍCIA (SISTEMA HÍBRIDO)
