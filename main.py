@@ -32,7 +32,6 @@ from core.database import (
     buscar_ou_criar_jogador,
     salvar_relacao_noticia_jogador
 )
-)
 
 
 # ✅ CRIA O APP UMA ÚNICA VEZ
