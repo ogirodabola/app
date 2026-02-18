@@ -1100,36 +1100,45 @@ from psycopg2.extras import RealDictCursor
 # ----------------------------------------------------------
 
 def buscar_jogador_na_api(nome):
-    """
-    Busca jogador na API-Football.
-    Retorna dict normalizado ou None.
-    """
 
-    try:
-        from core.futebol_api import api_football_client
+    import requests
+    import os
 
-        resp = api_football_client.players_search(nome=nome)
+    BASE_URL = "https://v3.football.api-sports.io"
+    API_KEY = os.getenv("API_FOOTBALL_KEY")
 
-        if not resp or not resp.get("response"):
-            return None
+    if not API_KEY:
+        return []
 
-        jogador = resp["response"][0]
-        player = jogador.get("player", {})
-        stats = jogador.get("statistics", [{}])[0]
+    headers = {"x-apisports-key": API_KEY}
 
-        return {
-            "api_id": player.get("id"),
+    response = requests.get(
+        f"{BASE_URL}/players",
+        headers=headers,
+        params={"search": nome},
+        timeout=10
+    )
+
+    data = response.json()
+
+    if not data.get("response"):
+        return []
+
+    jogadores = []
+
+    for item in data["response"]:
+        player = item.get("player", {})
+        statistics = item.get("statistics", [{}])[0]
+
+        jogadores.append({
             "nome": player.get("name"),
             "foto": player.get("photo"),
-            "time_atual": stats.get("team", {}).get("name"),
-            "escudo_time": stats.get("team", {}).get("logo"),
-            "posicao": stats.get("games", {}).get("position"),
-            "nacionalidade": player.get("nationality"),
-            "data_nascimento": player.get("birth", {}).get("date"),
-        }
+            "time": statistics.get("team", {}).get("name"),
+            "api_id": player.get("id")
+        })
 
-    except Exception:
-        return None
+    return jogadores[:5]
+
 
 
 # ----------------------------------------------------------
