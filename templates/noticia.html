@@ -103,21 +103,30 @@
             <!-- ========================= -->
 
             {% if recomendadas %}
-            <section class="article-recommended">
-                <h3>Você também pode gostar</h3>
+<section class="article-recommended">
+    <h3>Você também pode gostar</h3>
 
-                <div class="recommended-grid">
-                    {% for n in recomendadas %}
-                    <a href="/noticia/{{ n.slug }}" class="recommended-card">
-                        {% if n.imagem %}
-                        <img src="{{ n.imagem }}" loading="lazy">
-                        {% endif %}
-                        <span>{{ n.titulo_editorial or n.titulo }}</span>
-                    </a>
-                    {% endfor %}
-                </div>
-            </section>
-            {% endif %}
+    <div class="recommended-grid">
+        {% for n in recomendadas %}
+        <a href="/noticia/{{ n.slug }}" class="recommended-card">
+
+            <div class="recommended-image">
+                <img 
+                    src="{{ n.imagem or '/static/placeholder-news.jpg' }}" 
+                    alt="{{ n.titulo_editorial or n.titulo }}"
+                    loading="lazy"
+                >
+            </div>
+
+            <div class="recommended-title">
+                {{ n.titulo_editorial or n.titulo }}
+            </div>
+
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
             <!-- ========================= -->
             <!-- RELACIONADAS POR JOGADOR -->
