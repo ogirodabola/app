@@ -1137,12 +1137,9 @@ def buscar_jogador_na_api(nome):
 # ----------------------------------------------------------
 
 def buscar_ou_criar_jogador(nome):
-    """
-    Estratégia:
-    1. Busca no banco
-    2. Se existir e última sync < 7 dias, retorna
-    3. Se não existir ou estiver desatualizado, atualiza via API
-    """
+
+    from datetime import datetime
+    from slugify import slugify
 
     slug = slugify(nome)
 
@@ -1157,29 +1154,59 @@ def buscar_ou_criar_jogador(nome):
             jogador = cur.fetchone()
 
             if jogador:
+                return jogador
 
-                # 2️⃣ Verifica última sincronização
-                ultima_sync = jogador.get("ultima_sync")
+            # 2️⃣ Buscar dados na API
+            dados_api = buscar_dados_jogador_api(nome)
 
-                if ultima_sync and ultima_sync > datetime.utcnow() - timedelta(days=7):
-                    return jogador
+            if dados_api:
 
-                # 3️⃣ Atualiza via API
-                
-                dados_api = buscar_jogador_na_api(nome)
-                if not dados_api:
-                # Cria jogador básico se API falhar
                 cur.execute("""
-                    INSERT INTO jogadores (nome, slug)
-                    VALUES (%s, %s)
+                    INSERT INTO jogadores (
+                        nome,
+                        slug,
+                        foto,
+                        time_atual,
+                        escudo_time,
+                        posicao,
+                        nacionalidade,
+                        data_nascimento,
+                        altura,
+                        ultima_sync
+                    )
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     RETURNING *
-                """, (nome.title(), slug))
-            
+                """, (
+                    dados_api.get("nome"),
+                    slug,
+                    dados_api.get("foto"),
+                    dados_api.get("time_atual"),
+                    dados_api.get("escudo_time"),
+                    dados_api.get("posicao"),
+                    dados_api.get("nacionalidade"),
+                    dados_api.get("data_nascimento"),
+                    dados_api.get("altura"),
+                    datetime.utcnow()
+                ))
+
                 novo = cur.fetchone()
                 conn.commit()
                 return novo
 
+            # 3️⃣ Se API falhar, cria básico
+            cur.execute("""
+                INSERT INTO jogadores (nome, slug)
+                VALUES (%s, %s)
+                RETURNING *
+            """, (
+                nome.title(),
+                slug
+            ))
 
+            novo = cur.fetchone()
+            conn.commit()
+            return novo
+            
                 cur.execute("""
                     UPDATE jogadores
                     SET foto = %s,
