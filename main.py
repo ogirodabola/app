@@ -1076,7 +1076,4 @@ def pagina_jogador(slug: str, request: Request):
 
 @app.get("/admin/buscar-jogador")
 def buscar_jogador_api(query: str):
-
-    resultados = buscar_jogador_na_api(query)
-
-    return resultados or []
+    return buscar_jogador_na_api(query)
