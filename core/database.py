@@ -306,7 +306,7 @@ def salvar_noticia(
 
 def vincular_jogador_na_noticia(noticia_id: int, jogador_nome: str):
     from core.database import buscar_ou_criar_jogador
-    from core.database import salvar_relacao_noticia_jogador
+    from core.database import salvar_relacao_noticia_jogadores
 
     if not jogador_nome:
         return
@@ -315,7 +315,7 @@ def vincular_jogador_na_noticia(noticia_id: int, jogador_nome: str):
         jogador = buscar_ou_criar_jogador(jogador_nome)
 
         if jogador:
-            salvar_relacao_noticia_jogador(
+            salvar_relacao_noticia_jogadores(
                 noticia_id=noticia_id,
                 jogador_id=jogador["id"]
             )
@@ -1238,11 +1238,11 @@ def buscar_ou_criar_jogador(nome):
 # RELACIONAR NOTÍCIA ↔ JOGADOR
 # ----------------------------------------------------------
 
-def salvar_relacao_noticia_jogador(noticia_id, jogador_id):
+def salvar_relacao_noticia_jogadores(noticia_id, jogador_id):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO noticia_jogador (noticia_id, jogador_id)
+                INSERT INTO noticia_jogadores (noticia_id, jogador_id)
                 VALUES (%s, %s)
                 ON CONFLICT DO NOTHING
             """, (noticia_id, jogador_id))
@@ -1259,7 +1259,7 @@ def listar_noticias_por_jogador(jogador_id, limit=20):
             cur.execute("""
                 SELECT n.*
                 FROM noticias n
-                JOIN noticia_jogador nj ON nj.noticia_id = n.id
+                JOIN noticia_jogadores nj ON nj.noticia_id = n.id
                 WHERE nj.jogador_id = %s
                 AND n.editorial_status = 'publicado'
                 ORDER BY n.criada_em DESC
@@ -1272,7 +1272,7 @@ def limpar_vinculos_jogadores_noticia(noticia_id):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "DELETE FROM noticia_jogadores WHERE noticia_id = %s",
+                "DELETE FROM noticia_jogadoreses WHERE noticia_id = %s",
                 (noticia_id,)
             )
             conn.commit()
@@ -1297,7 +1297,7 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO noticia_jogadores (noticia_id, jogador_id)
+                INSERT INTO noticia_jogadoreses (noticia_id, jogador_id)
                 VALUES (%s, %s)
                 ON CONFLICT DO NOTHING
             """, (noticia_id, jogador_id))
@@ -1316,7 +1316,7 @@ def listar_jogadores_por_noticia(noticia_id: int):
                     j.*,
                     COALESCE(DATE_PART('year', AGE(j.data_nascimento)), 0) AS idade
                 FROM jogadores j
-                JOIN noticia_jogadores nj ON nj.jogador_id = j.id
+                JOIN noticia_jogadoreses nj ON nj.jogador_id = j.id
                 WHERE nj.noticia_id = %s
             """, (noticia_id,))
             return cur.fetchall()
