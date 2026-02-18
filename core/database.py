@@ -1275,7 +1275,7 @@ def limpar_vinculos_jogadores_noticia(noticia_id):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "DELETE FROM noticia_jogadoreses WHERE noticia_id = %s",
+                "DELETE FROM noticia_jogadores WHERE noticia_id = %s",
                 (noticia_id,)
             )
             conn.commit()
@@ -1300,7 +1300,7 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO noticia_jogadoreses (noticia_id, jogador_id)
+                INSERT INTO noticia_jogadores (noticia_id, jogador_id)
                 VALUES (%s, %s)
                 ON CONFLICT DO NOTHING
             """, (noticia_id, jogador_id))
@@ -1319,7 +1319,7 @@ def listar_jogadores_por_noticia(noticia_id: int):
                     j.*,
                     COALESCE(DATE_PART('year', AGE(j.data_nascimento)), 0) AS idade
                 FROM jogadores j
-                JOIN noticia_jogadoreses nj ON nj.jogador_id = j.id
+                JOIN noticia_jogadores nj ON nj.jogador_id = j.id
                 WHERE nj.noticia_id = %s
             """, (noticia_id,))
             return cur.fetchall()
