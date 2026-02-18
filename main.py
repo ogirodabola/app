@@ -710,7 +710,6 @@ async def admin_noticia_atualizar(
             shutil.copyfileobj(imagem_file.file, buffer)
 
         imagem_url = f"/static/uploads/{filename}"
-
     else:
         noticia_existente = buscar_noticia_admin(noticia_id)
         imagem_url = noticia_existente["imagem"]
@@ -726,7 +725,25 @@ async def admin_noticia_atualizar(
         "slug": slug_final
     })
 
+    # ============================
+    # 🔥 PROCESSAR JOGADORES
+    # ============================
+
+    form = await request.form()
+    jogadores_raw = form.get("jogador_nome", "") or ""
+    nomes_jogadores = [j.strip() for j in jogadores_raw.split(",") if j.strip()]
+
+    limpar_vinculos_jogadores_noticia(noticia_id)
+
+    for nome in nomes_jogadores:
+        slug_jogador = slugify(nome)
+        jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+
+        if jogador:
+            vincular_jogador_noticia(noticia_id, jogador["id"])
+
     return RedirectResponse("/admin/noticias", status_code=302)
+
 
 @app.get("/admin/noticias")
 def listar_noticias_view(
