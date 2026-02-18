@@ -52,6 +52,7 @@ def buscar_ou_sincronizar_jogador(slug: str):
 
     jogador = buscar_jogador_por_slug(slug)
 
+    # Se já está completo e dentro do TTL, retorna
     if jogador and jogador_completo(jogador) and not precisa_sincronizar(jogador):
         return jogador
 
@@ -59,36 +60,40 @@ def buscar_ou_sincronizar_jogador(slug: str):
 
     api_data = buscar_jogador_api_por_nome(nome)
 
+    # 🔴 Se API não retornar nada
     if not api_data:
-    # Se não encontrou na API, cria básico se não existir
-    if not jogador:
-        inserir_jogador({
-            "nome": nome.title(),
-            "slug": slug,
-            "foto": None,
-            "time_atual": None,
-            "escudo_time": None,
-            "posicao": None,
-            "nacionalidade": None,
-            "data_nascimento": None,
-            "altura": None,
-        })
-        return buscar_jogador_por_slug(slug)
 
-    return jogador
+        # Se não existe no banco ainda, cria básico
+        if not jogador:
+            inserir_jogador({
+                "nome": nome.title(),
+                "slug": slug,
+                "foto": None,
+                "time_atual": None,
+                "escudo_time": None,
+                "posicao": None,
+                "nacionalidade": None,
+                "data_nascimento": None,
+                "altura": None,
+            })
 
+            return buscar_jogador_por_slug(slug)
+
+        # Se já existe, retorna como está
+        return jogador
+
+    # 🔵 Se API retornou dados válidos
     dados = {
-    "nome": api_data.get("nome"),
-    "slug": slug,
-    "foto": api_data.get("foto"),
-    "time_atual": api_data.get("time_atual"),
-    "escudo_time": api_data.get("escudo_time"),
-    "posicao": api_data.get("posicao"),
-    "nacionalidade": api_data.get("nacionalidade"),
-    "data_nascimento": api_data.get("data_nascimento"),
-    "altura": api_data.get("altura"),
+        "nome": api_data.get("nome"),
+        "slug": slug,
+        "foto": api_data.get("foto"),
+        "time_atual": api_data.get("time_atual"),
+        "escudo_time": api_data.get("escudo_time"),
+        "posicao": api_data.get("posicao"),
+        "nacionalidade": api_data.get("nacionalidade"),
+        "data_nascimento": api_data.get("data_nascimento"),
+        "altura": api_data.get("altura"),
     }
-
 
     if jogador:
         atualizar_jogador(jogador["id"], dados)
@@ -96,3 +101,4 @@ def buscar_ou_sincronizar_jogador(slug: str):
         inserir_jogador(dados)
 
     return buscar_jogador_por_slug(slug)
+
