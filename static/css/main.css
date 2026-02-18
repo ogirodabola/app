@@ -2366,6 +2366,7 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .article-content h3 {
     margin-top: 30px;
     font-weight: 700;
+    color: #333 !important;
 }
 
 .article-content p {
@@ -2481,5 +2482,5 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .article-content {
     margin-top: 0 !important;
-    padding: 45px 55px !important;
+    padding: 10px 55px !important;
 }
