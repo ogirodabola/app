@@ -45,14 +45,24 @@
              placeholder="Ex: Brasileirão, Libertadores, Última Hora">
     </div>
 
-    <!-- JOGADOR RELACIONADO -->
+  <!-- JOGADOR RELACIONADO -->
 <div class="admin-form-group">
-  <label>Jogador relacionado (opcional)</label>
+  <label>Jogador relacionado</label>
+
   <input type="text"
-       name="jogador_nome"
-       value="{{ jogador_nome if jogador_nome else '' }}"
-       placeholder="Ex: Neymar">
+         id="jogador-search"
+         placeholder="Digite o nome do jogador"
+         autocomplete="off">
+
+  <!-- Campo real que será enviado no POST -->
+  <input type="hidden"
+         name="jogador_nome"
+         id="jogador-hidden"
+         value="{{ jogador_nome if jogador_nome else '' }}">
+
+  <div id="jogador-results" class="autocomplete-box"></div>
 </div>
+
 
 <!-- TIME RELACIONADO -->
 <div class="admin-form-group">
@@ -179,6 +189,45 @@ tinymce.init({
   toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link media table | code',
   menubar: false,
   branding: false
+});
+</script>
+<script>
+const input = document.getElementById("jogador-search");
+const hiddenInput = document.getElementById("jogador-hidden");
+const resultsBox = document.getElementById("jogador-results");
+
+input.addEventListener("input", async function() {
+
+    const query = this.value.trim();
+
+    if (query.length < 3) {
+        resultsBox.innerHTML = "";
+        return;
+    }
+
+    const response = await fetch(`/admin/buscar-jogador?query=${query}`);
+    const data = await response.json();
+
+    resultsBox.innerHTML = "";
+
+    data.forEach(j => {
+
+        const div = document.createElement("div");
+        div.classList.add("autocomplete-item");
+
+        div.innerHTML = `
+            <img src="${j.foto}" width="30" style="margin-right:8px;">
+            ${j.nome} - ${j.time}
+        `;
+
+        div.onclick = () => {
+            input.value = j.nome;
+            hiddenInput.value = j.nome;  // valor real enviado no form
+            resultsBox.innerHTML = "";
+        };
+
+        resultsBox.appendChild(div);
+    });
 });
 </script>
 
