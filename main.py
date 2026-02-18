@@ -692,8 +692,10 @@ async def admin_noticia_atualizar(
     categoria: str = Form(""),
     tags: str = Form(""),
     editorial_status: str = Form("pendente"),
-    imagem_file: UploadFile = File(None)
+    imagem_file: UploadFile = File(None),
+    jogador_nome: str = Form("")   # 👈 ADICIONE AQUI
 ):
+
     auth = login_required(request)
     if auth:
         return auth
