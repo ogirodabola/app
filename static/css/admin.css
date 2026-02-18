@@ -343,3 +343,12 @@ body {
 .autocomplete-item:hover {
     background: #f1f1f1;
 }
+
+.admin-form-group {
+    position: relative;
+}
+
+#jogador-search {
+    width: 100%;
+    padding: 8px;
+}
