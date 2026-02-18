@@ -1075,6 +1075,7 @@ def pagina_jogador(slug: str, request: Request):
         }
     )
 
+from core.futebol_api import buscar_jogador_na_api
 @app.get("/admin/buscar-jogador")
 def buscar_jogador_api(query: str):
     return buscar_jogador_na_api(query)
