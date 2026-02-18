@@ -2525,3 +2525,73 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     font-size: 15px;
     line-height: 1.4;
 }
+
+/* ===================== */
+/* JOGADORES */
+/* ===================== */
+
+.article-players {
+    margin: 40px 0;
+}
+
+.players-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    text-decoration: none;
+    color: #0f172a;
+    transition: all 0.2s ease;
+}
+
+.player-card:hover {
+    background: #e2e8f0;
+}
+
+.player-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #cbd5e1;
+    flex-shrink: 0;
+}
+
+.player-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.player-name {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.player-team {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #475569;
+    margin-top: 4px;
+}
+
+.player-team img {
+    width: 18px;
+    height: 18px;
+}
+
+.player-age {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
