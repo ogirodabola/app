@@ -671,6 +671,9 @@ def admin_noticia_editar(noticia_id: int, request: Request):
 
     noticia = buscar_noticia_admin(noticia_id)
     categorias = listar_categorias()
+    jogadores = listar_jogadores_por_noticia(noticia_id)
+    nomes_jogadores = ", ".join([j["nome"] for j in jogadores])
+
 
     return templates.TemplateResponse(
         "admin/noticias_edit.html",
