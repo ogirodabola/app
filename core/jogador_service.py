@@ -62,20 +62,18 @@ def buscar_ou_sincronizar_jogador(slug: str):
     if not api_data:
         return jogador
 
-    player = api_data.get("player", {})
-    stats = api_data.get("statistics", [{}])[0]
-
     dados = {
-        "nome": player.get("name"),
-        "slug": slug,
-        "foto": player.get("photo"),
-        "time_atual": stats.get("team", {}).get("name"),
-        "escudo_time": stats.get("team", {}).get("logo"),
-        "posicao": stats.get("games", {}).get("position"),
-        "nacionalidade": player.get("nationality"),
-        "data_nascimento": player.get("birth", {}).get("date"),
-        "altura": player.get("height"),
+    "nome": api_data.get("nome"),
+    "slug": slug,
+    "foto": api_data.get("foto"),
+    "time_atual": api_data.get("time_atual"),
+    "escudo_time": api_data.get("escudo_time"),
+    "posicao": api_data.get("posicao"),
+    "nacionalidade": api_data.get("nacionalidade"),
+    "data_nascimento": api_data.get("data_nascimento"),
+    "altura": api_data.get("altura"),
     }
+
 
     if jogador:
         atualizar_jogador(jogador["id"], dados)
