@@ -1271,8 +1271,9 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
             cur.execute("""
                 INSERT INTO noticia_jogadores (noticia_id, jogador_id)
                 VALUES (%s, %s)
-                ON CONFLICT DO NOTHING
+                ON CONFLICT (noticia_id, jogador_id) DO NOTHING
             """, (noticia_id, jogador_id))
+
             conn.commit()
 
 # ============================================
