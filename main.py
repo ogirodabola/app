@@ -13,7 +13,7 @@ from core.database import listar_noticias_admin
 from core.database import atualizar_ads_slot_dispositivo
 from core.database import obter_metricas_editoriais
 from core.database import listar_jogadores_por_noticia
-from core.jogador_service import buscar_ou_sincronizar_jogador
+from core.database import buscar_ou_criar_jogador
 from core.database import (
     criar_tabelas,
     listar_ultima_hora,
@@ -99,7 +99,7 @@ def admin_login(request: Request):
 
 from slugify import slugify
 from fastapi.responses import RedirectResponse
-from core.jogador_service import buscar_ou_sincronizar_jogador
+from core.database import buscar_ou_criar_jogador
 from fastapi import UploadFile
 from uuid import uuid4
 import os
@@ -167,13 +167,13 @@ async def salvar_noticia_admin(id: int, request: Request):
 
     limpar_vinculos_jogadores_noticia(id)
 
-    from core.jogador_service import buscar_ou_sincronizar_jogador
+    from core.database import buscar_ou_criar_jogador
     from core.database import vincular_jogador_noticia
 
     for nome in nomes_jogadores:
 
         slug_jogador = slugify(nome)
-        jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+        jogador = buscar_ou_criar_jogador(slug_jogador)
 
         if jogador:
             vincular_jogador_noticia(id, jogador["id"])
@@ -188,7 +188,7 @@ async def salvar_noticia_admin(id: int, request: Request):
 
     if jogador_nome and jogador_nome.strip():
 
-        from core.jogador_service import buscar_ou_sincronizar_jogador
+        from core.database import buscar_ou_criar_jogador
         from core.database import vincular_jogador_noticia
 
         nomes = [j.strip() for j in jogador_nome.split(",") if j.strip()]
@@ -197,7 +197,7 @@ async def salvar_noticia_admin(id: int, request: Request):
 
             slug_jogador = slugify(nome)
 
-            jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+            jogador = buscar_ou_criar_jogador (slug_jogador)
 
             if jogador:
                 vincular_jogador_noticia(id, jogador["id"])
@@ -382,10 +382,10 @@ def noticia(slug: str, request: Request):
 
     jogadores_db = listar_jogadores_por_noticia(noticia["id"]) or []
 
-    jogadores_relacionados = []
+    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
 
     for j in jogadores_db:
-        jogador_sync = buscar_ou_sincronizar_jogador(j["slug"])
+        jogador_sync = buscar_ou_criar_jogador(j["slug"])
         if jogador_sync:
             jogadores_relacionados.append(jogador_sync)
 
@@ -753,7 +753,7 @@ async def admin_noticia_atualizar(
 
     for nome in nomes_jogadores:
         slug_jogador = slugify(nome)
-        jogador = buscar_ou_sincronizar_jogador(slug_jogador)
+        jogador = buscar_ou_criar_jogador(slug_jogador)
 
         if jogador:
             vincular_jogador_noticia(noticia_id, jogador["id"])
@@ -1056,7 +1056,7 @@ def buscar_artilharia_brasileirao():
 @app.get("/jogador/{slug}", response_class=HTMLResponse)
 def pagina_jogador(slug: str, request: Request):
 
-    jogador = buscar_ou_sincronizar_jogador(slug)
+    jogador = buscar_ou_criar_jogador(slug)
 
     if not jogador:
         raise HTTPException(status_code=404)
