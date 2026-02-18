@@ -1206,6 +1206,20 @@ def buscar_ou_criar_jogador(nome):
             novo = cur.fetchone()
             conn.commit()
             return novo
+
+            # 3️⃣ Se API falhar, cria básico
+            cur.execute("""
+                INSERT INTO jogadores (nome, slug)
+                VALUES (%s, %s)
+                RETURNING *
+            """, (
+                nome.title(),
+                slug
+            ))
+
+            novo = cur.fetchone()
+            conn.commit()
+            return novo
             
                 cur.execute("""
                     UPDATE jogadores
