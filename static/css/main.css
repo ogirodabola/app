@@ -2475,5 +2475,10 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .article-wrapper {
-    margin-top: -50px;
+    margin-top: -50px; !important;
+}
+
+.article-content {
+    margin-top: 0 !important;
+    padding: 45px 55px !important;
 }
