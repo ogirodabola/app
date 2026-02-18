@@ -1219,22 +1219,34 @@ def buscar_ou_criar_jogador(nome):
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 RETURNING *
             """, (
-                dados_api["nome"],
-                slug,
-                dados_api["api_id"],
-                dados_api["foto"],
-                dados_api["time_atual"],
-                dados_api["escudo_time"],
-                dados_api["posicao"],
-                dados_api["nacionalidade"],
-                dados_api["data_nascimento"],
-                datetime.utcnow()
-            ))
 
-            novo = cur.fetchone()
-            conn.commit()
+                dados_api = buscar_dados_jogador_api(nome)
 
-            return novo
+                if not dados_api:
+                    return None
+                
+                cur.execute("""
+                    INSERT INTO jogadores
+                    (nome, slug, foto, time_atual, escudo_time, posicao,
+                     nacionalidade, data_nascimento, altura, ultima_sync)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    RETURNING *
+                """, (
+                    dados_api["nome"],
+                    slug,
+                    dados_api["foto"],
+                    dados_api["time_atual"],
+                    dados_api["escudo_time"],
+                    dados_api["posicao"],
+                    dados_api["nacionalidade"],
+                    dados_api["data_nascimento"],
+                    dados_api["altura"],
+                    datetime.utcnow()
+                ))
+                
+                novo = cur.fetchone()
+                conn.commit()
+                return novo
 
 
 # ----------------------------------------------------------
@@ -1410,3 +1422,56 @@ def atualizar_jogador(jogador_id: int, dados: dict):
             conn.commit()
     except Exception:
         pass
+
+def buscar_dados_jogador_api(nome: str):
+
+    import requests
+    import os
+
+    BASE_URL = "https://v3.football.api-sports.io"
+    API_KEY = os.getenv("API_FOOTBALL_KEY")
+
+    if not API_KEY:
+        return None
+
+    headers = {
+        "x-apisports-key": API_KEY
+    }
+
+    url = f"{BASE_URL}/players"
+
+    params = {
+        "search": nome
+    }
+
+    try:
+        response = requests.get(
+            url,
+            headers=headers,
+            params=params,
+            timeout=10
+        )
+
+        data = response.json()
+
+    except Exception:
+        return None
+
+    if not data.get("response"):
+        return None
+
+    item = data["response"][0]
+
+    player = item.get("player", {})
+    statistics = item.get("statistics", [{}])[0]
+
+    return {
+        "nome": player.get("name"),
+        "foto": player.get("photo"),
+        "time_atual": statistics.get("team", {}).get("name"),
+        "escudo_time": statistics.get("team", {}).get("logo"),
+        "posicao": statistics.get("games", {}).get("position"),
+        "nacionalidade": player.get("nationality"),
+        "data_nascimento": player.get("birth", {}).get("date"),
+        "altura": player.get("height"),
+    }
