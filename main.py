@@ -367,7 +367,7 @@ def pagina_categoria(request: Request, categoria_slug: str):
 # ======================================================
 # NOTÍCIA INDIVIDUAL
 # ======================================================
-from core.database import listar_jogadores_por_noticia
+from core.database import listar_noticias_por_jogador
 
 @app.get("/noticia/{slug}", response_class=HTMLResponse)
 def noticia(slug: str, request: Request):
@@ -377,10 +377,45 @@ def noticia(slug: str, request: Request):
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
-    # 🔹 Agora sim é seguro buscar jogadores
+    # =============================
+    # JOGADORES RELACIONADOS
+    # =============================
+
     jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
 
+    # =============================
+    # RECOMENDADAS (categoria)
+    # =============================
+
     recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
+
+    # =============================
+    # RELACIONADAS POR JOGADOR
+    # =============================
+
+    noticias_relacionadas = []
+
+    for jogador in jogadores_relacionados:
+        relacionadas_jogador = listar_noticias_por_jogador(
+            jogador["id"],
+            limit=3
+        ) or []
+
+        for n in relacionadas_jogador:
+            if n["slug"] != slug:  # evita repetir a própria matéria
+                noticias_relacionadas.append(n)
+
+    # Remove duplicadas
+    noticias_relacionadas = {
+        n["id"]: n for n in noticias_relacionadas
+    }.values()
+
+    # Limita para evitar excesso
+    noticias_relacionadas = list(noticias_relacionadas)[:6]
+
+    # =============================
+    # BREADCRUMB
+    # =============================
 
     categoria_nome = noticia.get("categoria") or "geral"
 
@@ -392,7 +427,7 @@ def noticia(slug: str, request: Request):
         ),
         (
             noticia.get("titulo_editorial") or noticia.get("titulo"),
-            f"https://girodesportivo.com/noticia/{noticia.get('slug')}"
+            f"https://girodesportivo.com/noticia/{slug}"
         )
     ])
 
@@ -402,6 +437,7 @@ def noticia(slug: str, request: Request):
             "request": request,
             "noticia": noticia,
             "recomendadas": recomendadas,
+            "noticias_relacionadas": noticias_relacionadas,
             "breadcrumb_schema": breadcrumb,
             "categorias": listar_categorias(),
             "jogadores_relacionados": jogadores_relacionados,
