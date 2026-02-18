@@ -1165,9 +1165,20 @@ def buscar_ou_criar_jogador(nome):
                     return jogador
 
                 # 3️⃣ Atualiza via API
+                
                 dados_api = buscar_jogador_na_api(nome)
                 if not dados_api:
-                    return jogador
+                # Cria jogador básico se API falhar
+                cur.execute("""
+                    INSERT INTO jogadores (nome, slug)
+                    VALUES (%s, %s)
+                    RETURNING *
+                """, (nome.title(), slug))
+            
+                novo = cur.fetchone()
+                conn.commit()
+                return novo
+
 
                 cur.execute("""
                     UPDATE jogadores
