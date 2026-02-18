@@ -461,6 +461,3 @@ def fetch_player_from_api(nome: str):
         logging.error(f"Erro ao buscar jogador {nome}: {e}")
         return None
 
-@app.get("/admin/buscar-jogador")
-def buscar_jogador_api(query: str):
-    return buscar_dados_jogador_api(query)
