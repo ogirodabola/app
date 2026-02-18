@@ -1160,7 +1160,6 @@ def buscar_ou_criar_jogador(nome):
             dados_api = buscar_dados_jogador_api(nome)
 
             if dados_api:
-
                 cur.execute("""
                     INSERT INTO jogadores (
                         nome,
@@ -1206,100 +1205,6 @@ def buscar_ou_criar_jogador(nome):
             novo = cur.fetchone()
             conn.commit()
             return novo
-
-            # 3️⃣ Se API falhar, cria básico
-            cur.execute("""
-                INSERT INTO jogadores (nome, slug)
-                VALUES (%s, %s)
-                RETURNING *
-            """, (
-                nome.title(),
-                slug
-            ))
-
-            novo = cur.fetchone()
-            conn.commit()
-            return novo
-            
-                cur.execute("""
-                    UPDATE jogadores
-                    SET foto = %s,
-                        time_atual = %s,
-                        escudo_time = %s,
-                        posicao = %s,
-                        nacionalidade = %s,
-                        data_nascimento = %s,
-                        ultima_sync = %s
-                    WHERE slug = %s
-                """, (
-                    dados_api["foto"],
-                    dados_api["time_atual"],
-                    dados_api["escudo_time"],
-                    dados_api["posicao"],
-                    dados_api["nacionalidade"],
-                    dados_api["data_nascimento"],
-                    datetime.utcnow(),
-                    slug
-                ))
-
-                conn.commit()
-
-                cur.execute(
-                    "SELECT * FROM jogadores WHERE slug = %s",
-                    (slug,)
-                )
-                return cur.fetchone()
-
-            # 4️⃣ NÃO EXISTE → Criar
-            dados_api = buscar_jogador_na_api(nome)
-            if not dados_api:
-                return None
-
-            cur.execute("""
-                INSERT INTO jogadores (
-                    nome,
-                    slug,
-                    api_id,
-                    foto,
-                    time_atual,
-                    escudo_time,
-                    posicao,
-                    nacionalidade,
-                    data_nascimento,
-                    ultima_sync
-                )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                RETURNING *
-            """, (
-
-                dados_api = buscar_dados_jogador_api(nome)
-
-                if not dados_api:
-                    return None
-                
-                cur.execute("""
-                    INSERT INTO jogadores
-                    (nome, slug, foto, time_atual, escudo_time, posicao,
-                     nacionalidade, data_nascimento, altura, ultima_sync)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                    RETURNING *
-                """, (
-                    dados_api["nome"],
-                    slug,
-                    dados_api["foto"],
-                    dados_api["time_atual"],
-                    dados_api["escudo_time"],
-                    dados_api["posicao"],
-                    dados_api["nacionalidade"],
-                    dados_api["data_nascimento"],
-                    dados_api["altura"],
-                    datetime.utcnow()
-                ))
-                
-                novo = cur.fetchone()
-                conn.commit()
-                return novo
-
 
 # ----------------------------------------------------------
 # RELACIONAR NOTÍCIA ↔ JOGADOR
