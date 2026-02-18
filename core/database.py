@@ -323,6 +323,9 @@ def vincular_jogador_na_noticia(noticia_id: int, jogador_nome: str):
     except Exception as e:
         print(f"Erro ao vincular jogador: {e}")
 
+def salvar_relacao_noticia_jogador(noticia_id, jogador_id):
+    return vincular_jogador_noticia(noticia_id, jogador_id)
+
 # ======================================================
 # ATUALIZA EDITORIAL (worker IA)
 # ======================================================
