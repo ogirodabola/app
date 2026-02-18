@@ -43,48 +43,49 @@
             <!-- ========================= -->
 
             {% if jogadores_relacionados %}
-            <section class="article-players">
+    <section class="article-players">
 
-                <h3>Jogadores citados nesta matéria</h3>
+    <h3>Jogadores citados nesta matéria</h3>
 
-                <div class="players-grid">
-                    {% for jogador in jogadores_relacionados %}
-                    <a href="/jogador/{{ jogador.slug }}" class="player-card">
+    <div class="players-grid">
+        {% for jogador in jogadores_relacionados %}
+        <a href="/jogador/{{ jogador.slug }}" class="player-card">
 
-                        <div class="player-image">
-                            <img 
-                                src="{{ jogador.foto or '/static/placeholder-player.png' }}" 
-                                alt="{{ jogador.nome }}"
-                                loading="lazy"
-                            >
-                        </div>
+            <div class="player-avatar">
+                <img 
+                    src="{{ jogador.foto if jogador.foto else '/static/placeholder-player.png' }}" 
+                    alt="{{ jogador.nome }}"
+                    loading="lazy"
+                >
+            </div>
 
-                        <div class="player-info">
-                            <strong>{{ jogador.nome }}</strong>
-
-                            {% if jogador.escudo_time %}
-                            <div class="player-team">
-                                <img 
-                                    src="{{ jogador.escudo_time }}" 
-                                    alt="{{ jogador.time_atual }}"
-                                    width="20"
-                                    loading="lazy"
-                                >
-                                <span>{{ jogador.time_atual }}</span>
-                            </div>
-                            {% endif %}
-
-                            {% if jogador.idade %}
-                            <small>{{ jogador.idade }} anos</small>
-                            {% endif %}
-                        </div>
-
-                    </a>
-                    {% endfor %}
+            <div class="player-details">
+                <div class="player-name">
+                    {{ jogador.nome }}
                 </div>
 
-            </section>
-            {% endif %}
+                {% if jogador.time_atual %}
+                <div class="player-team">
+                    {% if jogador.escudo_time %}
+                        <img src="{{ jogador.escudo_time }}" alt="" loading="lazy">
+                    {% endif %}
+                    <span>{{ jogador.time_atual }}</span>
+                </div>
+                {% endif %}
+
+                {% if jogador.idade and jogador.idade > 0 %}
+                <div class="player-age">
+                    {{ jogador.idade }} anos
+                </div>
+                {% endif %}
+            </div>
+
+        </a>
+        {% endfor %}
+    </div>
+
+</section>
+{% endif %}
 
             <!-- ========================= -->
             <!-- TAGS -->
