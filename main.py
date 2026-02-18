@@ -662,26 +662,38 @@ async def admin_noticia_criar(
 
     return RedirectResponse("/admin/noticias", status_code=302)
 
-@app.get("/admin/noticias/{noticia_id}", response_class=HTMLResponse)
+@app.get("/admin/noticias/{noticia_id}")
 def admin_noticia_editar(noticia_id: int, request: Request):
+
     auth = login_required(request)
     if auth:
         return auth
 
     noticia = buscar_noticia_admin(noticia_id)
-    categorias = listar_categorias()
-    jogadores = listar_jogadores_por_noticia(noticia_id)
-    nomes_jogadores = ", ".join([j["nome"] for j in jogadores])
 
+    if not noticia:
+        raise HTTPException(status_code=404, detail="Notícia não encontrada")
+
+    # ============================
+    # 🔥 BUSCAR JOGADORES RELACIONADOS
+    # ============================
+
+    jogadores = listar_jogadores_por_noticia(noticia_id)
+
+    nomes_jogadores = ", ".join(
+        [j["nome"] for j in jogadores]
+    ) if jogadores else ""
 
     return templates.TemplateResponse(
         "admin/noticias_edit.html",
         {
             "request": request,
             "noticia": noticia,
-            "categorias": categorias
+            "categorias": listar_categorias(),
+            "jogador_nome": nomes_jogadores
         }
     )
+
 
 @app.post("/admin/noticias/{noticia_id}")
 async def admin_noticia_atualizar(
