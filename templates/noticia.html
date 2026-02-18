@@ -38,6 +38,10 @@
 
             {{ render_ad("noticia_inline_1", request) | safe }}
 
+            <!-- ========================= -->
+            <!-- JOGADORES CITADOS -->
+            <!-- ========================= -->
+
             {% if jogadores_relacionados %}
             <section class="article-players">
 
@@ -46,11 +50,35 @@
                 <div class="players-grid">
                     {% for jogador in jogadores_relacionados %}
                     <a href="/jogador/{{ jogador.slug }}" class="player-card">
-                        <img src="{{ jogador.foto or '/static/placeholder-player.png' }}">
-                        <div>
-                            <strong>{{ jogador.nome }}</strong>
-                            <span>{{ jogador.time_atual }}</span>
+
+                        <div class="player-image">
+                            <img 
+                                src="{{ jogador.foto or '/static/placeholder-player.png' }}" 
+                                alt="{{ jogador.nome }}"
+                                loading="lazy"
+                            >
                         </div>
+
+                        <div class="player-info">
+                            <strong>{{ jogador.nome }}</strong>
+
+                            {% if jogador.escudo_time %}
+                            <div class="player-team">
+                                <img 
+                                    src="{{ jogador.escudo_time }}" 
+                                    alt="{{ jogador.time_atual }}"
+                                    width="20"
+                                    loading="lazy"
+                                >
+                                <span>{{ jogador.time_atual }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if jogador.idade %}
+                            <small>{{ jogador.idade }} anos</small>
+                            {% endif %}
+                        </div>
+
                     </a>
                     {% endfor %}
                 </div>
@@ -58,12 +86,59 @@
             </section>
             {% endif %}
 
+            <!-- ========================= -->
+            <!-- TAGS -->
+            <!-- ========================= -->
+
             {% if noticia.tags %}
             <div class="article-tags">
                 {% for tag in noticia.tags %}
                     <span>#{{ tag }}</span>
                 {% endfor %}
             </div>
+            {% endif %}
+
+            <!-- ========================= -->
+            <!-- RECOMENDADAS -->
+            <!-- ========================= -->
+
+            {% if recomendadas %}
+            <section class="article-recommended">
+                <h3>Você também pode gostar</h3>
+
+                <div class="recommended-grid">
+                    {% for n in recomendadas %}
+                    <a href="/noticia/{{ n.slug }}" class="recommended-card">
+                        {% if n.imagem %}
+                        <img src="{{ n.imagem }}" loading="lazy">
+                        {% endif %}
+                        <span>{{ n.titulo_editorial or n.titulo }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- ========================= -->
+            <!-- RELACIONADAS POR JOGADOR -->
+            <!-- (ativar quando backend enviar) -->
+            <!-- ========================= -->
+
+            {% if noticias_relacionadas %}
+            <section class="article-related">
+                <h3>Mais sobre este jogador</h3>
+
+                <div class="related-grid">
+                    {% for n in noticias_relacionadas %}
+                    <a href="/noticia/{{ n.slug }}" class="related-card">
+                        {% if n.imagem %}
+                        <img src="{{ n.imagem }}" loading="lazy">
+                        {% endif %}
+                        <span>{{ n.titulo_editorial or n.titulo }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
             {% endif %}
 
             {{ render_ad("noticia_footer", request) | safe }}
