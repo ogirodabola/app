@@ -381,7 +381,14 @@ def noticia(slug: str, request: Request):
     # JOGADORES RELACIONADOS
     # =============================
 
-    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
+    jogadores_db = listar_jogadores_por_noticia(noticia["id"]) or []
+
+jogadores_relacionados = []
+
+for j in jogadores_db:
+    jogador_sync = buscar_ou_sincronizar_jogador(j["slug"])
+    if jogador_sync:
+        jogadores_relacionados.append(jogador_sync)
 
     # =============================
     # RECOMENDADAS (categoria)
