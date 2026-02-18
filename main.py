@@ -1073,3 +1073,10 @@ def pagina_jogador(slug: str, request: Request):
             "categoria_ativa": None
         }
     )
+
+@app.get("/admin/buscar-jogador")
+def buscar_jogador_api(query: str):
+
+    resultados = buscar_jogador_na_api(query)
+
+    return resultados or []
