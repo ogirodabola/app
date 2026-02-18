@@ -378,20 +378,20 @@ def noticia(slug: str, request: Request):
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
     # =============================
-    # JOGADORES RELACIONADOS
+    # JOGADORES (COM SINCRONIZAÇÃO)
     # =============================
 
     jogadores_db = listar_jogadores_por_noticia(noticia["id"]) or []
 
-jogadores_relacionados = []
+    jogadores_relacionados = []
 
-for j in jogadores_db:
-    jogador_sync = buscar_ou_sincronizar_jogador(j["slug"])
-    if jogador_sync:
-        jogadores_relacionados.append(jogador_sync)
+    for j in jogadores_db:
+        jogador_sync = buscar_ou_sincronizar_jogador(j["slug"])
+        if jogador_sync:
+            jogadores_relacionados.append(jogador_sync)
 
     # =============================
-    # RECOMENDADAS (categoria)
+    # RECOMENDADAS
     # =============================
 
     recomendadas = listar_recomendadas_por_slug(slug, limit=5) or []
@@ -409,15 +409,14 @@ for j in jogadores_db:
         ) or []
 
         for n in relacionadas_jogador:
-            if n["slug"] != slug:  # evita repetir a própria matéria
+            if n["slug"] != slug:
                 noticias_relacionadas.append(n)
 
-    # Remove duplicadas
+    # remove duplicadas
     noticias_relacionadas = {
         n["id"]: n for n in noticias_relacionadas
     }.values()
 
-    # Limita para evitar excesso
     noticias_relacionadas = list(noticias_relacionadas)[:6]
 
     # =============================
@@ -451,6 +450,7 @@ for j in jogadores_db:
             "categoria_ativa": categoria_nome
         }
     )
+
 
 # ======================================================
 # SOBRE
