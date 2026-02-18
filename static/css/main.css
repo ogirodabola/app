@@ -2314,9 +2314,10 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .article-header {
     background: #ffffff;
+    backdrop-filter: blur(6px);
     padding: 40px;
     border-radius: 18px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
 .article-category {
@@ -2328,11 +2329,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .article-title {
-    font-size: 42px;
+    font-size: 48px;
     font-weight: 800;
     margin: 10px 0 15px;
     line-height: 1.2;
     color: #0f172a;
+    letter-spacing: -0.5px;
 }
 
 .article-meta {
@@ -2341,10 +2343,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .article-grid {
+    grid-template-columns: minmax(0, 720px) 300px;
+    justify-content: space-between;
     display: grid;
-    grid-template-columns: 1fr 300px;
     gap: 40px;
     margin-top: 40px;
+
 }
 
 .article-content {
@@ -2362,6 +2366,21 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     margin-top: 30px;
     font-weight: 700;
 }
+
+.article-content p {
+    margin-bottom: 22px;
+}
+
+.article-content strong {
+    font-weight: 700;
+}
+
+.article-content a {
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 
 .article-sidebar {
     position: sticky;
@@ -2425,5 +2444,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
         position: relative;
         top: auto;
     }
+}
+
+.article-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
 }
 
