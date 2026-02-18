@@ -60,7 +60,22 @@ def buscar_ou_sincronizar_jogador(slug: str):
     api_data = buscar_jogador_api_por_nome(nome)
 
     if not api_data:
-        return jogador
+    # Se não encontrou na API, cria básico se não existir
+    if not jogador:
+        inserir_jogador({
+            "nome": nome.title(),
+            "slug": slug,
+            "foto": None,
+            "time_atual": None,
+            "escudo_time": None,
+            "posicao": None,
+            "nacionalidade": None,
+            "data_nascimento": None,
+            "altura": None,
+        })
+        return buscar_jogador_por_slug(slug)
+
+    return jogador
 
     dados = {
     "nome": api_data.get("nome"),
