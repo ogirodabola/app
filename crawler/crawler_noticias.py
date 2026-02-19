@@ -92,12 +92,14 @@ def rodar_crawler():
                 if sucesso:
                     total_salvas += 1
 
-        except Exception as e:
-            print(f"[RUNNER] erro no crawler {crawler.__name__}: {e}")
-
-    print(
-        f"[RUNNER] Finalizado | coletadas: {total_coletadas} | salvas: {total_salvas}"
-    )
+                except Exception as e:
+                    import traceback
+                    print(f"\n[RUNNER] erro no crawler {crawler.__name__}")
+                    traceback.print_exc()
+        
+            print(
+                f"[RUNNER] Finalizado | coletadas: {total_coletadas} | salvas: {total_salvas}"
+            )
 
 
 # ======================================================
