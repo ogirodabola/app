@@ -2815,3 +2815,52 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     top: 0;
   }
 }
+
+.hub-editorial {
+  margin-top: 100px;
+  max-width: 900px;
+}
+
+.hub-editorial h2 {
+  margin: 60px 0 20px;
+}
+
+.hub-editorial h3 {
+  margin: 30px 0 10px;
+}
+
+.hub-editorial p,
+.hub-editorial li {
+  opacity: 0.9;
+  line-height: 1.7;
+}
+
+.hub-stats {
+  margin-top: 100px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.04);
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: .9rem;
+  opacity: .7;
+}
