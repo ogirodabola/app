@@ -367,7 +367,6 @@ def pagina_categoria(request: Request, categoria_slug: str):
 # ======================================================
 # NOTÍCIA INDIVIDUAL
 # ======================================================
-from core.database import listar_jogadores_por_noticia
 
 @app.get("/noticia/{slug}", response_class=HTMLResponse)
 def noticia(slug: str, request: Request):
@@ -436,7 +435,6 @@ def noticia(slug: str, request: Request):
         )
     ])
 
-    from core.database import listar_jogadores_por_noticia
     jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"])
 
     return templates.TemplateResponse(
