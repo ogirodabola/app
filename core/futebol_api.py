@@ -350,6 +350,7 @@ def buscar_classificacao_brasileirao():
                 "saldo_gols": time.get("goalsDiff"),
                 "gols_pro": time.get("all", {}).get("goals", {}).get("for"),
                 "gols_contra": time.get("all", {}).get("goals", {}).get("against"),
+                "forma": time.get("form", "")
             })
 
         return tabela
