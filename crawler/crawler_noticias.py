@@ -85,7 +85,8 @@ def rodar_crawler():
                     categoria=classificar_noticia(n["titulo"]),
                     slug=gerar_slug(n["titulo"]),
                     imagem=n["imagem"],
-                    imagem_credito=n.get("imagem_credito")
+                    imagem_credito=n.get("imagem_credito"),
+                    conteudo_original=n.get("conteudo_html")
                 )
 
                 if sucesso:
