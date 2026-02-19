@@ -128,56 +128,45 @@ def is_blacklisted(text: str) -> bool:
 # JOGADOR – BUSCA COMPLETA NA API
 # ======================================================
 
-def buscar_jogador_api_por_nome(nome: str):
-    url = f"{BASE_URL}/players"
+def buscar_jogador_na_api(query):
+    import requests
+    import os
 
-    params = {
-        "search": nome
-    }
+    BASE_URL = "https://v3.football.api-sports.io"
+    API_KEY = os.getenv("API_FOOTBALL_KEY")
 
-    try:
-        response = requests.get(
-            url,
-            headers=HEADERS,
-            params=params,
-            timeout=10
-        )
+    if not API_KEY:
+        return []
 
-        if response.status_code != 200:
-            return None
+    headers = {"x-apisports-key": API_KEY}
 
-        data = response.json()
+    response = requests.get(
+        f"{BASE_URL}/players",
+        headers=headers,
+        params={"search": query},
+        timeout=10
+    )
 
-        if not data.get("response"):
-            return None
+    data = response.json()
 
-        # Escolhe jogador mais relevante (primeiro retorno)
-        jogador = data["response"][0]
+    if not data.get("response"):
+        return []
 
-        player = jogador.get("player", {})
-        statistics = jogador.get("statistics", [])
+    jogadores = []
 
-        stats = statistics[0] if statistics else {}
+    for item in data["response"]:
+        player = item.get("player", {})
+        stats_list = item.get("statistics", [])
+        statistics = stats_list[0] if stats_list else {}
 
-        birth = player.get("birth", {})
-        team = stats.get("team", {})
-        games = stats.get("games", {})
-
-        return {
+        jogadores.append({
             "nome": player.get("name"),
             "foto": player.get("photo"),
-            "posicao": games.get("position"),
-            "time_atual": team.get("name"),
-            "escudo_time": team.get("logo"),
-            "nacionalidade": player.get("nationality"),
-            "data_nascimento": birth.get("date"),
-            "altura": player.get("height"),
-        }
+            "time": statistics.get("team", {}).get("name"),
+            "api_id": player.get("id")
+        })
 
-    except Exception:
-        return None
-
-
+    return jogadores[:5]
 
 def normalizar_nome(nome: str) -> str:
     return (
