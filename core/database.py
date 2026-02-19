@@ -27,6 +27,7 @@ def criar_tabelas():
                     titulo TEXT NOT NULL,
                     titulo_editorial TEXT,
                     resumo TEXT,
+                    conteudo_original TEXT,   -- 🔥 NOVO
                     conteudo_editorial TEXT,
                     categoria TEXT,
                     tags TEXT[],
@@ -38,6 +39,7 @@ def criar_tabelas():
                     editorial_status TEXT DEFAULT 'pendente',
                     criada_em TIMESTAMP DEFAULT NOW()
                 );
+
             """)
         conn.commit()
     finally:
@@ -273,15 +275,16 @@ def salvar_noticia(
     categoria,
     slug,
     imagem=None,
-    imagem_credito=None
+    imagem_credito=None,
+    conteudo_original=None
 ):
     conn = get_conn()
     try:
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO noticias
-                (titulo, resumo, url, fonte, categoria, slug, imagem, imagem_credito)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                (titulo, resumo, url, fonte, categoria, slug, imagem, imagem_credito, conteudo_original)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (url) DO UPDATE
                 SET
                     imagem = COALESCE(noticias.imagem, EXCLUDED.imagem),
