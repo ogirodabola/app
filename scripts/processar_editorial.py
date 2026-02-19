@@ -127,7 +127,7 @@ def salvar_editorial(
     categoria,
     tags
 ):
-    if not conteudo_editorial or len(conteudo_editorial) < 400:
+    if not conteudo_editorial or len(conteudo_editorial) < 150:
         print("   ⚠️ Conteúdo muito curto. Marcado como erro.")
         marcar_erro(conn, noticia_id)
         return
