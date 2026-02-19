@@ -136,33 +136,45 @@ href="https://girodesportivo.com/brasileirao-2026">
 
   <h2>Estatísticas do Brasileirão 2026</h2>
 
+  {% if estatisticas %}
   <div class="stats-grid">
 
     <div class="stat-card">
       <div class="stat-icon">⚽</div>
-      <span class="stat-number">128</span>
+      <span class="stat-number">
+        {{ estatisticas.total_gols }}
+      </span>
       <span class="stat-label">Gols marcados</span>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon">📊</div>
-      <span class="stat-number">2.6</span>
+      <span class="stat-number">
+        {{ estatisticas.media_gols }}
+      </span>
       <span class="stat-label">Média de gols por jogo</span>
     </div>
 
     <div class="stat-card">
-      <img src="/static/img/escudos/palmeiras.png" class="stat-escudo">
-      <span class="stat-number">Palmeiras</span>
+      <img src="{{ estatisticas.melhor_ataque.escudo }}"
+           class="stat-escudo">
+      <span class="stat-number">
+        {{ estatisticas.melhor_ataque.nome }}
+      </span>
       <span class="stat-label">Melhor ataque</span>
     </div>
 
     <div class="stat-card">
-      <img src="/static/img/escudos/bahia.png" class="stat-escudo">
-      <span class="stat-number">Bahia</span>
+      <img src="{{ estatisticas.melhor_defesa.escudo }}"
+           class="stat-escudo">
+      <span class="stat-number">
+        {{ estatisticas.melhor_defesa.nome }}
+      </span>
       <span class="stat-label">Melhor defesa</span>
     </div>
 
   </div>
+  {% endif %}
 
 </section>
 
