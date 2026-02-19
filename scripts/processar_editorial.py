@@ -222,3 +222,6 @@ def processar():
     finally:
         conn.close()
         print("🔒 Worker encerrado.")
+
+if __name__ == "__main__":
+    processar()
