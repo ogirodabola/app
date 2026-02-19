@@ -19,7 +19,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL não definida")
 
-LIMITE_POR_EXECUCAO = int(os.getenv("EDITORIAL_BATCH_LIMIT", 10))
+LIMITE_POR_EXECUCAO = int(os.getenv("EDITORIAL_BATCH_LIMIT", 35))
 PAUSA_ENTRE_ITENS = int(os.getenv("EDITORIAL_SLEEP", 2))
 
 
