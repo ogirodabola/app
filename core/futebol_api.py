@@ -456,3 +456,72 @@ def fetch_player_from_api(nome: str):
         logging.error(f"Erro ao buscar jogador {nome}: {e}")
         return None
 
+def buscar_estatisticas_brasileirao():
+    url = f"{BASE_URL}/standings"
+
+    for season in [2026, 2025, 2024]:
+
+        params = {
+            "league": 71,
+            "season": season
+        }
+
+        try:
+            response = requests.get(
+                url,
+                headers=HEADERS,
+                params=params,
+                timeout=10
+            )
+            data = response.json()
+        except Exception:
+            continue
+
+        if not data.get("response"):
+            continue
+
+        try:
+            tabela = data["response"][0]["league"]["standings"][0]
+        except:
+            continue
+
+        total_gols = 0
+        total_jogos = 0
+
+        melhor_ataque = None
+        melhor_defesa = None
+        max_gols = 0
+        min_gols_sofridos = 999
+
+        for time in tabela:
+            gols_pro = time["all"]["goals"]["for"]
+            gols_contra = time["all"]["goals"]["against"]
+            jogos = time["all"]["played"]
+
+            total_gols += gols_pro
+            total_jogos += jogos
+
+            if gols_pro > max_gols:
+                max_gols = gols_pro
+                melhor_ataque = {
+                    "nome": time["team"]["name"],
+                    "escudo": time["team"]["logo"]
+                }
+
+            if gols_contra < min_gols_sofridos:
+                min_gols_sofridos = gols_contra
+                melhor_defesa = {
+                    "nome": time["team"]["name"],
+                    "escudo": time["team"]["logo"]
+                }
+
+        media = round(total_gols / total_jogos, 2) if total_jogos else 0
+
+        return {
+            "total_gols": total_gols,
+            "media_gols": media,
+            "melhor_ataque": melhor_ataque,
+            "melhor_defesa": melhor_defesa
+        }
+
+    return None
