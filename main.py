@@ -436,6 +436,9 @@ def noticia(slug: str, request: Request):
         )
     ])
 
+    from core.database import listar_jogadores_por_noticia
+    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"])
+
     return templates.TemplateResponse(
         "noticia.html",
         {
