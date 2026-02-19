@@ -14,6 +14,7 @@ from core.database import atualizar_ads_slot_dispositivo
 from core.database import obter_metricas_editoriais
 from core.database import listar_jogadores_por_noticia
 from core.database import buscar_ou_criar_jogador
+from core.database import listar_noticias_por_jogador
 from core.futebol_api import buscar_jogador_na_api
 from core.database import (
     criar_tabelas,
