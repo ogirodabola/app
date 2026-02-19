@@ -876,6 +876,8 @@ def sitemap():
 
     return Response(content=xml.strip(), media_type="application/xml")
 
+from core.futebol_api import buscar_estatisticas_brasileirao
+
 @app.get("/brasileirao-2026", response_class=HTMLResponse)
 def brasileirao_2026(request: Request):
 
@@ -883,6 +885,7 @@ def brasileirao_2026(request: Request):
     noticias = listar_por_categoria("Brasileirão", 12)
     jogos = buscar_jogos_do_dia()
     artilharia = buscar_artilharia_brasileirao()
+    estatisticas = buscar_estatisticas_brasileirao()
 
     breadcrumb = gerar_breadcrumb_schema([
         ("Home", "https://girodesportivo.com/"),
@@ -898,7 +901,8 @@ def brasileirao_2026(request: Request):
             "jogos": jogos,
             "artilharia": artilharia,
             "breadcrumb_schema": breadcrumb,
-            "categoria_ativa": "Brasileirão"
+            "categoria_ativa": "Brasileirão",
+            "estatisticas": estatisticas
         }
     )
 
