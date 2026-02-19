@@ -191,6 +191,13 @@ def processar():
                     marcar_erro(conn, noticia_id)
                     continue
 
+                titulo_lower = titulo.lower()
+
+                if "onde assistir" in titulo_lower:
+                    tipo_materia = "guia_transmissao"
+                else:
+                    tipo_materia = "editorial_padrao"
+
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo_editorial,
                     resumo=resumo,
