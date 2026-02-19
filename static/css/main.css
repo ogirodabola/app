@@ -2622,3 +2622,45 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     object-fit: cover;
     display: block;
 }
+
+.related-player {
+    margin-top: 40px;
+}
+
+.related-player h3 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.related-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.related-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.related-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.related-title {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.4;
+}
