@@ -881,6 +881,8 @@ def brasileirao_2026(request: Request):
 
     classificacao = buscar_classificacao_brasileirao()
     noticias = listar_por_categoria("Brasileirão", 12)
+    jogos = buscar_jogos_do_dia()
+    artilharia = buscar_artilharia_brasileirao()
 
     breadcrumb = gerar_breadcrumb_schema([
         ("Home", "https://girodesportivo.com/"),
@@ -893,10 +895,13 @@ def brasileirao_2026(request: Request):
             "request": request,
             "classificacao": classificacao,
             "noticias": noticias,
+            "jogos": jogos,
+            "artilharia": artilharia,
             "breadcrumb_schema": breadcrumb,
             "categoria_ativa": "Brasileirão"
         }
     )
+
 
 from fastapi.responses import Response
 from datetime import datetime, timedelta
