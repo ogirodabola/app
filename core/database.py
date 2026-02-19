@@ -1442,3 +1442,17 @@ def buscar_dados_jogador_api(nome: str):
         "data_nascimento": player.get("birth", {}).get("date"),
         "altura": player.get("height"),
     }
+
+def buscar_jogadores_por_nome(query: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            cur.execute("""
+                SELECT id, nome, foto, time_atual
+                FROM jogadores
+                WHERE nome ILIKE %s
+                ORDER BY nome ASC
+                LIMIT 5
+            """, (f"%{query}%",))
+
+            return cur.fetchall()
