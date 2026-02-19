@@ -64,15 +64,9 @@ def gerar_slug_unico(conn, titulo: str) -> str:
 def buscar_pendentes_balanceado(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute("""
-            SELECT *
-            FROM (
-                SELECT *,
-                       ROW_NUMBER() OVER (PARTITION BY fonte ORDER BY criada_em ASC) as rn
-                FROM noticias
-                WHERE conteudo_editorial IS NULL
-                AND (editorial_status IS NULL OR editorial_status <> 'erro_conteudo')
-            ) sub
-            WHERE rn <= 3
+            SELECT id, titulo, resumo, conteudo_original
+            FROM noticias
+            WHERE conteudo_editorial IS NULL
             ORDER BY criada_em ASC
             LIMIT %s;
         """, (LIMITE_POR_EXECUCAO,))
