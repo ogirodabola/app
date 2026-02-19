@@ -68,69 +68,81 @@ href="https://girodesportivo.com/brasileirao-2026">
   </div>
 
   <!-- COLUNA DIREITA – CLASSIFICAÇÃO -->
-  <aside class="col-classificacao">
+<aside class="col-classificacao">
 
-    <div class="classificacao-card">
+  <div class="classificacao-card">
 
-      <h2 style="margin-bottom:20px;">Classificação</h2>
+    <h2 class="classificacao-title">Classificação</h2>
 
-      <div class="standings-grid">
+    <div class="standings-grid">
 
-        <!-- HEADER -->
-        <div class="standings-row standings-head">
-          <div>#</div>
-          <div class="team">Equipe</div>
-          <div>P</div>
-          <div>J</div>
-          <div>SG</div>
+      <!-- HEADER -->
+      <div class="standings-row standings-head">
+        <div class="col-pos">#</div>
+        <div class="col-team">Equipe</div>
+        <div class="col-num">P</div>
+        <div class="col-num">J</div>
+        <div class="col-num">SG</div>
+        <div class="col-forma">Forma</div>
+      </div>
+
+      <!-- ROWS -->
+      {% if classificacao %}
+        {% for t in classificacao %}
+        <div class="
+          standings-row
+          {% if t.posicao <= 6 %}
+            zona-libertadores
+          {% elif t.posicao <= 12 %}
+            zona-sulamericana
+          {% elif t.posicao >= 17 %}
+            zona-rebaixamento
+          {% else %}
+            zona-neutra
+          {% endif %}
+        ">
+          <div class="col-pos">{{ t.posicao }}</div>
+
+          <div class="col-team">
+            <img src="{{ t.escudo }}" alt="{{ t.nome }}" loading="lazy">
+            <span>{{ t.nome }}</span>
+          </div>
+
+          <div class="col-num">{{ t.pontos }}</div>
+          <div class="col-num">{{ t.jogos }}</div>
+          <div class="col-num">{{ t.saldo_gols }}</div>
+
+          <div class="col-forma">
+            {% for resultado in t.forma[-5:] %}
+              {% if resultado == "W" %}
+                <span class="form-win"></span>
+              {% elif resultado == "D" %}
+                <span class="form-draw"></span>
+              {% elif resultado == "L" %}
+                <span class="form-loss"></span>
+              {% endif %}
+            {% endfor %}
+          </div>
+
         </div>
-
-        <!-- ROWS -->
-        {% if classificacao %}
-          {% for t in classificacao %}
-          <div class="
-            standings-row
-            {% if t.posicao <= 6 %}
-              zona-libertadores
-            {% elif t.posicao <= 12 %}
-              zona-sulamericana
-            {% elif t.posicao >= 17 %}
-              zona-rebaixamento
-            {% else %}
-              zona-neutra
-            {% endif %}
-          ">
-            <div>{{ t.posicao }}</div>
-
-            <div class="team">
-              <img src="{{ t.escudo }}" alt="{{ t.nome }}" loading="lazy">
-              <span>{{ t.nome }}</span>
-            </div>
-
-            <div class="points">{{ t.pontos }}</div>
-            <div>{{ t.jogos }}</div>
-            <div>{{ t.saldo_gols }}</div>
-          </div>
-          {% endfor %}
-        {% else %}
-          <div style="padding:20px; opacity:.6;">
-            Classificação indisponível no momento.
-          </div>
-        {% endif %}
-
-      </div>
-
-      <div style="margin-top:20px;">
-        <a href="/classificacao-brasileirao-2026" class="btn-secondary">
-          Ver tabela completa
-        </a>
-      </div>
+        {% endfor %}
+      {% else %}
+        <div style="padding:20px; opacity:.6;">
+          Classificação indisponível no momento.
+        </div>
+      {% endif %}
 
     </div>
 
-  </aside>
+    <div class="classificacao-footer">
+      <a href="/classificacao-brasileirao-2026" class="btn-secondary">
+        Ver tabela completa
+      </a>
+    </div>
 
-</section>
+  </div>
+
+</aside>
 
 <section class="container hub-stats">
 
