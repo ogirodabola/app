@@ -2664,3 +2664,42 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     font-size: 15px;
     line-height: 1.4;
 }
+
+.hub-brasileirao {
+  padding: 60px 0;
+}
+
+.hub-section {
+  margin-bottom: 80px;
+}
+
+.hub-intro {
+  max-width: 800px;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.tabela-wrapper {
+  overflow-x: auto;
+}
+
+.jogos-grid,
+.artilharia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.jogo-card,
+.artilheiro-card {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
