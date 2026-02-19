@@ -69,33 +69,33 @@ def rodar_crawler():
     ]
 
     for crawler in fontes:
-        try:
-            noticias = crawler()
-            total_coletadas += len(noticias)
+    try:
+        noticias = crawler()
+        total_coletadas += len(noticias)
 
-            for n in noticias:
-                if not noticia_valida(n):
-                    continue
+        for n in noticias:
+            if not noticia_valida(n):
+                continue
 
-                sucesso = salvar_noticia(
-                    titulo=n["titulo"],
-                    resumo=n.get("subtitulo") or n["titulo"][:160],
-                    url=n["url"],
-                    fonte=n["fonte"],
-                    categoria=classificar_noticia(n["titulo"]),
-                    slug=gerar_slug(n["titulo"]),
-                    imagem=n["imagem"],
-                    imagem_credito=n.get("imagem_credito"),
-                    conteudo_original=n.get("conteudo_html")
-                )
+            salvar_noticia(
+                titulo=n["titulo"],
+                resumo=n.get("subtitulo") or n["titulo"][:160],
+                url=n["url"],
+                fonte=n["fonte"],
+                categoria=classificar_noticia(n["titulo"]),
+                slug=gerar_slug(n["titulo"]),
+                imagem=n["imagem"],
+                imagem_credito=n.get("imagem_credito"),
+                conteudo_original=n.get("conteudo_html")
+            )
 
-                if sucesso:
-                    total_salvas += 1
+            total_salvas += 1
 
-                except Exception as e:
-                    import traceback
-                    print(f"\n[RUNNER] erro no crawler {crawler.__name__}")
-                    traceback.print_exc()
+    except Exception as e:
+        import traceback
+        print(f"\n[RUNNER] erro no crawler {crawler.__name__}")
+        traceback.print_exc()
+
         
             print(
                 f"[RUNNER] Finalizado | coletadas: {total_coletadas} | salvas: {total_salvas}"
