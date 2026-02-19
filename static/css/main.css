@@ -2741,3 +2741,67 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   font-size: 1.1rem;
   opacity: 0.9;
 }
+
+/* GRID PRINCIPAL */
+
+.brasileirao-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+/* COLUNA NOTÍCIAS */
+
+.noticia-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 20px;
+}
+
+.noticia-row img {
+  width: 140px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.noticia-info h3 {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.meta {
+  font-size: .8rem;
+  opacity: .6;
+}
+
+/* COLUNA CLASSIFICAÇÃO */
+
+.classificacao-card {
+  background: rgba(255,255,255,0.03);
+  padding: 28px;
+  border-radius: 18px;
+  position: sticky;
+  top: 120px;
+}
+
+.classificacao-card h2 {
+  margin-bottom: 20px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1024px) {
+  .brasileirao-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .classificacao-card {
+    position: relative;
+    top: 0;
+  }
+}
