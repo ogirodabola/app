@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-Brasileirão 2026: Tabela, Classificação, Jogos e Artilharia | Giro Desportivo
+Brasileirão 2026: tabela, classificação, jogos e artilharia | Giro Desportivo
 {% endblock %}
 
 {% block meta %}
 <meta name="description"
-content="Acompanhe tabela, classificação atualizada, jogos, artilharia e estatísticas do Brasileirão 2026. Portal completo da Série A.">
+content="Acompanhe a classificação atualizada, tabela completa, jogos e últimas notícias do Brasileirão 2026. Portal completo da Série A.">
 
 <link rel="canonical"
 href="https://girodesportivo.com/brasileirao-2026">
@@ -14,37 +14,11 @@ href="https://girodesportivo.com/brasileirao-2026">
 <script type="application/ld+json">
 {{ breadcrumb_schema | safe }}
 </script>
-
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-   {
-     "@type": "Question",
-     "name": "Quantas rodadas tem o Brasileirão 2026?",
-     "acceptedAnswer": {
-       "@type": "Answer",
-       "text": "O Brasileirão Série A possui 38 rodadas, com jogos em turno e returno."
-     }
-   },
-   {
-     "@type": "Question",
-     "name": "Quantos times disputam o Brasileirão?",
-     "acceptedAnswer": {
-       "@type": "Answer",
-       "text": "20 clubes disputam o Campeonato Brasileiro Série A."
-     }
-   }
- ]
-}
-</script>
 {% endblock %}
 
 {% block content %}
 
-<section class="hub-brasileirao">
-
+<!-- HERO -->
 <header class="brasileirao-hero">
   <div class="hero-overlay"></div>
 
@@ -59,146 +33,103 @@ href="https://girodesportivo.com/brasileirao-2026">
 
 <!-- PROGRAMÁTICA -->
 <div class="container">
-  <div class="ads-block">
+  <div class="ads-block" style="margin:40px 0;">
     {{ render_ad("brasileirao_top", request) | safe }}
   </div>
 </div>
 
-{{ render_ad("brasileirao_top", request) | safe }}
+<!-- GRID PRINCIPAL -->
+<section class="container brasileirao-grid">
 
-<!-- CLASSIFICAÇÃO -->
-<section class="hub-section">
-<h2>Classificação do Brasileirão 2026</h2>
+  <!-- COLUNA ESQUERDA – NOTÍCIAS -->
+  <div class="col-noticias">
 
-<div class="tabela-wrapper">
-<table class="tabela-classificacao">
-<thead>
-<tr>
-<th>#</th>
-<th>Time</th>
-<th>P</th>
-<th>J</th>
-<th>V</th>
-<th>SG</th>
-</tr>
-</thead>
-<tbody>
-{% for time in classificacao %}
-<tr>
-<td>{{ time.posicao }}</td>
-<td>
-<img src="{{ time.escudo }}" width="20" loading="lazy">
-{{ time.nome }}
-</td>
-<td>{{ time.pontos }}</td>
-<td>{{ time.jogos }}</td>
-<td>{{ time.vitorias }}</td>
-<td>{{ time.saldo_gols }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
+    <h2 style="margin-bottom:30px;">Últimas notícias do Brasileirão</h2>
 
-<a href="/classificacao-brasileirao-2026" class="btn-secondary">
-Ver tabela completa
-</a>
+    {% for n in noticias %}
+    <article class="noticia-row">
 
-</section>
+      <a href="/noticia/{{ n.slug }}">
+        <img src="{{ n.imagem }}" alt="{{ n.titulo }}" loading="lazy">
+      </a>
 
-{{ render_ad("brasileirao_mid1", request) | safe }}
+      <div class="noticia-info">
+        <a href="/noticia/{{ n.slug }}">
+          <h3>{{ n.titulo }}</h3>
+        </a>
+        <span class="meta">
+          {{ n.categoria }}
+        </span>
+      </div>
 
-<!-- JOGOS -->
-<section class="hub-section">
-<h2>Próximos jogos do Brasileirão 2026</h2>
+    </article>
+    {% endfor %}
 
-<div class="jogos-grid">
-{% for jogo in jogos %}
-<div class="jogo-card">
-<span class="liga">{{ jogo.liga }}</span>
-<div class="times">
-<img src="{{ jogo.casa_logo }}" loading="lazy">
-<span>{{ jogo.casa }}</span>
-<strong>vs</strong>
-<span>{{ jogo.fora }}</span>
-<img src="{{ jogo.fora_logo }}" loading="lazy">
-</div>
-<span class="hora">{{ jogo.data }} - {{ jogo.hora }}</span>
-</div>
-{% endfor %}
-</div>
-</section>
+  </div>
 
-<!-- ARTILHARIA -->
-<section class="hub-section">
-<h2>Artilharia do Brasileirão 2026</h2>
+  <!-- COLUNA DIREITA – CLASSIFICAÇÃO -->
+  <aside class="col-classificacao">
 
-<div class="artilharia-grid">
-{% for jogador in artilharia[:10] %}
-<div class="artilheiro-card">
-<img src="{{ jogador.foto }}" loading="lazy">
-<strong>{{ jogador.nome }}</strong>
-<span>{{ jogador.time }}</span>
-<span class="gols">{{ jogador.gols }} gols</span>
-</div>
-{% endfor %}
-</div>
+    <div class="classificacao-card">
 
-<a href="/artilharia-brasileirao-2026" class="btn-secondary">
-Ver artilharia completa
-</a>
+      <h2 style="margin-bottom:20px;">Classificação</h2>
 
-</section>
+      <div class="standings-grid">
 
-{{ render_ad("brasileirao_mid2", request) | safe }}
+        <!-- HEADER -->
+        <div class="standings-row standings-head">
+          <div>#</div>
+          <div class="team">Equipe</div>
+          <div>P</div>
+          <div>J</div>
+          <div>SG</div>
+        </div>
 
-<!-- NOTÍCIAS -->
-<section class="hub-section">
-<h2>Últimas notícias do Brasileirão 2026</h2>
+        <!-- ROWS -->
+        {% if classificacao %}
+          {% for t in classificacao %}
+          <div class="
+            standings-row
+            {% if t.posicao <= 6 %}
+              zona-libertadores
+            {% elif t.posicao <= 12 %}
+              zona-sulamericana
+            {% elif t.posicao >= 17 %}
+              zona-rebaixamento
+            {% else %}
+              zona-neutra
+            {% endif %}
+          ">
+            <div>{{ t.posicao }}</div>
 
-<div class="cards-grid">
-{% for n in noticias %}
-<article class="card">
-<a href="/noticia/{{ n.slug }}">
-<img src="{{ n.imagem }}" loading="lazy">
-<h3>{{ n.titulo }}</h3>
-</a>
-</article>
-{% endfor %}
-</div>
-</section>
+            <div class="team">
+              <img src="{{ t.escudo }}" alt="{{ t.nome }}" loading="lazy">
+              <span>{{ t.nome }}</span>
+            </div>
 
-<!-- HISTÓRICO -->
-<section class="hub-section">
-<h2>História do Campeonato Brasileiro</h2>
+            <div class="points">{{ t.pontos }}</div>
+            <div>{{ t.jogos }}</div>
+            <div>{{ t.saldo_gols }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="padding:20px; opacity:.6;">
+            Classificação indisponível no momento.
+          </div>
+        {% endif %}
 
-<p>
-O Campeonato Brasileiro é a principal competição nacional do futebol brasileiro.
-Criado em 1971 no formato moderno, o torneio reúne os maiores clubes do país
-e é disputado em sistema de pontos corridos desde 2003.
-</p>
+      </div>
 
-<p>
-O clube que terminar na liderança após 38 rodadas é declarado campeão.
-Os quatro primeiros garantem vaga na Libertadores.
-</p>
-</section>
+      <div style="margin-top:20px;">
+        <a href="/classificacao-brasileirao-2026" class="btn-secondary">
+          Ver tabela completa
+        </a>
+      </div>
 
-<!-- FAQ -->
-<section class="hub-section">
-<h2>Perguntas frequentes sobre o Brasileirão 2026</h2>
+    </div>
 
-<h3>Quem lidera o Brasileirão 2026?</h3>
-<p>A liderança é definida pela pontuação acumulada ao longo das rodadas.</p>
+  </aside>
 
-<h3>Onde assistir aos jogos?</h3>
-<p>Os jogos são transmitidos por emissoras de TV aberta, fechada e streaming.</p>
-
-</section>
-
-{{ render_ad("brasileirao_bottom", request) | safe }}
-
-</div>
 </section>
 
 {% endblock %}
