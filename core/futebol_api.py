@@ -431,10 +431,16 @@ def fetch_player_from_api(nome: str):
 
     try:
         response = requests.get(
-            f"{BASE_URL}/players?search={nome}",
-            headers=HEADERS,
+            f"{BASE_URL}/players",
+            headers=headers,
+            params={
+                "search": query,
+                "league": 71,      # Brasileirão
+                "season": 2026
+            },
             timeout=10
         )
+
 
         if response.status_code != 200:
             return None
