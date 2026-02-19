@@ -297,7 +297,8 @@ def salvar_noticia(
                 categoria,
                 slug,
                 imagem,
-                imagem_credito
+                imagem_credito,
+                conteudo_original   # 🔥 AQUI ESTAVA FALTANDO
             ))
         conn.commit()
     finally:
