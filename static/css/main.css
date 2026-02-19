@@ -869,8 +869,10 @@ HOME – ÚLTIMAS NOTÍCIAS
 
 .brasileirao-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 32px;
+  grid-template-columns: 2.3fr 1fr;
+  gap: 50px;
+  margin-top: 60px;
+  align-items: start;
 }
 
 .brasileirao-cards {
@@ -2751,6 +2753,14 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   margin-top: 60px;
 }
 
+.col-classificacao {
+  max-width: 420px;
+}
+
+.classificacao-card {
+  width: 100%;
+}
+
 /* COLUNA NOTÍCIAS */
 
 .noticia-row {
@@ -2762,15 +2772,15 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .noticia-row img {
-  width: 140px;
-  height: 90px;
+  width: 170px;
+  height: 110px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .noticia-info h3 {
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 1.05rem;
+  line-height: 1.45;
   margin-bottom: 8px;
 }
 
