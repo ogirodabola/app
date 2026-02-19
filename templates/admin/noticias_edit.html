@@ -184,13 +184,52 @@ document.addEventListener("DOMContentLoaded", function() {
 <script>
 tinymce.init({
   selector: '#conteudo_editorial',
-  height: 500,
-  plugins: 'lists link table media code wordcount',
-  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link media table | code',
+  height: 550,
   menubar: false,
-  branding: false
+  branding: false,
+
+  plugins: [
+    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
+    'link', 'lists', 'media', 'searchreplace', 'table',
+    'visualblocks', 'wordcount',
+    'checklist', 'mediaembed', 'casechange', 'formatpainter',
+    'pageembed', 'a11ychecker', 'tinymcespellchecker',
+    'permanentpen', 'powerpaste', 'advtable', 'advcode',
+    'advtemplate', 'mentions', 'tinycomments',
+    'tableofcontents', 'footnotes', 'mergetags',
+    'autocorrect', 'typography', 'inlinecss',
+    'markdown', 'importword', 'exportword', 'exportpdf'
+  ],
+
+  toolbar:
+    'undo redo | blocks fontfamily fontsize | ' +
+    'bold italic underline strikethrough | ' +
+    'link media table mergetags | ' +
+    'align lineheight | ' +
+    'checklist numlist bullist indent outdent | ' +
+    'emoticons charmap | removeformat',
+
+  tinycomments_mode: 'embedded',
+  tinycomments_author: 'Giro Desportivo',
+
+  mergetags_list: [
+    { value: 'First.Name', title: 'First Name' },
+    { value: 'Email', title: 'Email' }
+  ],
+
+  content_style: `
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+    h2 {
+      margin-top: 24px;
+    }
+  `
 });
 </script>
+
+
 <script>
 const input = document.getElementById("jogador-search");
 const hiddenInput = document.getElementById("jogador-hidden");
