@@ -217,7 +217,7 @@ input.addEventListener("input", async function() {
 
         div.innerHTML = `
             <img src="${j.foto}" width="30" style="margin-right:8px;">
-            ${j.nome} - ${j.time}
+            ${j.nome} - ${j.time_atual || ''}
         `;
 
         div.onclick = () => {
