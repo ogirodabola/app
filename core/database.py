@@ -1290,20 +1290,23 @@ def vincular_jogador_noticia(noticia_id, jogador_id):
 # ============================================
 
 def listar_jogadores_por_noticia(noticia_id: int):
-    conn = get_conn()
-    try:
+    with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
             cur.execute("""
-                SELECT 
-                    j.*,
-                    COALESCE(DATE_PART('year', AGE(j.data_nascimento)), 0) AS idade
+                SELECT j.id,
+                       j.nome,
+                       j.slug,
+                       j.foto,
+                       j.time_atual,
+                       j.escudo_time,
+                       j.data_nascimento
                 FROM jogadores j
                 JOIN noticia_jogadores nj ON nj.jogador_id = j.id
                 WHERE nj.noticia_id = %s
             """, (noticia_id,))
+
             return cur.fetchall()
-    finally:
-        conn.close()
 
 # ======================================================
 # JOGADORES
