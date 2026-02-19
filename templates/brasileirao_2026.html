@@ -45,15 +45,24 @@ href="https://girodesportivo.com/brasileirao-2026">
 
 <section class="hub-brasileirao">
 
+<header class="brasileirao-hero">
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+    <h1>Brasileirão 2026: tabela, classificação, jogos e artilharia</h1>
+    <p>
+      Acompanhe a classificação atualizada, tabela completa,
+      próximos jogos e as últimas notícias do Campeonato Brasileiro Série A.
+    </p>
+  </div>
+</header>
+
+<!-- PROGRAMÁTICA -->
 <div class="container">
-
-<h1>Brasileirão 2026: tabela, classificação, jogos e artilharia</h1>
-
-<p class="hub-intro">
-O Brasileirão 2026 reúne os 20 principais clubes do futebol brasileiro.
-Acompanhe aqui a classificação atualizada, tabela completa, próximos jogos,
-artilharia e as últimas notícias da Série A.
-</p>
+  <div class="ads-block">
+    {{ render_ad("brasileirao_top", request) | safe }}
+  </div>
+</div>
 
 {{ render_ad("brasileirao_top", request) | safe }}
 
