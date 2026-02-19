@@ -14,7 +14,6 @@ from core.database import atualizar_ads_slot_dispositivo
 from core.database import obter_metricas_editoriais
 from core.database import listar_jogadores_por_noticia
 from core.database import buscar_ou_criar_jogador
-from core.database import listar_noticias_por_jogador
 from core.futebol_api import buscar_jogador_na_api
 from core.database import (
     criar_tabelas,
@@ -37,7 +36,8 @@ from core.database import (
     limpar_vinculos_jogadores_noticia,
     buscar_jogador_por_slug,
     criar_jogador_basico,
-    vincular_jogador_noticia
+    vincular_jogador_noticia,
+    listar_noticias_por_jogador
 )
 
 
@@ -378,16 +378,10 @@ def noticia(slug: str, request: Request):
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
 
     # =============================
-    # JOGADORES (COM SINCRONIZAÇÃO)
+    # JOGADORES RELACIONADOS
     # =============================
 
-    jogadores_db = listar_jogadores_por_noticia(noticia["id"]) or []
-    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"])
-
-    for j in jogadores_db:
-        jogador_sync = buscar_ou_criar_jogador(j["slug"])
-        if jogador_sync:
-            jogadores_relacionados.append(jogador_sync)
+    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
 
     # =============================
     # RECOMENDADAS
@@ -402,16 +396,17 @@ def noticia(slug: str, request: Request):
     noticias_relacionadas = []
 
     for jogador in jogadores_relacionados:
-        relacionadas_jogador = listar_noticias_por_jogador(
+
+        relacionadas = listar_noticias_por_jogador(
             jogador["id"],
             limit=3
         ) or []
 
-        for n in relacionadas_jogador:
+        for n in relacionadas:
             if n["slug"] != slug:
                 noticias_relacionadas.append(n)
 
-    # remove duplicadas
+    # remover duplicadas
     noticias_relacionadas = {
         n["id"]: n for n in noticias_relacionadas
     }.values()
@@ -435,8 +430,6 @@ def noticia(slug: str, request: Request):
             f"https://girodesportivo.com/noticia/{slug}"
         )
     ])
-
-    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"])
 
     return templates.TemplateResponse(
         "noticia.html",
