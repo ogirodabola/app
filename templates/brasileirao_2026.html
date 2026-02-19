@@ -113,9 +113,10 @@ href="https://girodesportivo.com/brasileirao-2026">
           <div class="col-num">{{ t.saldo_gols }}</div>
 
           <div class="col-forma">
-            {% set forma = t.get('forma', '') %}
-            {% if forma %}
-              {% for resultado in forma[-5:] %}
+          {% set forma = t.get('forma') or '' %}
+          {% if forma %}
+            {% for resultado in forma[-5:] %}
+              {% if resultado == "W" %}
                 <span class="form-win"></span>
               {% elif resultado == "D" %}
                 <span class="form-draw"></span>
@@ -123,6 +124,7 @@ href="https://girodesportivo.com/brasileirao-2026">
                 <span class="form-loss"></span>
               {% endif %}
             {% endfor %}
+          {% endif %}
           </div>
 
         </div>
