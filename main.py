@@ -367,7 +367,7 @@ def pagina_categoria(request: Request, categoria_slug: str):
 # ======================================================
 # NOTÍCIA INDIVIDUAL
 # ======================================================
-from core.database import listar_noticias_por_jogador
+from core.database import listar_jogadores_por_noticia
 
 @app.get("/noticia/{slug}", response_class=HTMLResponse)
 def noticia(slug: str, request: Request):
@@ -382,8 +382,7 @@ def noticia(slug: str, request: Request):
     # =============================
 
     jogadores_db = listar_jogadores_por_noticia(noticia["id"]) or []
-
-    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"]) or []
+    jogadores_relacionados = listar_jogadores_por_noticia(noticia["id"])
 
     for j in jogadores_db:
         jogador_sync = buscar_ou_criar_jogador(j["slug"])
