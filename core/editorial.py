@@ -122,54 +122,63 @@ RESUMO:
 # ======================================================
 # CONTEÚDO EDITORIAL
 # ======================================================
+
 def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
     if USE_MOCK or not _client:
         return f"<p>{resumo}</p>"
 
     prompt = f"""
+Você é editor-chefe de um portal esportivo profissional brasileiro.
+
 Reescreva a notícia abaixo como matéria de portal esportivo profissional.
 
 Regras obrigatórias:
 
-- Mínimo de 600 palavras
-- Linguagem jornalística neutra
-- Estrutura clara com subtítulos (##)
-- Contextualize o momento atual da equipe
-- Inclua dados recentes (últimos jogos, posição na tabela, estatísticas)
-- Explique impacto futuro da notícia
-- Evite repetição
-- Não use emojis
-- Não use linguagem informal
-- Não invente informações
+- NÃO use Markdown
+- NÃO use ##
+- NÃO use listas com "-"
+- NÃO use negrito
+- Use apenas HTML válido
+- Use SOMENTE <p> e <h2>
+- Sempre comece com um <p> (lead forte)
+- Use <h2> apenas para subtítulos
+- Estruture em 5 a 8 blocos bem desenvolvidos
+- Mínimo 600 palavras
+- Linguagem natural e envolvente
+- SEO otimizado
+- Nunca inclua o título dentro do conteúdo
+- Não invente dados
 - Conteúdos patrocinados de Bets devem ser descartados e nunca publicados
 
-Título:
+TÍTULO:
 {titulo}
 
-Resumo original:
+TEXTO BASE:
 {resumo}
 
-Categoria:
+CATEGORIA:
 {categoria}
-
-Retorne apenas o texto final da matéria.
 """
-
 
     resp = _client.responses.create(
         model=MODEL_NAME,
         input=prompt,
-        max_output_tokens=900,
+        max_output_tokens=1200,
     )
 
     texto = resp.output_text.strip()
-    texto = texto.replace("```html", "").replace("```", "").strip()
 
-    if len(texto) < 200:
+    # limpeza defensiva
+    texto = texto.replace("```html", "").replace("```", "")
+    texto = re.sub(r"^##\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
+    texto = re.sub(r"^###\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
+
+    texto = texto.strip()
+
+    if len(texto) < 400:
         raise ValueError("Conteúdo editorial muito curto")
 
     return texto
-
 
 # ======================================================
 # FUNÇÃO DE COMPATIBILIDADE (NÃO REMOVER)
