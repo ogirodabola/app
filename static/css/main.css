@@ -2950,3 +2950,79 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   opacity: .85;
   line-height: 1.7;
 }
+
+.classificacao-title {
+  margin-bottom: 25px;
+}
+
+/* GRID DEFINIDO COM COLUNAS FIXAS */
+.standings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.standings-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 50px 50px 50px 90px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 14px;
+}
+
+.standings-head {
+  background: rgba(255,255,255,0.04);
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  opacity: .6;
+}
+
+/* COLUNAS */
+.col-pos {
+  text-align: center;
+  font-weight: 600;
+}
+
+.col-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.col-team img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.col-num {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.col-forma {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* FORMA */
+.form-win,
+.form-draw,
+.form-loss {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.form-win { background: #22c55e; }
+.form-draw { background: #facc15; }
+.form-loss { background: #ef4444; }
+
+/* FOOTER */
+.classificacao-footer {
+  margin-top: 20px;
+}
