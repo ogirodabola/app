@@ -266,3 +266,5 @@ Retorne APENAS o slug.
     slug = re.sub(r"[^a-z0-9-]", "", slug.lower())
 
     return slug
+
+def gerar_guia_transmissao(dados_partida: dict) -> str:
