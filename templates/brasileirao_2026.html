@@ -147,76 +147,86 @@ href="https://girodesportivo.com/brasileirao-2026">
 
 </aside>
 
-<section class="container hub-stats">
-
-  <h2>Estatísticas do Brasileirão 2026</h2>
+<section class="container hub-info-grid">
 
   {% if estatisticas %}
-  <div class="stats-grid">
+  <div class="hub-stats">
 
-    <div class="stat-card">
-      <div class="stat-icon">⚽</div>
-      <span class="stat-number">
-        {{ estatisticas.total_gols }}
-      </span>
-      <span class="stat-label">Gols marcados</span>
-    </div>
+    <h2>Estatísticas do Brasileirão 2026</h2>
 
-    <div class="stat-card">
-      <div class="stat-icon">📊</div>
-      <span class="stat-number">
-        {{ estatisticas.media_gols }}
-      </span>
-      <span class="stat-label">Média de gols por jogo</span>
-    </div>
+    <div class="stats-grid">
 
-    <div class="stat-card">
-      <img src="{{ estatisticas.melhor_ataque.escudo }}"
-           class="stat-escudo">
-      <span class="stat-number">
-        {{ estatisticas.melhor_ataque.nome }}
-      </span>
-      <span class="stat-label">Melhor ataque</span>
-    </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚽</div>
+        <span class="stat-number">
+          {{ estatisticas.total_gols }}
+        </span>
+        <span class="stat-label">Gols marcados</span>
+      </div>
 
-    <div class="stat-card">
-      <img src="{{ estatisticas.melhor_defesa.escudo }}"
-           class="stat-escudo">
-      <span class="stat-number">
-        {{ estatisticas.melhor_defesa.nome }}
-      </span>
-      <span class="stat-label">Melhor defesa</span>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <span class="stat-number">
+          {{ estatisticas.media_gols }}
+        </span>
+        <span class="stat-label">Média de gols por jogo</span>
+      </div>
+
+      {% if estatisticas.melhor_ataque %}
+      <div class="stat-card">
+        <img src="{{ estatisticas.melhor_ataque.escudo }}"
+             class="stat-escudo"
+             alt="{{ estatisticas.melhor_ataque.nome }}">
+        <span class="stat-number">
+          {{ estatisticas.melhor_ataque.nome }}
+        </span>
+        <span class="stat-label">Melhor ataque</span>
+      </div>
+      {% endif %}
+
+      {% if estatisticas.melhor_defesa %}
+      <div class="stat-card">
+        <img src="{{ estatisticas.melhor_defesa.escudo }}"
+             class="stat-escudo"
+             alt="{{ estatisticas.melhor_defesa.nome }}">
+        <span class="stat-number">
+          {{ estatisticas.melhor_defesa.nome }}
+        </span>
+        <span class="stat-label">Melhor defesa</span>
+      </div>
+      {% endif %}
+
     </div>
 
   </div>
   {% endif %}
 
-</section>
+  <div class="faq-section">
 
-<section class="container faq-section">
+    <div class="faq-box">
 
-  <div class="faq-box">
+      <h2>Perguntas frequentes sobre o Brasileirão 2026</h2>
 
-    <h2>Perguntas frequentes sobre o Brasileirão 2026</h2>
+      <div class="faq-item">
+        <h3>Quantas rodadas tem o Brasileirão?</h3>
+        <p>O campeonato possui 38 rodadas, disputadas em turno e returno.</p>
+      </div>
 
-    <div class="faq-item">
-      <h3>Quantas rodadas tem o Brasileirão?</h3>
-      <p>O campeonato possui 38 rodadas, disputadas em turno e returno.</p>
-    </div>
+      <div class="faq-item">
+        <h3>Quantos pontos garantem o título?</h3>
+        <p>Historicamente, entre 70 e 80 pontos costumam garantir o título.</p>
+      </div>
 
-    <div class="faq-item">
-      <h3>Quantos pontos garantem o título?</h3>
-      <p>Historicamente, entre 70 e 80 pontos costumam garantir o título.</p>
-    </div>
+      <div class="faq-item">
+        <h3>Quantos pontos evitam o rebaixamento?</h3>
+        <p>Em média, 45 pontos são suficientes para garantir permanência.</p>
+      </div>
 
-    <div class="faq-item">
-      <h3>Quantos pontos evitam o rebaixamento?</h3>
-      <p>Em média, 45 pontos são suficientes para garantir permanência.</p>
-    </div>
+      <div class="faq-item">
+        <h3>Onde assistir aos jogos do Brasileirão?</h3>
+        <p>Os jogos são transmitidos por TV aberta, canais por assinatura e plataformas de streaming.</p>
+      </div>
 
-    <div class="faq-item">
-      <h3>Onde assistir aos jogos do Brasileirão?</h3>
-      <p>Os jogos são transmitidos por TV aberta, canais por assinatura e plataformas de streaming.</p>
     </div>
 
   </div>
