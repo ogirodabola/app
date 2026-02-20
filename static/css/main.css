@@ -3000,6 +3000,16 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .form-draw { background: #facc15; }
 .form-loss { background: #ef4444; }
 
+.form-win,
+.form-draw,
+.form-loss {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
 /* FOOTER */
 .classificacao-footer {
   margin-top: 20px;
