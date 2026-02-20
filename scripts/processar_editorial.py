@@ -201,9 +201,10 @@ def processar():
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo_editorial,
                     resumo=resumo,
-                    categoria=categoria
+                    categoria=categoria,
+                    conteudo_original=noticia.get("conteudo_original")
                 )
-
+                
                 salvar_editorial(
                     conn,
                     noticia_id=noticia_id,
