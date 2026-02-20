@@ -129,7 +129,7 @@ def listar_ultima_hora(limit=12):
     finally:
         conn.close()
 
-def listar_ultimas_editoriais(limit=5):
+def listar_ultimas_editoriais(limit=8):
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
