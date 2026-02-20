@@ -2835,18 +2835,6 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   line-height: 1.7;
 }
 
-.hub-stats {
-  margin-top: 100px;
-}
-
-.stat-card {
-  background: rgba(255,255,255,0.04);
-  padding: 40px 30px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
-}
-
 .stat-number {
   font-size: 1.8rem;
   font-weight: 700;
@@ -2857,10 +2845,6 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .stat-label {
   font-size: .9rem;
   opacity: .7;
-}
-
-.hub-stats {
-  margin-top: 120px;
 }
 
 .stats-grid {
@@ -3027,7 +3011,7 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .hub-stats {
-  margin-top: 0;
+  margin-top: 120px;
 }
 
 .faq-section {
