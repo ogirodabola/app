@@ -2748,13 +2748,9 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .brasileirao-grid {
   display: grid;
-  grid-template-columns: 2fr 1.2fr;
+  grid-template-columns: 2fr 1.4fr;
   gap: 60px;
   margin-top: 60px;
-}
-
-.col-classificacao {
-  max-width: 420px;
 }
 
 .classificacao-card {
@@ -2940,10 +2936,16 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .standings-row {
   display: grid;
-  grid-template-columns: 40px 1fr 50px 50px 50px 90px;
+  grid-template-columns: 
+    50px        /* posição */
+    1.6fr       /* equipe */
+    70px        /* pontos */
+    70px        /* jogos */
+    70px        /* saldo */
+    110px;      /* forma */
   align-items: center;
-  padding: 14px 16px;
-  border-radius: 14px;
+  padding: 16px 20px;
+  border-radius: 16px;
 }
 
 .standings-head {
