@@ -51,6 +51,23 @@ app.add_middleware(
     secret_key="MUDE_ESSA_CHAVE_SUPER_SECRETA"
 )
 
+@app.middleware("http")
+async def redirect_middleware(request: Request, call_next):
+    path = request.url.path.strip("/")
+
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT new_slug FROM redirects WHERE old_slug = %s LIMIT 1",
+                (path,)
+            )
+            row = cur.fetchone()
+
+    if row:
+        return RedirectResponse(f"/{row[0]}", status_code=301)
+
+    return await call_next(request)
+
 import json
 
 def gerar_breadcrumb_schema(itens):
