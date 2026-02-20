@@ -302,3 +302,24 @@ def gerar_editorial_com_extracao(titulo, resumo, conteudo_original, categoria):
 
     texto = resp.output_text.strip()
     return texto
+
+def gerar_editorial_com_extracao(
+    titulo: str,
+    resumo: str,
+    conteudo_original: str,
+    categoria: str
+) -> str:
+    
+    prompt = f"""
+    ...
+    CONTEÚDO ORIGINAL:
+    {conteudo_original}
+    """
+
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=1400,
+    )
+
+    return resp.output_text.strip()
