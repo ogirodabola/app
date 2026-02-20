@@ -268,3 +268,4 @@ Retorne APENAS o slug.
     return slug
 
 def gerar_guia_transmissao(dados_partida: dict) -> str:
+        return ""
