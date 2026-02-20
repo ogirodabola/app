@@ -123,9 +123,17 @@ RESUMO:
 # CONTEÚDO EDITORIAL
 # ======================================================
 
-def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
+def gerar_conteudo_editorial(
+    titulo: str,
+    resumo: str,
+    categoria: str,
+    conteudo_original: str | None = None
+) -> str:
     if USE_MOCK or not _client:
         return f"<p>{resumo}</p>"
+
+    # ✅ fallback seguro caso conteudo_original venha vazio
+    conteudo_base = conteudo_original or resumo
 
     prompt = f"""
 Você é editor-chefe de um portal esportivo profissional brasileiro.
@@ -178,24 +186,25 @@ CATEGORIA:
 {categoria}
 
 CONTEÚDO ORIGINAL:
-{conteudo_original}
+{conteudo_base}
 """
 
     resp = _client.responses.create(
         model=MODEL_NAME,
         input=prompt,
-        max_output_tokens=1200,
+        max_output_tokens=1500,
     )
 
     texto = resp.output_text.strip()
 
-    # limpeza defensiva
+    # 🔎 limpeza defensiva
     texto = texto.replace("```html", "").replace("```", "")
     texto = re.sub(r"^##\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
     texto = re.sub(r"^###\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
 
     texto = texto.strip()
 
+    # 🚨 Validação mínima de qualidade
     if len(texto) < 400:
         raise ValueError("Conteúdo editorial muito curto")
 
