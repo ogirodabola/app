@@ -130,34 +130,55 @@ def gerar_conteudo_editorial(titulo: str, resumo: str, categoria: str) -> str:
     prompt = f"""
 Você é editor-chefe de um portal esportivo profissional brasileiro.
 
-Reescreva a notícia abaixo como matéria de portal esportivo profissional.
+A matéria trata de um confronto de futebol.
 
-Regras obrigatórias:
+LEIA atentamente o conteúdo original.
+Extraia apenas informações reais presentes no texto.
+NÃO invente dados.
 
-- NÃO use Markdown
-- NÃO use ##
-- NÃO use listas com "-"
-- NÃO use negrito
+REGRAS OBRIGATÓRIAS:
+
 - Use apenas HTML válido
 - Use SOMENTE <p> e <h2>
-- Sempre comece com um <p> (lead forte)
-- Use <h2> apenas para subtítulos
-- Estruture em 5 a 8 blocos bem desenvolvidos
-- Mínimo 600 palavras
-- Linguagem natural e envolvente
+- Nunca use Markdown
+- Nunca use negrito
+- Nunca use listas
+- Sempre comece com um <p> (lead direto e informativo)
+- Estruture entre 5 e 8 blocos
+- Produza entre 600 e 900 palavras
 - SEO otimizado
 - Nunca inclua o título dentro do conteúdo
-- Não invente dados
-- Conteúdos patrocinados de Bets devem ser descartados e nunca publicados
+- Não invente horário, transmissão ou escalações
+- Se o texto não mencionar canal específico, não invente
+- Se não houver nomes de jogadores, não invente escalação
+
+ESTRUTURA OBRIGATÓRIA:
+
+<p>Lead forte resumindo o confronto e sua importância</p>
+
+<h2>Onde será o jogo</h2>
+<p>Informar estádio e contexto</p>
+
+<h2>Horário da partida</h2>
+<p>Informar data e horário confirmados</p>
+
+<h2>Onde assistir</h2>
+<p>Informar transmissão apenas se citada</p>
+
+<h2>Prováveis escalações</h2>
+<p>Somente se houver informação concreta no texto</p>
+
+<h2>Momento das equipes</h2>
+<p>Análise baseada exclusivamente no conteúdo original</p>
 
 TÍTULO:
 {titulo}
 
-TEXTO BASE:
-{resumo}
-
 CATEGORIA:
 {categoria}
+
+CONTEÚDO ORIGINAL:
+{conteudo_original}
 """
 
     resp = _client.responses.create(
@@ -269,3 +290,15 @@ Retorne APENAS o slug.
 
 def gerar_guia_transmissao(dados_partida: dict) -> str:
         return ""
+
+def gerar_editorial_com_extracao(titulo, resumo, conteudo_original, categoria):
+    prompt = f"..."
+    
+    resp = _client.responses.create(
+        model=MODEL_NAME,
+        input=prompt,
+        max_output_tokens=1400,
+    )
+
+    texto = resp.output_text.strip()
+    return texto
