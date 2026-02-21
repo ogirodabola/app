@@ -111,57 +111,7 @@ def noticia_similar_existe(conn, titulo):
             return True
 
     return False
-
-
-# ======================================================
-# EXTRAÇÃO E VÍNCULO AUTOMÁTICO DE JOGADORES
-# ======================================================
-
-def vincular_jogadores_automaticamente(conn, noticia_id, tags, conteudo_original):
-    from core.database import buscar_ou_criar_jogador, vincular_jogador_noticia
-
-    candidatos = set()
-
-    # 1️⃣ Tags geradas pela IA
-    for tag in tags or []:
-        if len(tag) >= 4:
-            candidatos.add(tag.title())
-
-    # 2️⃣ Extração simples do conteúdo original
-    if conteudo_original:
-        encontrados = re.findall(
-            r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+(?:\s[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+)?\b",
-            conteudo_original
-        )
-        for nome in encontrados:
-            if len(nome) > 4:
-                candidatos.add(nome)
-
-    bloqueados = {
-        "Brasileirão",
-        "Libertadores",
-        "Flamengo",
-        "Palmeiras",
-        "Corinthians",
-        "Vasco",
-        "São Paulo",
-        "Santos",
-        "Grêmio",
-        "Internacional",
-    }
-
-    for nome in candidatos:
-        if nome in bloqueados:
-            continue
-
-        try:
-            jogador = buscar_ou_criar_jogador(nome)
-            if jogador:
-                vincular_jogador_noticia(noticia_id, jogador["id"])
-        except Exception as e:
-            print(f"Erro ao vincular jogador {nome}: {e}")
-
-
+    
 # ======================================================
 # SALVAR EDITORIAL
 # ======================================================
@@ -255,15 +205,6 @@ def processar():
                     categoria,
                     tags
                 )
-
-                # 🔥 VINCULAR JOGADORES APENAS SE PUBLICOU
-                if publicado:
-                    vincular_jogadores_automaticamente(
-                        conn,
-                        noticia_id,
-                        tags,
-                        noticia.get("conteudo_original")
-                    )
 
                 print("   ✅ Publicado.\n")
                 time.sleep(PAUSA_ENTRE_ITENS)
