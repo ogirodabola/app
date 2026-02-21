@@ -26,6 +26,7 @@ PAUSA_ENTRE_ITENS = int(os.getenv("EDITORIAL_SLEEP", 2))
 # ======================================================
 # CONEXÃO
 # ======================================================
+
 def get_conn():
     return psycopg2.connect(DATABASE_URL)
 
@@ -33,6 +34,7 @@ def get_conn():
 # ======================================================
 # SLUG SEO SEGURO
 # ======================================================
+
 def gerar_slug_seo_simples(titulo: str) -> str:
     slug = slugify(titulo)
     slug = re.sub(r"-+", "-", slug)
@@ -49,18 +51,18 @@ def gerar_slug_unico(conn, titulo: str) -> str:
     base_slug = gerar_slug_seo_simples(titulo)
     slug = base_slug
 
-    for contador in range(1, 20):  # limite de segurança
+    for contador in range(1, 20):
         if not slug_existe(conn, slug):
             return slug
         slug = f"{base_slug}-{contador}"
 
-    # fallback absoluto
     return f"{base_slug}-{int(time.time())}"
 
 
 # ======================================================
-# BUSCAR PENDENTES (SEM REPROCESSAR ERROS)
+# BUSCAR PENDENTES
 # ======================================================
+
 def buscar_pendentes_balanceado(conn):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute("""
@@ -72,23 +74,24 @@ def buscar_pendentes_balanceado(conn):
         """, (LIMITE_POR_EXECUCAO,))
         return cur.fetchall()
 
+
 # ======================================================
 # MARCAR ERRO
 # ======================================================
+
 def marcar_erro(conn, noticia_id):
     with conn.cursor() as cur:
-        cur.execute(
-            """
+        cur.execute("""
             UPDATE noticias
             SET editorial_status = 'erro_conteudo'
             WHERE id = %s;
-            """,
-            (noticia_id,)
-        )
+        """, (noticia_id,))
     conn.commit()
+
 
 def normalizar_titulo(titulo):
     return re.sub(r'\W+', '', titulo.lower())
+
 
 def noticia_similar_existe(conn, titulo):
     titulo_norm = normalizar_titulo(titulo)
@@ -111,8 +114,58 @@ def noticia_similar_existe(conn, titulo):
 
 
 # ======================================================
-# SALVAR EDITORIAL + AUTO PUBLISH
+# EXTRAÇÃO E VÍNCULO AUTOMÁTICO DE JOGADORES
 # ======================================================
+
+def vincular_jogadores_automaticamente(conn, noticia_id, tags, conteudo_original):
+    from core.database import buscar_ou_criar_jogador, vincular_jogador_noticia
+
+    candidatos = set()
+
+    # 1️⃣ Tags geradas pela IA
+    for tag in tags or []:
+        if len(tag) >= 4:
+            candidatos.add(tag.title())
+
+    # 2️⃣ Extração simples do conteúdo original
+    if conteudo_original:
+        encontrados = re.findall(
+            r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+(?:\s[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]+)?\b",
+            conteudo_original
+        )
+        for nome in encontrados:
+            if len(nome) > 4:
+                candidatos.add(nome)
+
+    bloqueados = {
+        "Brasileirão",
+        "Libertadores",
+        "Flamengo",
+        "Palmeiras",
+        "Corinthians",
+        "Vasco",
+        "São Paulo",
+        "Santos",
+        "Grêmio",
+        "Internacional",
+    }
+
+    for nome in candidatos:
+        if nome in bloqueados:
+            continue
+
+        try:
+            jogador = buscar_ou_criar_jogador(nome)
+            if jogador:
+                vincular_jogador_noticia(noticia_id, jogador["id"])
+        except Exception as e:
+            print(f"Erro ao vincular jogador {nome}: {e}")
+
+
+# ======================================================
+# SALVAR EDITORIAL
+# ======================================================
+
 def salvar_editorial(
     conn,
     noticia_id,
@@ -124,13 +177,12 @@ def salvar_editorial(
     if not conteudo_editorial or len(conteudo_editorial) < 150:
         print("   ⚠️ Conteúdo muito curto. Marcado como erro.")
         marcar_erro(conn, noticia_id)
-        return
+        return False
 
     slug = gerar_slug_unico(conn, titulo_editorial)
 
     with conn.cursor() as cur:
-        cur.execute(
-            """
+        cur.execute("""
             UPDATE noticias
             SET
               titulo_editorial = %s,
@@ -140,19 +192,17 @@ def salvar_editorial(
               slug = %s,
               editorial_status = 'publicado'
             WHERE id = %s;
-            """,
-            (
-                titulo_editorial,
-                conteudo_editorial,
-                categoria,
-                tags,
-                slug,
-                noticia_id
-            )
-        )
+        """, (
+            titulo_editorial,
+            conteudo_editorial,
+            categoria,
+            tags,
+            slug,
+            noticia_id
+        ))
 
     conn.commit()
-
+    return True
 
 
 # ======================================================
@@ -185,18 +235,10 @@ def processar():
                 categoria, tags = classificar_editorial(titulo, resumo)
                 titulo_editorial = gerar_titulo_editorial(titulo)
 
-                # 🔎 DEDUPLICAÇÃO
                 if noticia_similar_existe(conn, titulo_editorial):
                     print("   ⚠️ Notícia similar já publicada. Ignorando.")
                     marcar_erro(conn, noticia_id)
                     continue
-
-                titulo_lower = titulo.lower()
-
-                if "onde assistir" in titulo_lower:
-                    tipo_materia = "guia_transmissao"
-                else:
-                    tipo_materia = "editorial_padrao"
 
                 conteudo = gerar_conteudo_editorial(
                     titulo=titulo_editorial,
@@ -204,15 +246,24 @@ def processar():
                     categoria=categoria,
                     conteudo_original=noticia.get("conteudo_original")
                 )
-                
-                salvar_editorial(
+
+                publicado = salvar_editorial(
                     conn,
-                    noticia_id=noticia_id,
-                    titulo_editorial=titulo_editorial,
-                    conteudo_editorial=conteudo,
-                    categoria=categoria,
-                    tags=tags
+                    noticia_id,
+                    titulo_editorial,
+                    conteudo,
+                    categoria,
+                    tags
                 )
+
+                # 🔥 VINCULAR JOGADORES APENAS SE PUBLICOU
+                if publicado:
+                    vincular_jogadores_automaticamente(
+                        conn,
+                        noticia_id,
+                        tags,
+                        noticia.get("conteudo_original")
+                    )
 
                 print("   ✅ Publicado.\n")
                 time.sleep(PAUSA_ENTRE_ITENS)
@@ -224,6 +275,7 @@ def processar():
     finally:
         conn.close()
         print("🔒 Worker encerrado.")
+
 
 if __name__ == "__main__":
     processar()
