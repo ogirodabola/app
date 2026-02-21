@@ -170,14 +170,21 @@ ESTRUTURA OBRIGATÓRIA:
 <h2>Horário da partida</h2>
 <p>Informar data e horário confirmados</p>
 
+IMPORTANTE:
+
+- NÃO crie seções se não houver informação concreta no texto original.
+- NÃO escreva explicações como "o texto não menciona".
+- NÃO crie subtítulos vazios.
+- Se não houver informação confirmada, omita completamente a seção.
+
+Se houver transmissão confirmada:
 <h2>Onde assistir</h2>
-<p>Informe a transmissão se houver canal citado. Caso contrário, escreva de forma neutra indicando que a partida deve ter cobertura nos canais habituais da competição.</p>
 
+Se houver escalação confirmada:
 <h2>Prováveis escalações</h2>
-<p>Somente se houver informação concreta no texto</p>
 
+Se houver análise baseada em dados reais do texto:
 <h2>Momento das equipes</h2>
-<p>Análise baseada exclusivamente no conteúdo original</p>
 
 TÍTULO:
 {titulo}
