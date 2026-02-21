@@ -1463,3 +1463,40 @@ def buscar_jogadores_por_nome(query: str):
             """, (f"%{query}%",))
 
             return cur.fetchall()
+
+def garantir_coluna_facebook():
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                ALTER TABLE noticias
+                ADD COLUMN IF NOT EXISTS facebook_posted BOOLEAN DEFAULT FALSE;
+            """)
+        conn.commit()
+
+def listar_para_facebook(limit=10):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT id, titulo_editorial, slug, imagem, categoria
+                FROM noticias
+                WHERE editorial_status = 'publicado'
+                  AND facebook_posted = FALSE
+                  AND categoria IN (
+                      'Mercado da Bola',
+                      'Brasileirão',
+                      'Última Hora'
+                  )
+                ORDER BY criada_em DESC
+                LIMIT %s;
+            """, (limit,))
+            return cur.fetchall()
+
+def marcar_como_postado_facebook(noticia_id):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE noticias
+                SET facebook_posted = TRUE
+                WHERE id = %s;
+            """, (noticia_id,))
+        conn.commit()
