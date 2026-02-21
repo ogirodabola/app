@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ noticia.titulo_editorial or noticia.titulo }} | Giro Desportivo
+{% endblock %}
+
+{% block meta %}
+
+<meta name="description" content="{{ noticia.resumo }}">
+
+<link rel="canonical" href="{{ request.url }}">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
+<meta property="og:description" content="{{ noticia.resumo }}">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:site_name" content="Giro Desportivo">
+
+<meta property="og:image"
+      content="{{ noticia.imagem }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
+<meta name="twitter:description" content="{{ noticia.resumo }}">
+<meta name="twitter:image"
+      content="{{ noticia.imagem }}">
+
+<meta property="article:published_time"
+      content="{{ noticia.criada_em.isoformat() if noticia.criada_em }}">
+
+{% endblock %}
+
 {% block content %}
 
 <section class="article-hero"
