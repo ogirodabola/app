@@ -115,7 +115,7 @@ def listar_ultima_hora(limit=12):
                   fonte,
                   categoria,
                   imagem,
-                  criada_em,
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                   editorial_status
                 FROM noticias
                 WHERE conteudo_editorial IS NOT NULL
@@ -167,7 +167,7 @@ def listar_por_categoria(categoria: str, limit: int = 10):
                   fonte,
                   categoria,
                   imagem,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria = %s
                 AND conteudo_editorial IS NOT NULL
@@ -205,7 +205,7 @@ def listar_noticias(limit: int = 30):
                   fonte,
                   categoria,
                   imagem,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
 
                 ORDER BY criada_em DESC
@@ -235,7 +235,7 @@ def buscar_noticia_por_slug(slug: str):
                     fonte,
                     categoria,
                     tags,
-                    criada_em
+                    criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE slug = %s
                 AND conteudo_editorial IS NOT NULL
@@ -610,7 +610,7 @@ def listar_noticias_admin(
             COALESCE(titulo_editorial, titulo) AS titulo,
             categoria,
             editorial_status,
-            criada_em
+            criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
         FROM noticias
         WHERE 1=1
     """
@@ -713,7 +713,7 @@ def listar_noticias_publicadas(limit=10):
                   resumo,
                   imagem,
                   categoria,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
@@ -736,7 +736,7 @@ def buscar_noticia_publica(slug: str):
                   imagem_credito,
                   categoria,
                   tags,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE slug = %s
                   AND editorial_status = 'publicado'
@@ -762,7 +762,7 @@ def listar_ultima_hora_publicada(limit=6):
                   imagem,
                   categoria,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                   AND categoria = 'Última Hora'
@@ -787,7 +787,7 @@ def listar_editorial_publicado(limit=6):
                   imagem,
                   categoria,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                   AND (categoria IS NULL OR categoria <> 'Última Hora')
@@ -920,7 +920,7 @@ def listar_home_hero():
                   imagem,
                   categoria,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
@@ -940,7 +940,7 @@ def listar_home_feed(limit=20):
                   imagem,
                   categoria,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
@@ -959,7 +959,7 @@ def listar_home_brasileirao(limit=6):
                   resumo,
                   imagem,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria = 'Brasileirão'
                 AND editorial_status = 'publicado'
@@ -979,7 +979,7 @@ def listar_home_mercado(limit=6):
                   resumo,
                   imagem,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria = 'Mercado da Bola'
                 AND editorial_status = 'publicado'
@@ -1000,7 +1000,7 @@ def listar_home_internacional(limit=6):
                   imagem,
                   categoria,
                   fonte,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria NOT IN (
                     'Brasileirão',
@@ -1023,7 +1023,7 @@ def listar_home_analises(limit=4):
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   resumo,
                   imagem,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria = 'Análises'
                 AND editorial_status = 'publicado'
@@ -1042,7 +1042,7 @@ def listar_home_bastidores(limit=4):
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   resumo,
                   imagem,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE categoria = 'Bastidores'
                 AND editorial_status = 'publicado'
@@ -1060,7 +1060,7 @@ def listar_home_mais_lidas(limit=8):
                   slug,
                   COALESCE(titulo_editorial, titulo) AS titulo,
                   categoria,
-                  criada_em
+                  criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
                 FROM noticias
                 WHERE editorial_status = 'publicado'
                 ORDER BY criada_em DESC
