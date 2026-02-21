@@ -171,7 +171,7 @@ ESTRUTURA OBRIGATÓRIA:
 <p>Informar data e horário confirmados</p>
 
 <h2>Onde assistir</h2>
-<p>Informar transmissão apenas se citada</p>
+<p>Informe a transmissão se houver canal citado. Caso contrário, escreva de forma neutra indicando que a partida deve ter cobertura nos canais habituais da competição.</p>
 
 <h2>Prováveis escalações</h2>
 <p>Somente se houver informação concreta no texto</p>
