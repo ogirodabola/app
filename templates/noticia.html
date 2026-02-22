@@ -93,13 +93,11 @@
         <!-- X -->
       
         <a href="https://twitter.com/intent/tweet?
-            text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}
-            &url={{ request.url }}
-            &hashtags={{ noticia.tags[:3]|join(',') }}"
-            target="_blank"
-            rel="noopener"
-            class="share-btn twitter"
-            aria-label="Compartilhar no X">
+        text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{% if noticia.tags %}{% for tag in noticia.tags[:6] %}#{{ tag }} {% endfor %}{% endif %}%0A%0A{{ request.url|urlencode }}"
+        target="_blank"
+        rel="noopener"
+        class="share-btn twitter"
+        aria-label="Compartilhar no X">
 
             <svg viewBox="0 0 24 24">
                 <path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l4 6 6-6z"/>
