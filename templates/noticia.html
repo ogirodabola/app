@@ -53,10 +53,8 @@
 
 {% endblock %}
 {% block content %}
-<section class="article-hero">
-    {% if noticia.imagem %}
-        style="background-image:url('{{ noticia.imagem }}');"
-    {% endif %}
+<section class="article-hero"
+    style="background-image:url('{{ noticia.imagem or '/static/placeholder-news.jpg' }}');">
 </section>
 
 <div class="article-container">
