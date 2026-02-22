@@ -91,16 +91,15 @@
         </a>
 
         <!-- X -->
-        <a href="https://twitter.com/intent/tweet?text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{{ ('#' ~ noticia.tags|join(' #'))|urlencode if noticia.tags else '' }}%0A%0A{{ request.url|urlencode }}" target="_blank" rel="noopener" class="share-btn twitter" aria-label="Compartilhar no X">      
-        target="_blank"
-        rel="noopener"
-        class="share-btn twitter"
-        aria-label="Compartilhar no X">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l4 6 6-6z"/>
-            </svg>
-        </a>
+<a href="https://twitter.com/intent/tweet?text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{{ ('#' ~ noticia.tags|join(' #'))|urlencode if noticia.tags else '' }}%0A%0A{{ request.url|urlencode }}"
+   target="_blank"
+   rel="noopener"
+   class="share-btn twitter"
+   aria-label="Compartilhar no X">
+    <svg viewBox="0 0 24 24">
+        <path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l4 6 6-6z"/>
+    </svg>
+</a>
 
         <!-- WhatsApp -->
         <a href="https://api.whatsapp.com/send?text={{ noticia.titulo|urlencode }}%20{{ request.url }}"
