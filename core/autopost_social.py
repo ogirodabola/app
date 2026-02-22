@@ -59,23 +59,30 @@ def gerar_hashtags(noticia):
 # POST X
 # =========================
 
+import random
+
 def postar_x(noticia):
-    titulo = (noticia.get("titulo_editorial") or "").strip()
+    titulo = (noticia.get("titulo_editorial") or "").strip()[:150]
     slug = noticia.get("slug")
 
     if not slug:
-        print("Slug ausente, pulando X")
         return
-
-    # Limite mais conservador
-    titulo = titulo[:150]
 
     link = f"{BASE_URL}{slug}"
     hashtags = gerar_hashtags(noticia)
 
-    texto = f"{titulo}\n\n{hashtags}\n\n{link}"
+    variacoes = [
+        "",
+        " 🔥",
+        " ⚽",
+        " 📢",
+        f" #{random.randint(1,999)}"
+    ]
 
-    # Hard limit de segurança (X = 280)
+    sufixo = random.choice(variacoes)
+
+    texto = f"{titulo}{sufixo}\n\n{hashtags}\n\n{link}"
+
     if len(texto) > 270:
         texto = texto[:270]
 
