@@ -15,3 +15,4 @@ itsdangerous
 passlib
 python-multipart
 cryptography==42.0.8
+tweepy==4.14.0
