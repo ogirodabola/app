@@ -10,9 +10,20 @@
 
 <link rel="canonical" href="{{ request.url }}">
 
-<<meta property="og:type" content="article">
-<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta property="og:description" content="{{ noticia.resumo }}">
+{% block meta %}
+
+<meta name="description"
+      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
+
+<link rel="canonical" href="{{ request.url }}">
+
+<meta property="og:type" content="article">
+<meta property="og:title"
+      content="{{ noticia.titulo_editorial or noticia.titulo }}">
+
+<meta property="og:description"
+      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
+
 <meta property="og:url" content="{{ request.url }}">
 
 <meta property="og:image"
@@ -22,10 +33,15 @@
 <meta property="og:image:height" content="630">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta name="twitter:description" content="{{ noticia.resumo }}">
+<meta name="twitter:title"
+      content="{{ noticia.titulo_editorial or noticia.titulo }}">
+
+<meta name="twitter:description"
+      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
+
 <meta name="twitter:image"
       content="https://girodesportivo.com{{ noticia.imagem }}">
+
 <meta name="twitter:url" content="{{ request.url }}">
 
 <meta property="article:published_time"
