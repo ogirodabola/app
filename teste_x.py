@@ -1,14 +1,15 @@
 import os
 import tweepy
 
-auth = tweepy.OAuth1UserHandler(
-    os.getenv("X_API_KEY"),
-    os.getenv("X_API_SECRET"),
-    os.getenv("X_ACCESS_TOKEN"),
-    os.getenv("X_ACCESS_SECRET"),
+client = tweepy.Client(
+    consumer_key=os.getenv("X_API_KEY"),
+    consumer_secret=os.getenv("X_API_SECRET"),
+    access_token=os.getenv("X_ACCESS_TOKEN"),
+    access_token_secret=os.getenv("X_ACCESS_SECRET"),
 )
 
-api = tweepy.API(auth)
+response = client.create_tweet(
+    text="Teste de integração Giro Desportivo 🚀"
+)
 
-api.update_status("Teste de integração Giro Desportivo 🚀")
-print("Postado com sucesso")
+print("Tweet publicado:", response.data)
