@@ -22,8 +22,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta name="twitter:description" content="{{ noticia.resumo }}">
-<meta name="twitter:image"
-      content="{{ noticia.imagem }}">
+<meta name="twitter:image" content="{{ request.url.scheme }}://{{ request.url.hostname }}{{ noticia.imagem }}">
+<meta name="twitter:url" content="{{ request.url }}">
 
 <meta property="article:published_time"
       content="{{ noticia.criada_em.isoformat() if noticia.criada_em }}">
