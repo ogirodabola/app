@@ -1,27 +1,26 @@
 import os
-import requests
 import tweepy
-from core.database import (
-    listar_publicadas_nao_postadas_x,
-    marcar_postado_x
-)
-
-X_API_KEY = os.getenv("X_API_KEY")
-X_API_SECRET = os.getenv("X_API_SECRET")
-X_ACCESS_TOKEN = os.getenv("X_ACCESS_TOKEN")
-X_ACCESS_SECRET = os.getenv("X_ACCESS_SECRET")
-
-auth = tweepy.OAuth1UserHandler(
-    X_API_KEY,
-    X_API_SECRET,
-    X_ACCESS_TOKEN,
-    X_ACCESS_SECRET
-)
-
-api = tweepy.API(auth)
+import requests
+from core.database import listar_publicadas_nao_postadas_x, marcar_postado_x
 
 BASE_URL = "https://girodesportivo.com/noticia/"
 
+client = tweepy.Client(
+    consumer_key=os.getenv("X_API_KEY"),
+    consumer_secret=os.getenv("X_API_SECRET"),
+    access_token=os.getenv("X_ACCESS_TOKEN"),
+    access_token_secret=os.getenv("X_ACCESS_SECRET"),
+)
+
+# upload de mídia ainda usa v1.1
+auth = tweepy.OAuth1UserHandler(
+    os.getenv("X_API_KEY"),
+    os.getenv("X_API_SECRET"),
+    os.getenv("X_ACCESS_TOKEN"),
+    os.getenv("X_ACCESS_SECRET"),
+)
+
+api_v1 = tweepy.API(auth)
 
 def postar_noticia(noticia):
     titulo = noticia["titulo_editorial"]
@@ -32,13 +31,19 @@ def postar_noticia(noticia):
 
     texto = f"{titulo}\n\n{link}\n\nvia @ogirodesportivo"
 
-    # baixa imagem
+    # baixar imagem
     img_data = requests.get(imagem_url).content
     with open("temp.jpg", "wb") as f:
         f.write(img_data)
 
-    media = api.media_upload("temp.jpg")
-    api.update_status(status=texto, media_ids=[media.media_id])
+    media = api_v1.media_upload("temp.jpg")
+
+    response = client.create_tweet(
+        text=texto,
+        media_ids=[media.media_id]
+    )
+
+    return response
 
 
 def rodar_autopost():
@@ -50,4 +55,8 @@ def rodar_autopost():
             marcar_postado_x(n["id"])
             print(f"Postado: {n['slug']}")
         except Exception as e:
-            print("Erro ao postar:", e)
+            print("Erro:", e)
+
+
+if __name__ == "__main__":
+    rodar_autopost()
