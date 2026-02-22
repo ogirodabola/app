@@ -60,41 +60,30 @@ def gerar_hashtags(noticia):
 # =========================
 
 def postar_x(noticia):
-    titulo = noticia.get("titulo_editorial", "")[:180]
+    titulo = (noticia.get("titulo_editorial") or "").strip()
     slug = noticia.get("slug")
-    imagem = noticia.get("imagem")
+
+    if not slug:
+        print("Slug ausente, pulando X")
+        return
+
+    # Limite mais conservador
+    titulo = titulo[:150]
 
     link = f"{BASE_URL}{slug}"
     hashtags = gerar_hashtags(noticia)
 
-    texto = f"{titulo}\n\n🔗 {link}\n\n{hashtags}"
+    texto = f"{titulo}\n\n{hashtags}\n\n{link}"
 
-    # Corrigir imagem relativa
-    if imagem and imagem.startswith("/"):
-        imagem = SITE_URL + imagem
+    # Hard limit de segurança (X = 280)
+    if len(texto) > 270:
+        texto = texto[:270]
 
     try:
-        if imagem:
-            response_img = requests.get(imagem, timeout=10)
-
-            if "image" not in response_img.headers.get("Content-Type", ""):
-                raise Exception("Imagem inválida")
-
-            with open("temp.jpg", "wb") as f:
-                f.write(response_img.content)
-
-            media = api_v1.media_upload("temp.jpg")
-
-            client_x.create_tweet(
-                text=texto,
-                media_ids=[media.media_id]
-            )
-        else:
-            client_x.create_tweet(text=texto)
-
-    except Exception as e:
-        print("Postando no X sem imagem:", e)
         client_x.create_tweet(text=texto)
+        print(f"Post X OK: {slug}")
+    except Exception as e:
+        print("Erro X:", e)
 
 
 # =========================
