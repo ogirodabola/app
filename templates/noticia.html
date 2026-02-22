@@ -10,8 +10,6 @@
 
 <link rel="canonical" href="{{ request.url }}">
 
-{% block meta %}
-
 <meta name="description"
       content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
 
