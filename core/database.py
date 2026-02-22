@@ -1501,7 +1501,7 @@ def marcar_como_postado_facebook(noticia_id):
             """, (noticia_id,))
         conn.commit()
 
- def listar_publicadas_nao_postadas_x(limit=5):
+def listar_publicadas_nao_postadas_x(limit=5):
     with get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
