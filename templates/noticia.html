@@ -91,9 +91,7 @@
         </a>
 
         <!-- X -->
-      
-        <a href="https://twitter.com/intent/tweet?
-        text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{% if noticia.tags %}{% for tag in noticia.tags[:6] %}#{{ tag }} {% endfor %}{% endif %}%0A%0A{{ request.url|urlencode }}"
+        <a href="https://twitter.com/intent/tweet?text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{{ ('#' ~ noticia.tags|join(' #'))|urlencode if noticia.tags else '' }}%0A%0A{{ request.url|urlencode }}" target="_blank" rel="noopener" class="share-btn twitter" aria-label="Compartilhar no X">      
         target="_blank"
         rel="noopener"
         class="share-btn twitter"
