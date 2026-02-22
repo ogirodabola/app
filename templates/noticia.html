@@ -6,45 +6,32 @@
 
 {% block meta %}
 
-<meta name="description"
-      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
-
-<link rel="canonical" href="{{ request.url }}">
-
-<meta property="og:type" content="article">
-
-<meta property="og:title"
-      content="{{ noticia.titulo_editorial or noticia.titulo }}">
-
-<meta property="og:description"
-      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
-
-<meta property="og:url" content="{{ request.url }}">
-
 {% if noticia.imagem %}
-    {% if noticia.imagem.startswith('http') %}
-        <meta property="og:image" content="{{ noticia.imagem }}">
-        <meta name="twitter:image" content="{{ noticia.imagem }}">
-    {% else %}
-        <meta property="og:image"
-              content="https://girodesportivo.com{{ noticia.imagem }}">
-        <meta name="twitter:image"
-              content="https://girodesportivo.com{{ noticia.imagem }}">
-    {% endif %}
+    {% set imagem = noticia.imagem if noticia.imagem.startswith('http') 
+        else 'https://girodesportivo.com' ~ noticia.imagem %}
+{% else %}
+    {% set imagem = 'https://girodesportivo.com/static/placeholder-news.jpg' %}
 {% endif %}
 
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
+<meta property="og:description" content="{{ noticia.resumo or '' }}">
+<meta property="og:image" content="{{ imagem }}">
+<meta property="og:url" content="{{ request.url }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
+<!-- X -->
 <meta name="twitter:card" content="summary_large_image">
-
-<meta name="twitter:title"
-      content="{{ noticia.titulo_editorial or noticia.titulo }}">
-
+<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta name="twitter:description"
-      content="{{ noticia.resumo if noticia.resumo and noticia.resumo|length > 20 else (noticia.titulo_editorial or noticia.titulo) }}">
-
+      content="{{ ('#' ~ noticia.tags|join(' #')) if noticia.tags else (noticia.resumo or '') }}">
+<meta name="twitter:image" content="{{ imagem }}">
 <meta name="twitter:url" content="{{ request.url }}">
+
+<!-- HASHTAGS NÃO TEM TAG ESPECIAL, mas -->
+<!-- podemos colocar elas em description -->
 
 {% if noticia.criada_em %}
 <meta property="article:published_time"
