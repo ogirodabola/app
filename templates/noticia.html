@@ -10,19 +10,22 @@
 
 <link rel="canonical" href="{{ request.url }}">
 
-<meta property="og:type" content="article">
+<<meta property="og:type" content="article">
 <meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta property="og:description" content="{{ noticia.resumo }}">
 <meta property="og:url" content="{{ request.url }}">
-<meta property="og:site_name" content="Giro Desportivo">
 
 <meta property="og:image"
-      content="{{ noticia.imagem }}">
+      content="https://girodesportivo.com{{ noticia.imagem }}">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta name="twitter:description" content="{{ noticia.resumo }}">
-<meta name="twitter:image" content="{{ request.url.scheme }}://{{ request.url.hostname }}{{ noticia.imagem }}">
+<meta name="twitter:image"
+      content="https://girodesportivo.com{{ noticia.imagem }}">
 <meta name="twitter:url" content="{{ request.url }}">
 
 <meta property="article:published_time"
@@ -85,10 +88,11 @@
         </a>
 
         <!-- X -->
+      
         <a href="https://twitter.com/intent/tweet?
-            text={{ noticia.titulo_editorial or noticia.titulo | urlencode }}
+            text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}
             &url={{ request.url }}
-            &hashtags={{ noticia.tags | join(',') }}"
+            &hashtags={{ noticia.tags[:3]|join(',') }}"
             target="_blank"
             rel="noopener"
             class="share-btn twitter"
