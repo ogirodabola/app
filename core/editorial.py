@@ -99,6 +99,76 @@ def gerar_conteudo_editorial(
         return f"<p>{resumo}</p>"
 
     conteudo_base = conteudo_original or resumo
+    # ------------------------------------------------------
+    # EXTRAÇÃO AUTOMÁTICA DE VÍDEOS
+    # ------------------------------------------------------
+    
+    video_embed_html = ""
+    
+    if conteudo_original:
+    
+        # YouTube padrão
+        yt_match = re.search(
+            r"(https?://(?:www\.)?(?:youtube\.com/watch\?v=[\w\-]+|youtu\.be/[\w\-]+))",
+            conteudo_original
+        )
+    
+        # Vimeo
+        vimeo_match = re.search(
+            r"(https?://(?:www\.)?vimeo\.com/\d+)",
+            conteudo_original
+        )
+    
+        if yt_match:
+            url = yt_match.group(1)
+    
+            video_id = None
+            if "watch?v=" in url:
+                video_id = url.split("watch?v=")[-1].split("&")[0]
+            elif "youtu.be/" in url:
+                video_id = url.split("youtu.be/")[-1]
+    
+            if video_id:
+                video_embed_html = f"""
+    <h2>Assista ao vídeo</h2>
+    <p>
+    <iframe width="100%" height="400"
+    src="https://www.youtube.com/embed/{video_id}"
+    title="YouTube video player"
+    frameborder="0"
+    allowfullscreen></iframe>
+    </p>
+    """
+    
+        elif vimeo_match:
+            url = vimeo_match.group(1)
+            video_id = url.split("/")[-1]
+    
+            video_embed_html = f"""
+    <h2>Assista ao vídeo</h2>
+    <p>
+    <iframe src="https://player.vimeo.com/video/{video_id}"
+    width="100%" height="400"
+    frameborder="0"
+    allowfullscreen></iframe>
+    </p>
+    """
+    # ------------------------------------------------------
+    # EXTRAÇÃO DE IMAGENS DO CONTEÚDO ORIGINAL
+    # ------------------------------------------------------
+    
+    imagens_extraidas = []
+    
+    if conteudo_original:
+        imagens = re.findall(
+            r'<img[^>]+src="([^">]+)"',
+            conteudo_original
+        )
+    
+        for img in imagens[:3]:
+            imagens_extraidas.append(
+                f'<p><img src="{img}" style="width:100%;height:auto;" loading="lazy"></p>'
+            )
 
     # 🔎 DETECÇÃO AUTOMÁTICA DE TIPO
     texto_base = f"{titulo} {resumo}".lower()
@@ -173,18 +243,44 @@ CONTEÚDO ORIGINAL:
     )
 
     texto = resp.output_text.strip()
-
+    
     # 🔎 LIMPEZA DEFENSIVA
     texto = texto.replace("```html", "").replace("```", "").strip()
-
-    # 🚨 Blindagem final contra lixo estrutural
+    
+    # 🚨 Blindagem pós-jogo
     if tipo_materia == "pos_jogo":
         texto = re.sub(r"<h2>Horário.*?</p>", "", texto, flags=re.DOTALL)
         texto = re.sub(r"<h2>Onde assistir.*?</p>", "", texto, flags=re.DOTALL)
         texto = re.sub(r"<h2>Onde será.*?</p>", "", texto, flags=re.DOTALL)
-
+    
+    # ------------------------------------------------------
+    # INSERIR VÍDEO APÓS PRIMEIRO BLOCO
+    # ------------------------------------------------------
+    if video_embed_html:
+        primeiro_paragrafo = re.search(r"<p>.*?</p>", texto, flags=re.DOTALL)
+        if primeiro_paragrafo:
+            texto = texto.replace(
+                primeiro_paragrafo.group(0),
+                primeiro_paragrafo.group(0) + video_embed_html,
+                1
+            )
+    
+    # ------------------------------------------------------
+    # INSERIR IMAGENS COM SEGURANÇA
+    # ------------------------------------------------------
+    if imagens_extraidas:
+        paragrafos = re.findall(r"<p>.*?</p>", texto, flags=re.DOTALL)
+    
+        for i, img_html in enumerate(imagens_extraidas):
+            if i < len(paragrafos):
+                texto = texto.replace(
+                    paragrafos[i],
+                    paragrafos[i] + img_html,
+                    1
+                )
+    
     if len(texto) < 400:
-        raise ValueError("Conteúdo editorial muito curto")
+        raise ValueError("Conteúdo editorial muito curto")   
 
     return texto
 
