@@ -1514,8 +1514,7 @@ def listar_publicadas_nao_postadas_x(limit=3):
                     categoria,
                     tags
                 FROM noticias
-                WHERE publicada = TRUE
-                AND (postado_social IS NULL OR postado_social = FALSE)
+                WHERE (postado_social IS NULL OR postado_social = FALSE)
                 ORDER BY criada_em ASC
                 LIMIT %s
             """, (limit,))
