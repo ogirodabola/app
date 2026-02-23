@@ -3102,3 +3102,26 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .share-btn:hover svg {
     fill: #ffffff;
 }
+
+.internal-link {
+    color: #1d4ed8;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+}
+
+.internal-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #1d4ed8;
+    opacity: 0.25;
+    transition: opacity 0.2s ease;
+}
+
+.internal-link:hover::after {
+    opacity: 1;
+}
