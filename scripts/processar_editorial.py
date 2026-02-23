@@ -140,7 +140,7 @@ def salvar_editorial(
     categoria,
     tags
 ):
-    if not conteudo_editorial or len(conteudo_editorial) < 150:
+    if not conteudo_editorial or len(conteudo_editorial) < 400:
         print("   ⚠️ Conteúdo muito curto. Marcado como erro.")
         marcar_erro(conn, noticia_id)
         return False
@@ -198,7 +198,11 @@ def processar():
             print(f"➡️ [{idx}/{len(noticias)}] ID {noticia_id}")
 
             try:
-                categoria, tags = classificar_editorial(titulo, resumo)
+                categoria, tags = classificar_editorial(
+                    titulo,
+                    resumo,
+                    noticia.get("conteudo_original")
+                )
                 titulo_editorial = gerar_titulo_editorial(titulo)
 
                 if noticia_similar_existe(conn, titulo_editorial):
