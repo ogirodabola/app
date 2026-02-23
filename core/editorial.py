@@ -209,38 +209,38 @@ def gerar_conteudo_editorial(
     </p>
     """
 
-# ------------------------------------------------------
-# EXTRAÇÃO DE IMAGENS DO CONTEÚDO ORIGINAL
-# ------------------------------------------------------
-
-imagens_extraidas = []
-
-if conteudo_original:
-    imagens = re.findall(
-        r'<img[^>]+src="([^">]+)"',
-        conteudo_original
-    )
-
-    for img in imagens:
-        img_lower = img.lower()
-
-        # ❌ BLOQUEIOS
-        if any(p in img_lower for p in [
-            "logo",
-            "sponsor",
-            "banner",
-            "ads",
-            "esportesdasorte",
-            "assets.goal.com/images/v3/blt"
-        ]):
-            continue
-
-        imagens_extraidas.append(
-            f'<p><img src="{img}" style="width:100%;height:auto;" loading="lazy"></p>'
+    # ------------------------------------------------------
+    # EXTRAÇÃO DE IMAGENS DO CONTEÚDO ORIGINAL
+    # ------------------------------------------------------
+    
+    imagens_extraidas = []
+    
+    if conteudo_original:
+        imagens = re.findall(
+            r'<img[^>]+src="([^">]+)"',
+            conteudo_original
         )
-
-        if len(imagens_extraidas) >= 3:
-            break
+    
+        for img in imagens:
+            img_lower = img.lower()
+    
+            # ❌ BLOQUEIOS
+            if any(p in img_lower for p in [
+                "logo",
+                "sponsor",
+                "banner",
+                "ads",
+                "esportesdasorte",
+                "assets.goal.com/images/v3/blt"
+            ]):
+                continue
+    
+            imagens_extraidas.append(
+                f'<p><img src="{img}" style="width:100%;height:auto;" loading="lazy"></p>'
+            )
+    
+            if len(imagens_extraidas) >= 3:
+                break
 
     # 🔎 DETECÇÃO AUTOMÁTICA DE TIPO
     texto_base = f"{titulo} {resumo}".lower()
