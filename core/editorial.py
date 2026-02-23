@@ -1,4 +1,3 @@
-# core/editorial.py
 import os
 import json
 from typing import Optional, List, Tuple
@@ -27,58 +26,28 @@ CATEGORIAS_VALIDAS = [
 # ======================================================
 # CLASSIFICAÇÃO + TAGS
 # ======================================================
+
 def classificar_editorial(titulo: str, resumo: str) -> Tuple[str, List[str]]:
     if USE_MOCK or not _client:
         return "Última Hora", ["Futebol"]
 
     prompt = f"""
-Você é o editor-chefe de um grande portal esportivo brasileiro.
+Você é o editor-chefe de um portal esportivo brasileiro.
 
-Sua tarefa é classificar a notícia com precisão editorial.
-
-REGRAS OBRIGATÓRIAS:
-
-1) Escolha EXATAMENTE UMA categoria da lista permitida.
-2) Nunca invente novas categorias.
-3) A decisão deve seguir hierarquia estratégica:
-
-PRIORIDADE DE CLASSIFICAÇÃO:
-
-- Se envolver contratação, transferência, sondagem, renovação ou mercado:
-  -> "Mercado da Bola"
-
-- Se envolver jogo, rodada, tabela, desempenho ou posição no campeonato brasileiro:
-  -> "Brasileirão"
-
-- Se for análise técnica, avaliação tática ou opinião estruturada:
-  -> "Análises"
-
-- Se tratar de bastidores, clima interno, polêmica ou comportamento:
-  -> "Bastidores"
-
-- Se for internacional e não envolver Brasileirão:
-  -> "Internacional"
-
-- Se nenhuma regra for claramente atendida:
-  -> "Última Hora"
-
-IMPORTANTE:
-- Não classifique como "Última Hora" se existir categoria mais específica.
-- Evite usar categoria genérica quando houver específica.
-
-CATEGORIAS PERMITIDAS:
+Escolha EXATAMENTE UMA categoria da lista:
 {", ".join(CATEGORIAS_VALIDAS)}
 
-TAGS:
-- Gere entre 3 e 6 tags relevantes.
-- Use nomes próprios quando possível (clubes, jogadores, técnicos).
-- Não repita palavras da categoria.
-- Não use tags genéricas como "futebol".
+Regras:
+- Mercado ou transferência → Mercado da Bola
+- Jogo do Brasileirão → Brasileirão
+- Análise técnica → Análises
+- Bastidor/polêmica → Bastidores
+- Dúvida real → Última Hora
 
-RETORNE APENAS JSON NO FORMATO:
+Retorne apenas JSON:
 
 {{
-  "categoria": "Categoria escolhida",
+  "categoria": "Categoria",
   "tags": ["tag1", "tag2", "tag3"]
 }}
 
@@ -105,22 +74,18 @@ RESUMO:
             t = normalizar_tag(tag)
             if t and t not in tags:
                 tags.append(t)
-        
-        tags = tags[:8]
-
 
         if categoria not in CATEGORIAS_VALIDAS:
             categoria = "Última Hora"
 
         return categoria, tags[:6]
 
-    except Exception as e:
-        print("[EDITORIAL CLASSIFICAÇÃO ERRO]", e)
-        return "Última Hora", ["Futebol"]
+    except Exception:
+        return "Última Hora", ["futebol"]
 
 
 # ======================================================
-# CONTEÚDO EDITORIAL
+# CONTEÚDO EDITORIAL INTELIGENTE
 # ======================================================
 
 def gerar_conteudo_editorial(
@@ -129,68 +94,73 @@ def gerar_conteudo_editorial(
     categoria: str,
     conteudo_original: str | None = None
 ) -> str:
+
     if USE_MOCK or not _client:
         return f"<p>{resumo}</p>"
 
-    # ✅ fallback seguro caso conteudo_original venha vazio
     conteudo_base = conteudo_original or resumo
+
+    # 🔎 DETECÇÃO AUTOMÁTICA DE TIPO
+    texto_base = f"{titulo} {resumo}".lower()
+
+    if any(p in texto_base for p in [
+        "vence", "empat", "derrota", "classifica",
+        "goleia", "após jogo", "apos jogo"
+    ]):
+        tipo_materia = "pos_jogo"
+    elif any(p in texto_base for p in [
+        "onde assistir", "horário", "horario",
+        "antes do jogo", "provável escalação"
+    ]):
+        tipo_materia = "pre_jogo"
+    else:
+        tipo_materia = "geral"
 
     prompt = f"""
 Você é editor-chefe de um portal esportivo profissional brasileiro.
 
-A matéria trata de um confronto de futebol.
+TIPO DA MATÉRIA: {tipo_materia}
 
-LEIA atentamente o conteúdo original.
-Extraia apenas informações reais presentes no texto.
-NÃO invente dados.
+REGRAS ABSOLUTAS:
 
-REGRAS OBRIGATÓRIAS:
+- Use apenas informações do conteúdo original.
+- Nunca invente horário, transmissão, escalação ou estádio.
+- Use apenas HTML válido.
+- Use SOMENTE <p> e <h2>.
+- Nunca use Markdown.
+- Comece com <p> (lead forte).
+- Produza entre 600 e 900 palavras.
+- Nunca inclua o título dentro do conteúdo.
 
-- Use apenas HTML válido
-- Use SOMENTE <p> e <h2>
-- Nunca use Markdown
-- Nunca use negrito
-- Nunca use listas
-- Sempre comece com um <p> (lead direto e informativo)
-- Estruture entre 5 e 8 blocos
-- Produza entre 600 e 900 palavras
-- SEO otimizado
-- Nunca inclua o título dentro do conteúdo
-- Não invente horário, transmissão ou escalações
-- Se o texto não mencionar canal específico, não invente
-- Se não houver nomes de jogadores, não invente escalação
+ESTRUTURA POR TIPO:
 
-ESTRUTURA OBRIGATÓRIA:
+Se for pos_jogo:
+- Foque no resultado.
+- Destaque desempenho.
+- Contextualize impacto na competição.
+- Pode usar <h2>Análise da partida</h2>.
+- NÃO use:
+  Onde será o jogo
+  Horário da partida
+  Onde assistir
+  Prováveis escalações
 
-<p>Lead forte resumindo o confronto e sua importância</p>
+Se for pre_jogo:
+- Pode usar:
+  <h2>Onde será o jogo</h2>
+  <h2>Horário da partida</h2>
+  <h2>Onde assistir</h2> (somente se confirmado)
+  <h2>Prováveis escalações</h2> (somente se confirmado)
 
-<h2>Onde será o jogo</h2>
-<p>Informar estádio e contexto</p>
-
-<h2>Horário da partida</h2>
-<p>Informar data e horário confirmados</p>
-
-IMPORTANTE:
-
-- NÃO crie seções se não houver informação concreta no texto original.
-- NÃO escreva explicações como "o texto não menciona".
-- NÃO crie subtítulos vazios.
-- Se não houver informação confirmada, omita completamente a seção.
-
-Se houver transmissão confirmada:
-<h2>Onde assistir</h2>
-
-Se houver escalação confirmada:
-<h2>Prováveis escalações</h2>
-
-Se houver análise baseada em dados reais do texto:
-<h2>Momento das equipes</h2>
+Se for geral:
+- Estrutura editorial livre.
+- Nunca use seções de serviço.
 
 TÍTULO:
 {titulo}
 
-CATEGORIA:
-{categoria}
+RESUMO:
+{resumo}
 
 CONTEÚDO ORIGINAL:
 {conteudo_base}
@@ -204,25 +174,29 @@ CONTEÚDO ORIGINAL:
 
     texto = resp.output_text.strip()
 
-    # 🔎 limpeza defensiva
-    texto = texto.replace("```html", "").replace("```", "")
-    texto = re.sub(r"^##\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
-    texto = re.sub(r"^###\s*(.*)", r"<h2>\1</h2>", texto, flags=re.MULTILINE)
+    # 🔎 LIMPEZA DEFENSIVA
+    texto = texto.replace("```html", "").replace("```", "").strip()
 
-    texto = texto.strip()
+    # 🚨 Blindagem final contra lixo estrutural
+    if tipo_materia == "pos_jogo":
+        texto = re.sub(r"<h2>Horário.*?</p>", "", texto, flags=re.DOTALL)
+        texto = re.sub(r"<h2>Onde assistir.*?</p>", "", texto, flags=re.DOTALL)
+        texto = re.sub(r"<h2>Onde será.*?</p>", "", texto, flags=re.DOTALL)
 
-    # 🚨 Validação mínima de qualidade
     if len(texto) < 400:
         raise ValueError("Conteúdo editorial muito curto")
 
     return texto
 
+
 # ======================================================
-# FUNÇÃO DE COMPATIBILIDADE (NÃO REMOVER)
+# UTILIDADES
 # ======================================================
+
 def gerar_tags_editoriais(titulo: str, resumo: str, categoria: str) -> List[str]:
     _, tags = classificar_editorial(titulo, resumo)
     return tags
+
 
 def normalizar_tag(tag: str) -> str:
     tag = unicodedata.normalize("NFKD", tag).encode("ascii", "ignore").decode("ascii")
@@ -230,34 +204,21 @@ def normalizar_tag(tag: str) -> str:
     tag = re.sub(r"[^a-z0-9]", "", tag)
     return tag
 
+
 def gerar_titulo_editorial(titulo: str) -> str:
     if USE_MOCK or not _client:
         return titulo
 
     prompt = f"""
-Você é editor de títulos de um grande portal esportivo brasileiro.
+Reescreva o título abaixo para um portal esportivo brasileiro.
 
-Reescreva o título abaixo seguindo padrão profissional de portal.
+Regras:
+- Máx 90 caracteres
+- Claro
+- Jornalístico
+- Sem clickbait exagerado
 
-REGRAS OBRIGATÓRIAS:
-
-- Máximo 90 caracteres
-- Linguagem jornalística objetiva
-- Priorize clareza e impacto informativo
-- Inclua nome de clube ou jogador se relevante
-- Inclua competição quando aplicável (Brasileirão, Libertadores, etc.)
-- Evite termos vagos como "veja", "confira", "surpreende"
-- Não use emojis
-- Não use clickbait exagerado
-- Não invente informações
-
-ESTRATÉGIA:
-- Se for Mercado → destaque negociação ou valor
-- Se for jogo → destaque resultado + consequência
-- Se for bastidor → destaque fato central
-- Se for internacional → inclua país ou competição
-
-Retorne APENAS o título final.
+Retorne apenas o título final.
 
 Título original:
 {titulo}
@@ -271,71 +232,3 @@ Título original:
 
     texto = resp.output_text.strip().replace('"', "")
     return texto or titulo
-
-def gerar_slug_seo(titulo: str) -> str:
-    if USE_MOCK or not _client:
-        from slugify import slugify
-        return slugify(titulo)
-
-    prompt = f"""
-Reescreva o título abaixo em formato de slug SEO.
-
-Regras:
-- Apenas minúsculas
-- Separado por hífen
-- Sem palavras desnecessárias
-- Máximo 8 palavras
-- Não use números aleatórios
-
-Título:
-{titulo}
-
-Retorne APENAS o slug.
-"""
-
-    resp = _client.responses.create(
-        model=MODEL_NAME,
-        input=prompt,
-        max_output_tokens=50,
-    )
-
-    slug = resp.output_text.strip().replace(" ", "-")
-    slug = re.sub(r"[^a-z0-9-]", "", slug.lower())
-
-    return slug
-
-def gerar_guia_transmissao(dados_partida: dict) -> str:
-        return ""
-
-def gerar_editorial_com_extracao(titulo, resumo, conteudo_original, categoria):
-    prompt = f"..."
-    
-    resp = _client.responses.create(
-        model=MODEL_NAME,
-        input=prompt,
-        max_output_tokens=1400,
-    )
-
-    texto = resp.output_text.strip()
-    return texto
-
-def gerar_editorial_com_extracao(
-    titulo: str,
-    resumo: str,
-    conteudo_original: str,
-    categoria: str
-) -> str:
-    
-    prompt = f"""
-    ...
-    CONTEÚDO ORIGINAL:
-    {conteudo_original}
-    """
-
-    resp = _client.responses.create(
-        model=MODEL_NAME,
-        input=prompt,
-        max_output_tokens=1400,
-    )
-
-    return resp.output_text.strip()
