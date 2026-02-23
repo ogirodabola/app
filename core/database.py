@@ -1514,7 +1514,7 @@ def listar_publicadas_nao_postadas_x(limit=3):
                     categoria,
                     tags
                 FROM noticias
-                WHERE (postado_social IS NULL OR postado_social = FALSE)
+                WHERE postado_social = FALSE
                 ORDER BY criada_em ASC
                 LIMIT %s
             """, (limit,))
@@ -1522,12 +1522,15 @@ def listar_publicadas_nao_postadas_x(limit=3):
     finally:
         conn.close()
 
-def marcar_postado_x(noticia_id: int):
-    with get_conn() as conn:
+def marcar_postado_x(noticia_id):
+    conn = get_conn()
+    try:
         with conn.cursor() as cur:
             cur.execute("""
                 UPDATE noticias
-                SET postado_x = TRUE
-                WHERE id = %s;
+                SET postado_social = TRUE
+                WHERE id = %s
             """, (noticia_id,))
-        conn.commit()
+            conn.commit()
+    finally:
+        conn.close()
