@@ -208,21 +208,22 @@ def gerar_conteudo_editorial(
     allowfullscreen></iframe>
     </p>
     """
-    # ------------------------------------------------------
-    # EXTRAÇÃO DE IMAGENS DO CONTEÚDO ORIGINAL
-    # ------------------------------------------------------
-    
-    imagens_extraidas = []
-    
-    if conteudo_original:
-        imagens = re.findall(
+
+# ------------------------------------------------------
+# EXTRAÇÃO DE IMAGENS DO CONTEÚDO ORIGINAL
+# ------------------------------------------------------
+
+imagens_extraidas = []
+
+if conteudo_original:
+    imagens = re.findall(
         r'<img[^>]+src="([^">]+)"',
         conteudo_original
     )
-    
+
     for img in imagens:
         img_lower = img.lower()
-    
+
         # ❌ BLOQUEIOS
         if any(p in img_lower for p in [
             "logo",
@@ -233,11 +234,11 @@ def gerar_conteudo_editorial(
             "assets.goal.com/images/v3/blt"
         ]):
             continue
-    
+
         imagens_extraidas.append(
             f'<p><img src="{img}" style="width:100%;height:auto;" loading="lazy"></p>'
         )
-    
+
         if len(imagens_extraidas) >= 3:
             break
 
