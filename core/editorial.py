@@ -342,7 +342,7 @@ CONTEÚDO ORIGINAL:
     # ------------------------------------------------------
     if imagens_extraidas:
         paragrafos = re.findall(r"<p>.*?</p>", texto, flags=re.DOTALL)
-    
+
         for i, img_html in enumerate(imagens_extraidas):
             if i < len(paragrafos):
                 texto = texto.replace(
@@ -350,14 +350,13 @@ CONTEÚDO ORIGINAL:
                     paragrafos[i] + img_html,
                     1
                 )
-    
+
     if len(texto) < 400:
         raise ValueError("Conteúdo editorial muito curto")
 
     texto = aplicar_links_internos(texto)
 
     return texto
-
 
 # ======================================================
 # UTILIDADES
