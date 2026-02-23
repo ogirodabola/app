@@ -1501,19 +1501,27 @@ def marcar_como_postado_facebook(noticia_id):
             """, (noticia_id,))
         conn.commit()
 
-def listar_publicadas_nao_postadas_x(limit=5):
-    with get_conn() as conn:
+def listar_publicadas_nao_postadas_x(limit=3):
+    conn = get_conn()
+    try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-                SELECT id, titulo_editorial, slug, imagem
+                SELECT
+                    id,
+                    titulo_editorial,
+                    slug,
+                    imagem,
+                    categoria,
+                    tags
                 FROM noticias
-                WHERE editorial_status = 'publicado'
-                AND (postado_x IS FALSE OR postado_x IS NULL)
+                WHERE publicada = TRUE
+                AND (postado_social IS NULL OR postado_social = FALSE)
                 ORDER BY criada_em ASC
-                LIMIT %s;
+                LIMIT %s
             """, (limit,))
             return cur.fetchall()
-
+    finally:
+        conn.close()
 
 def marcar_postado_x(noticia_id: int):
     with get_conn() as conn:
