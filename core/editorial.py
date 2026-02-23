@@ -27,15 +27,73 @@ CATEGORIAS_VALIDAS = [
 # CLASSIFICAÇÃO + TAGS
 # ======================================================
 
-def classificar_editorial(titulo: str, resumo: str) -> Tuple[str, List[str]]:
+def classificar_editorial(
+    titulo: str,
+    resumo: str,
+    conteudo_original: str | None = None
+) -> Tuple[str, List[str]]:
+
+    texto_base = f"{titulo} {resumo} {conteudo_original or ''}".lower()
+
+    # ======================================================
+    # BLOQUEIO INTERNACIONAL (PRIORIDADE MÁXIMA)
+    # ======================================================
+
+    if any(p in texto_base for p in [
+        "premier league",
+        "tottenham",
+        "liverpool",
+        "manchester",
+        "arsenal",
+        "chelsea",
+        "la liga",
+        "real madrid",
+        "barcelona",
+        "bundesliga",
+        "bayern",
+        "ligue 1",
+        "psg",
+        "serie a italiana",
+        "juventus",
+        "inter de milao",
+        "milan"
+    ]):
+        return "Última Hora", ["futebol_internacional"]
+
+    # ======================================================
+    # FORÇA BRASILEIRÃO APENAS SE FOR BRASIL
+    # ======================================================
+
+    if any(p in texto_base for p in [
+        "brasileirão",
+        "campeonato brasileiro",
+        "corinthians",
+        "palmeiras",
+        "flamengo",
+        "são paulo",
+        "vasco",
+        "grêmio",
+        "internacional",
+        "atlético-mg",
+        "fluminense",
+        "botafogo",
+        "cruzeiro",
+        "bahia"
+    ]):
+        return "Brasileirão", ["brasileirao"]
+
+    # ======================================================
+    # SE NÃO CAIU NAS REGRAS DURAS → IA DECIDE
+    # ======================================================
+
     if USE_MOCK or not _client:
-        return "Última Hora", ["Futebol"]
+        return "Última Hora", ["futebol"]
 
     prompt = f"""
-Você é o editor-chefe de um portal esportivo brasileiro.
+Você é o editor-chefe de um portal esportivo brasileiro - Giro Desportivo.
 
 Escolha EXATAMENTE UMA categoria da lista:
-{", ".join(CATEGORIAS_VALIDAS)}
+Última Hora, Brasileirão, Mercado da Bola, Onde Assistir, Análises, Bastidores, Agenda
 
 Regras:
 - Mercado ou transferência → Mercado da Bola
@@ -68,15 +126,12 @@ RESUMO:
         data = json.loads(resp.output_text)
         categoria = data.get("categoria", "Última Hora")
         tags_raw = data.get("tags", [])
-        tags = []
 
+        tags = []
         for tag in tags_raw:
             t = normalizar_tag(tag)
             if t and t not in tags:
                 tags.append(t)
-
-        if categoria not in CATEGORIAS_VALIDAS:
-            categoria = "Última Hora"
 
         return categoria, tags[:6]
 
