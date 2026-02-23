@@ -296,7 +296,9 @@ CONTEÚDO ORIGINAL:
                 )
     
     if len(texto) < 400:
-        raise ValueError("Conteúdo editorial muito curto")   
+        raise ValueError("Conteúdo editorial muito curto")
+
+    texto = aplicar_links_internos(texto)
 
     return texto
 
@@ -344,3 +346,37 @@ Título original:
 
     texto = resp.output_text.strip().replace('"', "")
     return texto or titulo
+
+def aplicar_links_internos(texto: str) -> str:
+    from datetime import datetime
+
+    ano_atual = datetime.now().year
+
+    # Detecta ano específico no texto
+    ano_match = re.search(r"(20\d{2})", texto)
+    ano = ano_match.group(1) if ano_match else str(ano_atual)
+
+    url = f"https://girodesportivo.com/brasileirao-{ano}"
+
+    # Divide o texto evitando mexer em links já existentes
+    partes = re.split(r"(<a.*?>.*?</a>)", texto, flags=re.DOTALL)
+
+    link_aplicado = False
+
+    for i in range(len(partes)):
+        # Se já é um link, não mexe
+        if partes[i].startswith("<a"):
+            continue
+
+        if not link_aplicado:
+            partes[i], substituicoes = re.subn(
+                r"\b(Campeonato Brasileiro\s?20\d{2}|Brasileirão\s?20\d{2}|Campeonato Brasileiro|Brasileirão)\b",
+                lambda m: f'<a href="{url}" class="internal-link">{m.group(0)}</a>',
+                partes[i],
+                count=1
+            )
+
+            if substituicoes > 0:
+                link_aplicado = True
+
+    return "".join(partes)
