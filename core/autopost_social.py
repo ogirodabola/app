@@ -73,7 +73,7 @@ def postar_x(noticia):
     hashtags = gerar_hashtags(noticia)
 
     variacao = random.choice(["", " 🔥", " ⚽", " 📢"])
-    texto = f"{titulo}{variacao}\n\n{hashtags}\n\n{link}"
+    texto = f"{titulo}{variacao}\n\n{link}\n\n{hashtags}"
 
     if len(texto) > 270:
         texto = texto[:270]
@@ -144,12 +144,20 @@ def postar_facebook(noticia):
 def rodar_autopost_social():
     noticias = listar_publicadas_nao_postadas_x(limit=3)
 
+    if not noticias:
+        print("Nenhuma nova notícia para postar.")
+        return
+
     for n in noticias:
         try:
+            # LOCK PREVENTIVO
+            marcar_postado_x(n["id"])
+
             postar_x(n)
             postar_facebook(n)
-            marcar_postado_x(n["id"])
+
             print(f"Publicado social: {n['slug']}")
+
         except Exception as e:
             print("Erro social:", e)
 
