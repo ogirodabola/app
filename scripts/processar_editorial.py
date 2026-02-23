@@ -37,8 +37,24 @@ def get_conn():
 
 def gerar_slug_seo_simples(titulo: str) -> str:
     slug = slugify(titulo)
-    slug = re.sub(r"-+", "-", slug)
-    return slug[:80]
+    slug = re.sub(r"-+", "-", slug).strip("-")
+
+    # Limite ideal SEO: 110 caracteres
+    if len(slug) <= 110:
+        return slug
+
+    # Corta respeitando palavras
+    palavras = slug.split("-")
+    novo_slug = ""
+
+    for palavra in palavras:
+        if len(novo_slug) + len(palavra) + 1 > 110:
+            break
+        if novo_slug:
+            novo_slug += "-"
+        novo_slug += palavra
+
+    return novo_slug
 
 
 def slug_existe(conn, slug: str) -> bool:
