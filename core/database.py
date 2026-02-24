@@ -237,6 +237,8 @@ def buscar_noticia_por_slug(slug: str):
                     n.tags,
                     criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em,
                     a.nome AS autor_nome,
+                    a.foto AS autor_foto,
+                    a.bio AS autor_bio,
                     a.slug AS autor_slug
                 FROM noticias n
                 LEFT JOIN autores a ON a.id = n.autor_id
