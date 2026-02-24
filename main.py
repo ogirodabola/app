@@ -1080,6 +1080,16 @@ def pagina_jogador(slug: str, request: Request):
 
 from core.database import buscar_jogadores_por_nome
 
+@app.get("/autor/tiago-sampaio", response_class=HTMLResponse)
+def autor_tiago(request: Request):
+    return templates.TemplateResponse(
+        "autor_tiago.html",
+        {
+            "request": request,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
 @app.get("/admin/buscar-jogador")
 def buscar_jogador_api(query: str):
     return buscar_jogadores_por_nome(query)
