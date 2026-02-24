@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 
 {% block title %}
-Redação Giro Desportivo | Perfil Editorial
+{{ autor.nome }} | Giro Desportivo
 {% endblock %}
 
 {% block meta %}
 <meta name="description"
-content="Conheça a Redação do Giro Desportivo, responsável pela cobertura de futebol nacional e internacional.">
+content="{{ autor.bio }}">
 
 <link rel="canonical"
-href="https://girodesportivo.com/autor/redacao-giro-desportivo">
+href="https://girodesportivo.com/autor/{{ autor.slug }}">
 
+<!-- Schema.org Person -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Redação Giro Desportivo",
-  "url": "https://girodesportivo.com/autor/redacao-giro-desportivo",
-  "description": "Equipe editorial especializada em futebol nacional e internacional.",
+  "name": "{{ autor.nome }}",
+  "url": "https://girodesportivo.com/autor/{{ autor.slug }}",
+  "description": "{{ autor.bio }}",
+  "image": "{{ autor.foto }}",
   "worksFor": {
     "@type": "Organization",
-    "name": "Giro Desportivo"
+    "name": "Giro Desportivo",
+    "url": "https://girodesportivo.com"
   }
 }
 </script>
@@ -31,32 +34,58 @@ href="https://girodesportivo.com/autor/redacao-giro-desportivo">
 <section class="section-block">
   <div class="container">
 
-    <div class="section-header">
-      <h1>{{ autor_nome }}</h1>
-      <div class="section-line"></div>
+    <div style="display:flex; align-items:center; gap:20px; margin-bottom:30px;">
+
+      {% if autor.foto %}
+      <img src="{{ autor.foto }}" 
+           alt="{{ autor.nome }}" 
+           width="120" 
+           height="120"
+           style="border-radius:100px; object-fit:cover;">
+      {% endif %}
+
+      <div>
+        <h1 style="margin-bottom:10px;">{{ autor.nome }}</h1>
+
+        <div style="color:#64748b; font-size:14px;">
+          <p><strong>Especialidade:</strong> Futebol Brasileiro e Mercado da Bola</p>
+          <p><strong>No Giro desde:</strong> 2025</p>
+          <p><strong>Contato:</strong> contato@girodesportivo.com</p>
+        </div>
+      </div>
+
     </div>
 
-    <div style="max-width:700px; margin-bottom:50px;">
-      <p>{{ autor_bio }}</p>
+    <div style="max-width:750px; margin-bottom:50px; line-height:1.7;">
+      <p>{{ autor.bio }}</p>
     </div>
 
-    <h2 style="margin-bottom:20px;">Últimas matérias publicadas</h2>
+    <hr style="margin:40px 0;">
+
+    <h2 style="margin-bottom:25px;">Últimas matérias publicadas</h2>
 
     <div class="cards-grid">
       {% for n in noticias %}
       <article class="card">
+
         {% if n.imagem %}
         <a href="/noticia/{{ n.slug }}" class="card-image">
           <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
         </a>
         {% endif %}
+
         <div class="card-body">
           <h3 class="card-title">
             <a href="/noticia/{{ n.slug }}">
               {{ n.titulo }}
             </a>
           </h3>
+
+          <p style="font-size:13px; color:#64748b; margin-top:8px;">
+            Publicado em {{ n.criada_em.strftime("%d/%m/%Y") }}
+          </p>
         </div>
+
       </article>
       {% endfor %}
     </div>
