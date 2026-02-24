@@ -132,18 +132,21 @@
 
     </div>
 </div>
-            <div class="author-card">
 
-  <div class="author-card-left">
-    {% if noticia.autor_foto %}
+<div class="author-card">
+
+  <div class="author-avatar">
     <img src="{{ noticia.autor_foto }}" 
          alt="{{ noticia.autor_nome }}">
-    {% endif %}
   </div>
 
-  <div class="author-card-right">
+  <div class="author-content">
     <h3>{{ noticia.autor_nome }}</h3>
-    <p>{{ noticia.autor_bio }}</p>
+
+    <p>
+      Ex-jogador profissional de futsal e editor-chefe do Giro Desportivo.
+      Atua com foco em análise tática, mercado da bola e bastidores do futebol.
+    </p>
 
     <a href="/autor/{{ noticia.autor_slug }}" class="author-btn">
       Ver perfil completo →
