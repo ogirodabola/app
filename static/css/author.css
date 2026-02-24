@@ -12,7 +12,7 @@
   max-width: 1128px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 300px 1fr;
   gap: 24px;
   align-items: start;
   padding: 0 16px;
@@ -28,9 +28,11 @@
 
 /* SIDEBAR */
 .x-author-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* separa perfil e social */
   position: sticky;
   top: 100px;
-  height: fit-content;
 }
 
 .x-author-card h1 {
@@ -216,18 +218,6 @@
 .page .x-author-wrapper h2,
 .page .x-author-wrapper h3 {
   color: #111 !important;
-}
-
-.x-author-container {
-  align-items: start !important;
-}
-
-.x-author-main {
-  margin-top: 0 !important;
-}
-
-.x-author-sidebar {
-  margin-top: 0 !important;
 }
 
 .x-author-card {
