@@ -4,103 +4,96 @@
 {{ autor.nome }} | {{ autor.cargo }} | Giro Desportivo
 {% endblock %}
 
-{% block meta %}
-<meta name="description" content="{{ autor.bio_curta }}">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "{{ autor.nome }}",
-  "jobTitle": "{{ autor.cargo }}",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Giro Desportivo"
-  },
-  "sameAs": [
-    {% if autor.instagram %}"{{ autor.instagram }}",{% endif %}
-    {% if autor.twitter %}"{{ autor.twitter }}",{% endif %}
-    {% if autor.linkedin %}"{{ autor.linkedin }}"{% endif %}
-  ]
-}
-</script>
-{% endblock %}
-
 {% block content %}
 
-<section class="author-hero">
-  <div class="author-hero-inner">
+<section class="author-page container">
 
-    <div class="author-avatar-large">
-      <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}" alt="{{ autor.nome }}">
-    </div>
+  <div class="author-layout">
 
-    <div class="author-hero-content">
-      <h1>
-        {{ autor.nome }}
-        {% if autor.verificado %}
-          <span class="verified-badge"></span>
-        {% endif %}
-      </h1>
+    <!-- SIDEBAR -->
+    <aside class="author-sidebar">
 
-      <p class="author-role">
-        {{ autor.cargo }}
-      </p>
+      <div class="author-card">
 
-      <p class="author-mini-bio">
-        {{ autor.bio_curta }}
-      </p>
+        <img class="author-avatar"
+             src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
+             alt="{{ autor.nome }}">
 
-      <div class="author-stats">
-        <div>
+        <h1>
+          {{ autor.nome }}
+          {% if autor.verificado %}
+            <span class="verified-badge"></span>
+          {% endif %}
+        </h1>
+
+        <p class="author-role">
+          {{ autor.cargo }}
+        </p>
+
+        <div class="author-social">
+
+          <a href="https://instagram.com/otiagosampaio" target="_blank">Instagram</a>
+          <a href="https://twitter.com/otiagosampaio" target="_blank">X</a>
+          <a href="https://linkedin.com/in/otiagosampaio" target="_blank">LinkedIn</a>
+
+        </div>
+
+        <div class="author-metrics">
           <strong>{{ total_materias }}</strong>
           <span>Matérias publicadas</span>
         </div>
+
       </div>
 
-    </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="author-main">
+
+      <section class="author-bio">
+        {{ autor.bio_longa | safe }}
+      </section>
+
+      <section class="author-specialties">
+        <h2>Especialidades</h2>
+
+        <div class="specialty-grid">
+          <span>Mercado da Bola</span>
+          <span>Análise Tática</span>
+          <span>Futebol Internacional</span>
+          <span>Bastidores</span>
+          <span>Gestão Esportiva</span>
+        </div>
+      </section>
+
+      <section class="author-posts">
+        <h2>Últimas publicações</h2>
+
+        <div class="posts-grid">
+          {% for n in noticias %}
+          <a href="/noticia/{{ n.slug }}" class="post-card">
+
+            <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}"
+                 alt="{{ n.titulo }}">
+
+            <div class="post-content">
+              <span class="post-category">{{ n.categoria }}</span>
+              <h3>{{ n.titulo }}</h3>
+              <span class="post-date">
+                {{ n.criada_em.strftime("%d/%m/%Y") }}
+              </span>
+            </div>
+
+          </a>
+          {% endfor %}
+        </div>
+
+      </section>
+
+    </main>
+
   </div>
-</section>
 
-<section class="author-biografia container">
-  {{ autor.bio_longa | safe }}
-</section>
-
-<section class="author-especialidades container">
-  <h2>Especialidades</h2>
-
-  <div class="especialidades-grid">
-    <div class="esp-card">Mercado da Bola</div>
-    <div class="esp-card">Análise Tática</div>
-    <div class="esp-card">Futebol Internacional</div>
-    <div class="esp-card">Bastidores de Clubes</div>
-    <div class="esp-card">Gestão e Estratégia no Esporte</div>
-  </div>
-</section>
-
-<section class="author-posts container">
-  <h2>Últimas publicações</h2>
-
-  <div class="posts-grid">
-    {% for n in noticias %}
-    <a href="/noticia/{{ n.slug }}" class="post-card">
-      <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}" alt="{{ n.titulo }}">
-      <div class="post-info">
-        <span class="post-category">{{ n.categoria }}</span>
-        <h3>{{ n.titulo }}</h3>
-        <span class="post-date">{{ n.criada_em.strftime("%d/%m/%Y") }}</span>
-      </div>
-    </a>
-    {% endfor %}
-  </div>
-</section>
-
-<section class="author-credibilidade container">
-  <h2>Compromisso Editorial</h2>
-  <p>
-    O conteúdo produzido por {{ autor.nome }} segue os princípios editoriais do Giro Desportivo,
-    priorizando precisão, responsabilidade, verificação de fontes e independência editorial.
-  </p>
 </section>
 
 {% endblock %}
