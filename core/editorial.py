@@ -231,7 +231,8 @@ def gerar_conteudo_editorial(
                 "banner",
                 "ads",
                 "esportesdasorte",
-                "assets.goal.com/images/v3/blt"
+                "assets.goal.com/images/v3/blt",
+                "cdn.sportfeeds.io/sdl/images/team/crest"
             ]):
                 continue
     
