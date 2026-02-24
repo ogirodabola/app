@@ -1,99 +1,103 @@
 /* ======================================================
-   AUTHOR PAGE — CSS ISOLADO
+   AUTHOR — LAYOUT PADRÃO LINKEDIN
 ====================================================== */
 
-/* SOBRESCREVE O FUNDO GLOBAL */
-body {
-  background: #f8fafc !important;
-  color: #0f172a;
+.x-author-wrapper {
+  background: #f3f2ef; /* CINZA LINKEDIN */
+  padding: 40px 0 80px;
 }
 
-/* WRAPPER GERAL */
-.x-author-page {
-  padding: 100px 0;
-}
-
-/* CONTAINER */
-.x-author-shell {
-  max-width: 1200px;
+/* CONTAINER CENTRAL */
+.x-author-container {
+  max-width: 1128px;
   margin: 0 auto;
-  padding: 0 40px;
-
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 80px;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+/* CARDS */
+.x-author-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
 /* SIDEBAR */
-.x-author-profile {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-  text-align: center;
+.x-author-sidebar {
   position: sticky;
-  top: 120px;
+  top: 100px;
+  height: fit-content;
 }
 
 .x-author-avatar {
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 24px;
-}
-
-.x-author-name {
-  font-size: 22px;
-  font-weight: 700;
+  margin-bottom: 16px;
 }
 
 .x-author-role {
-  color: #64748b;
   font-size: 14px;
-  margin-bottom: 20px;
+  color: #666;
+  margin-bottom: 12px;
 }
 
+.x-author-count strong {
+  font-size: 20px;
+  display: block;
+}
+
+/* MAIN */
 .x-author-main {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
 }
 
-.x-author-section {
-  background: #ffffff;
-  padding: 50px;
-  border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-}
-
+/* POSTS */
 .x-author-post {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 24px;
-  background: #f1f5f9;
-  padding: 18px;
-  border-radius: 18px;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
   text-decoration: none;
   color: inherit;
-  transition: 0.2s ease;
+  padding: 12px 0;
+  border-top: 1px solid #e5e5e5;
 }
 
-.x-author-post:hover {
-  transform: translateY(-3px);
+.x-author-post:first-child {
+  border-top: none;
+}
+
+.x-author-post img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.x-author-post-category {
+  font-size: 12px;
+  color: #666;
+}
+
+.x-author-post-date {
+  font-size: 12px;
+  color: #999;
 }
 
 /* RESPONSIVO */
-@media (max-width: 1000px) {
-  .x-author-shell {
+@media (max-width: 900px) {
+  .x-author-container {
     grid-template-columns: 1fr;
   }
 
-  .x-author-profile {
+  .x-author-sidebar {
     position: relative;
-  }
-
-  .x-author-post {
-    grid-template-columns: 1fr;
+    top: 0;
   }
 }
