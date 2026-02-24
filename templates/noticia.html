@@ -42,6 +42,11 @@
     style="background-image:url('{{ noticia.imagem or '/static/placeholder-news.jpg' }}');">
 
   <div class="hero-overlay">
+
+    <h1 class="hero-title">
+      {{ noticia.titulo_editorial or noticia.titulo }}
+    </h1>
+
     <div class="article-meta hero-meta">
 
       <span class="meta-author">
@@ -59,8 +64,8 @@
       </span>
 
     </div>
-  </div>
 
+  </div>
 </section>
 
 <!-- CONTAINER -->
@@ -99,6 +104,41 @@
 
       </div>
 
+{% if noticia.tags %}
+<div class="article-tags">
+  {% for tag in noticia.tags %}
+    <span>#{{ tag }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+{% if recomendadas %}
+<section class="article-recommended">
+  <h3>Você também pode gostar</h3>
+
+  <div class="recommended-grid">
+    {% for n in recomendadas %}
+    <a href="/noticia/{{ n.slug }}" class="recommended-card">
+
+      <div class="recommended-image">
+        <img 
+          src="{{ n.imagem or '/static/placeholder-news.jpg' }}" 
+          alt="{{ n.titulo_editorial or n.titulo }}"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="recommended-title">
+        {{ n.titulo_editorial or n.titulo }}
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+        
       {{ render_ad("noticia_footer", request) | safe }}
 
     </main>
