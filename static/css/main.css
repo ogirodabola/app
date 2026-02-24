@@ -3159,11 +3159,8 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  flex-shrink: 0;
-  overflow: hidden;
+  background: center/cover no-repeat;
+  display: block;
 }
 
 .author-content h3 {
