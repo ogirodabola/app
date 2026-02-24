@@ -3272,3 +3272,53 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   margin-bottom: 20px;
   max-width: 900px;
 }
+
+/* ============================= */
+/* RESPONSIVO MOBILE NOTÍCIA */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .article-header {
+    padding: 30px 20px;
+    margin-top: -60px;
+    border-radius: 20px;
+  }
+
+  .article-title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .article-label {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .article-meta {
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .article-container {
+    padding: 0 15px;
+  }
+
+  .article-content {
+    padding: 30px 20px;
+  }
+
+  .author-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .author-avatar {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+
+}
