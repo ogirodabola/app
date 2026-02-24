@@ -1,96 +1,126 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ autor.nome }} | Giro Desportivo
+Tiago Sampaio | Editor-chefe do Giro Desportivo
 {% endblock %}
 
 {% block meta %}
-<meta name="description"
-content="{{ autor.bio }}">
+<meta name="description" content="Tiago Sampaio é editor-chefe do Giro Desportivo, especialista em Mercado da Bola e análise tática de futebol, com trajetória profissional no futsal e formação em Marketing.">
 
-<link rel="canonical"
-href="https://girodesportivo.com/autor/{{ autor.slug }}">
-
-<!-- Schema.org Person -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "{{ autor.nome }}",
-  "url": "https://girodesportivo.com/autor/{{ autor.slug }}",
-  "description": "{{ autor.bio }}",
-  "image": "{{ autor.foto }}",
+  "name": "Tiago Sampaio",
+  "jobTitle": "Editor-chefe",
   "worksFor": {
     "@type": "Organization",
-    "name": "Giro Desportivo",
-    "url": "https://girodesportivo.com"
-  }
+    "name": "Giro Desportivo"
+  },
+  "alumniOf": "UniCarioca",
+  "sameAs": [
+    "https://instagram.com/SEUUSER",
+    "https://twitter.com/SEUUSER",
+    "https://linkedin.com/in/SEUUSER"
+  ]
 }
 </script>
 {% endblock %}
 
 {% block content %}
 
-<section class="section-block">
-  <div class="container">
+<section class="author-hero">
+  <div class="author-hero-inner">
 
-    <div style="display:flex; align-items:center; gap:20px; margin-bottom:30px;">
+    <div class="author-avatar-large">
+      <img src="/static/img/tiago-sampaio.jpg" alt="Tiago Sampaio">
+    </div>
 
-      {% if autor.foto %}
-      <img src="{{ autor.foto }}" 
-           alt="{{ autor.nome }}" 
-           width="120" 
-           height="120"
-           style="border-radius:100px; object-fit:cover;">
-      {% endif %}
+    <div class="author-hero-content">
+      <h1>
+        Tiago Sampaio
+        <span class="verified-badge"></span>
+      </h1>
 
-      <div>
-        <h1 style="margin-bottom:10px;">{{ autor.nome }}</h1>
+      <p class="author-role">
+        Editor-chefe do Giro Desportivo | Especialista em Mercado da Bola e Análise Tática
+      </p>
 
-        <div style="color:#64748b; font-size:14px;">
-          <p><strong>Especialidade:</strong> Futebol Brasileiro e Mercado da Bola</p>
-          <p><strong>No Giro desde:</strong> 2025</p>
-          <p><strong>Contato:</strong> contato@girodesportivo.com</p>
+      <p class="author-mini-bio">
+        Ex-jogador profissional de futsal com passagens por Madureira-RJ e Botafogo.
+        Atua há mais de 15 anos no ecossistema esportivo e digital.
+      </p>
+
+      <div class="author-stats">
+        <div>
+          <strong>{{ total_materias }}</strong>
+          <span>Matérias publicadas</span>
         </div>
       </div>
 
     </div>
-
-    <div style="max-width:750px; margin-bottom:50px; line-height:1.7;">
-      <p>{{ autor.bio }}</p>
-    </div>
-
-    <hr style="margin:40px 0;">
-
-    <h2 style="margin-bottom:25px;">Últimas matérias publicadas</h2>
-
-    <div class="cards-grid">
-      {% for n in noticias %}
-      <article class="card">
-
-        {% if n.imagem %}
-        <a href="/noticia/{{ n.slug }}" class="card-image">
-          <img src="{{ n.imagem }}" alt="{{ n.titulo }}">
-        </a>
-        {% endif %}
-
-        <div class="card-body">
-          <h3 class="card-title">
-            <a href="/noticia/{{ n.slug }}">
-              {{ n.titulo }}
-            </a>
-          </h3>
-
-          <p style="font-size:13px; color:#64748b; margin-top:8px;">
-            Publicado em {{ n.criada_em.strftime("%d/%m/%Y") }}
-          </p>
-        </div>
-
-      </article>
-      {% endfor %}
-    </div>
-
   </div>
+</section>
+
+<section class="author-biografia container">
+
+  <h2>Trajetória no Esporte</h2>
+  <p>
+    Tiago Sampaio iniciou sua trajetória no futsal profissional integrando o elenco do Madureira Esporte Clube, no Rio de Janeiro, onde desenvolveu fundamentos técnicos e visão tática. Posteriormente, teve passagem pelo Botafogo, consolidando sua vivência no esporte de alto rendimento.
+  </p>
+
+  <h2>Formação Acadêmica e Transição</h2>
+  <p>
+    Formado em Marketing pela UniCarioca, direcionou sua carreira para o ambiente digital e estratégico, atuando em projetos ligados à comunicação esportiva, posicionamento e crescimento digital.
+  </p>
+
+  <h2>Comunicação e Presença Digital</h2>
+  <p>
+    Há mais de uma década produz análises sobre mercado de transferências, bastidores, desempenho e tendências do futebol nacional e internacional.
+  </p>
+
+  <h2>O Nascimento do Giro Desportivo</h2>
+  <p>
+    O Giro Desportivo nasceu como iniciativa independente e hoje evolui como plataforma editorial estruturada, com compromisso com informação verificada, análise aprofundada e responsabilidade editorial.
+  </p>
+
+</section>
+
+<section class="author-especialidades container">
+  <h2>Especialidades</h2>
+
+  <div class="especialidades-grid">
+    <div class="esp-card">Mercado da Bola</div>
+    <div class="esp-card">Análise Tática</div>
+    <div class="esp-card">Futebol Internacional</div>
+    <div class="esp-card">Bastidores de Clubes</div>
+    <div class="esp-card">Gestão e Estratégia no Esporte</div>
+  </div>
+</section>
+
+<section class="author-posts container">
+  <h2>Últimas publicações</h2>
+
+  <div class="posts-grid">
+    {% for n in noticias %}
+    <a href="/noticia/{{ n.slug }}" class="post-card">
+      <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}" alt="{{ n.titulo }}">
+      <div class="post-info">
+        <span class="post-category">{{ n.categoria }}</span>
+        <h3>{{ n.titulo }}</h3>
+        <span class="post-date">{{ n.criada_em.strftime("%d/%m/%Y") }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="author-credibilidade container">
+  <h2>Compromisso Editorial</h2>
+  <p>
+    O conteúdo produzido por Tiago Sampaio segue os princípios editoriais do Giro Desportivo,
+    priorizando precisão, responsabilidade, verificação de fontes e independência editorial.
+  </p>
 </section>
 
 {% endblock %}
