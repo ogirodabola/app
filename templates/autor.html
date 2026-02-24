@@ -10,39 +10,37 @@
 
 {% block content %}
 
-<div class="page-author">
+<div class="gd-author-page">
 
-  <section class="author-wrapper">
+  <div class="gd-author-layout">
 
-    <div class="author-container">
+    <!-- SIDEBAR -->
+    <aside class="gd-author-sidebar">
 
-    <!-- SIDEBAR PERFIL -->
-    <aside class="author-sidebar">
-
-      <div class="author-card">
+      <div class="gd-author-card">
 
         <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
              alt="{{ autor.nome }}"
-             class="author-photo">
+             class="gd-author-avatar">
 
-        <h1>
+        <h1 class="gd-author-name">
           {{ autor.nome }}
           {% if autor.verificado %}
-            <span class="verified-badge"></span>
+            <span class="gd-author-verified"></span>
           {% endif %}
         </h1>
 
-        <p class="author-role">
-          {{ autor.cargo }}
+        <p class="gd-author-role">
+          {{ autor.cargo or "Jornalista Esportivo" }}
         </p>
 
-        <div class="author-social">
-          <a href="{{ autor.instagram }}" target="_blank">Instagram</a>
-          <a href="{{ autor.twitter }}" target="_blank">X</a>
-          <a href="{{ autor.linkedin }}" target="_blank">LinkedIn</a>
+        <div class="gd-author-socials">
+          <a href="https://instagram.com/otiagosampaio" target="_blank">Instagram</a>
+          <a href="https://twitter.com/otiagosampaio" target="_blank">X</a>
+          <a href="https://linkedin.com/in/otiagosampaio" target="_blank">LinkedIn</a>
         </div>
 
-        <div class="author-count">
+        <div class="gd-author-count">
           <strong>{{ total_materias }}</strong>
           <span>Publicações</span>
         </div>
@@ -51,56 +49,42 @@
 
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="author-main">
+    <!-- CONTEÚDO -->
+    <main class="gd-author-content">
 
-      <!-- BIO COMPLETA -->
-      <section class="author-section">
-
+      <section class="gd-author-bio-box">
         <h2>Sobre {{ autor.nome }}</h2>
-
-        <div class="author-bio">
+        <div class="gd-author-bio-text">
           {{ autor.bio_longa | safe }}
         </div>
-
       </section>
 
-      <!-- ESPECIALIDADES -->
-      <section class="author-section">
-
+      <section class="gd-author-specialties-box">
         <h3>Especialidades</h3>
-
-        <div class="author-tags">
+        <div class="gd-author-tags">
           <span>Mercado da Bola</span>
           <span>Análise Tática</span>
           <span>Futebol Internacional</span>
           <span>Bastidores</span>
           <span>Gestão Esportiva</span>
         </div>
-
       </section>
 
-      <!-- PUBLICAÇÕES -->
-      <section class="author-section">
-
+      <section class="gd-author-posts-box">
         <h3>Últimas publicações</h3>
 
-        <div class="author-list">
+        <div class="gd-author-post-list">
 
           {% for n in noticias %}
-          <a href="/noticia/{{ n.slug }}" class="author-item">
+          <a href="/noticia/{{ n.slug }}" class="gd-author-post-item">
 
             <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}"
-                 alt="{{ n.titulo }}">
+                 class="gd-author-post-thumb">
 
-            <div class="author-item-content">
-              <span class="author-article-category">
-                {{ n.categoria }}
-              </span>
-
+            <div class="gd-author-post-info">
+              <span class="gd-author-post-category">{{ n.categoria }}</span>
               <h4>{{ n.titulo }}</h4>
-
-              <span class="author-article-date">
+              <span class="gd-author-post-date">
                 {{ n.criada_em.strftime("%d/%m/%Y") }}
               </span>
             </div>
@@ -116,6 +100,8 @@
 
   </div>
 
-</section>
+</div>
+
+{% endblock %}
 
 {% endblock %}
