@@ -2408,10 +2408,8 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 
 .article-sidebar {
-    position: sticky;
-    top: 100px;
+  position: relative;
 }
-
 .article-tags {
     margin-top: 40px;
 }
@@ -2728,12 +2726,11 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .hero-overlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.85)
-  );
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2), transparent);
 }
 
 .hero-content {
@@ -2752,6 +2749,10 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 .hero-content p {
   font-size: 1.1rem;
   opacity: 0.9;
+}
+
+.hero-meta {
+  color: #fff;
 }
 
 /* GRID PRINCIPAL */
@@ -3140,14 +3141,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .author-card {
   margin-top: 60px;
-  padding: 35px;
-  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
-  border-radius: 20px;
   display: flex;
   gap: 30px;
   align-items: center;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 40px;
 }
 
 .author-card:hover {
@@ -3159,14 +3158,11 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: center/cover no-repeat;
-  display: block;
+  flex-shrink: 0;
 }
 
 .author-content h3 {
   margin-bottom: 10px;
-  font-size: 22px;
-  color: #0f172a;
 }
 
 .author-content p {
@@ -3179,14 +3175,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 
 .author-btn {
   display: inline-block;
-  padding: 10px 18px;
+  margin-top: 15px;
+  padding: 12px 20px;
   background: #0f172a;
   color: #fff;
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 12px;
   text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s ease;
 }
 
 .author-btn:hover {
@@ -3214,12 +3208,11 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .author-link {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
   color: #fff;
+  font-weight: 600;
   text-decoration: none;
 }
+
 
 
 .author-link:hover {
@@ -3227,28 +3220,27 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .meta-separator {
-  color: #cbd5e1;
+  margin: 0 8px;
+  color: rgba(255,255,255,0.5);
 }
 
 .article-date {
-  color: #94a3b8;
+  color: rgba(255,255,255,0.8);
 }
 /* ===== VERIFIED BADGE ===== */
 
 .verified-badge {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background: #1d9bf0;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: bold;
   color: #fff;
-  line-height: 1;
 }
-
 .verified-badge::after {
   content: "✓";
   color: white;
