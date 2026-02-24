@@ -1115,7 +1115,7 @@ def pagina_autor(slug: str, request: Request):
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
-    ))
+    )
 
 @app.get("/politica-de-correcao", response_class=HTMLResponse)
 def politica_correcao(request: Request):
