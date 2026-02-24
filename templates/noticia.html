@@ -58,18 +58,17 @@
             {{ noticia.titulo_editorial or noticia.titulo }}
         </h1>
 
-        <p class="meta">
-              Por 
-              <a href="/autor/{{ noticia.autor_slug }}">
-                <strong>{{ noticia.autor_nome }}</strong>
-              </a>
-              • {{ noticia.criada_em.strftime("%d/%m/%Y") }}
-            </p>
-
         <div class="article-meta">
+          <span>
+            Por 
+            <a href="/autor/{{ noticia.autor_slug }}">
+              {{ noticia.autor_nome }}
+            </a>
+          </span>
+          <span class="article-date">
             {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
+          </span>
         </div>
-
     </header>
 
     <div class="article-grid">
@@ -132,6 +131,25 @@
         </a>
 
     </div>
+</div>
+            <div class="author-card">
+
+  <div class="author-card-left">
+    {% if noticia.autor_foto %}
+    <img src="{{ noticia.autor_foto }}" 
+         alt="{{ noticia.autor_nome }}">
+    {% endif %}
+  </div>
+
+  <div class="author-card-right">
+    <h3>{{ noticia.autor_nome }}</h3>
+    <p>{{ noticia.autor_bio }}</p>
+
+    <a href="/autor/{{ noticia.autor_slug }}" class="author-btn">
+      Ver perfil completo →
+    </a>
+  </div>
+
 </div>
 
             <!-- ========================= -->
