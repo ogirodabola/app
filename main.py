@@ -1093,3 +1093,23 @@ def autor_tiago(request: Request):
 @app.get("/admin/buscar-jogador")
 def buscar_jogador_api(query: str):
     return buscar_jogadores_por_nome(query)
+
+
+@app.get("/autor/{slug}", response_class=HTMLResponse)
+def pagina_autor(slug: str, request: Request):
+    autor = buscar_autor_por_slug(slug)
+    noticias = listar_noticias_por_autor(slug)
+
+    if not autor:
+        raise HTTPException(status_code=404)
+
+    return templates.TemplateResponse(
+        "autor.html",
+        {
+            "request": request,
+            "autor": autor,
+            "noticias": noticias,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
