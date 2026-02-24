@@ -10,14 +10,14 @@
 
 {% block content %}
 
-<section class="author-wrapper container">
+<section class="author-wrapper">
 
-  <div class="author-grid">
+  <div class="author-container">
 
     <!-- SIDEBAR PERFIL -->
-    <aside class="author-left">
+    <aside class="author-sidebar">
 
-      <div class="author-profile-card">
+      <div class="author-card">
 
         <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
              alt="{{ autor.nome }}"
@@ -30,25 +30,17 @@
           {% endif %}
         </h1>
 
-        <p class="author-position">
+        <p class="author-role">
           {{ autor.cargo }}
         </p>
 
-        <div class="author-follow">
-          <a href="https://instagram.com/otiagosampaio" target="_blank" class="btn-social">
-            <i class="fab fa-instagram"></i> Instagram
-          </a>
-
-          <a href="https://twitter.com/otiagosampaio" target="_blank" class="btn-social">
-            <i class="fab fa-x-twitter"></i> X
-          </a>
-
-          <a href="https://linkedin.com/in/otiagosampaio" target="_blank" class="btn-social">
-            <i class="fab fa-linkedin"></i> LinkedIn
-          </a>
+        <div class="author-social">
+          <a href="{{ autor.instagram }}" target="_blank">Instagram</a>
+          <a href="{{ autor.twitter }}" target="_blank">X</a>
+          <a href="{{ autor.linkedin }}" target="_blank">LinkedIn</a>
         </div>
 
-        <div class="author-stats">
+        <div class="author-count">
           <strong>{{ total_materias }}</strong>
           <span>Publicações</span>
         </div>
@@ -58,50 +50,54 @@
     </aside>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <main class="author-right">
+    <main class="author-main">
 
-      <!-- BIO COMPLETA (E-E-A-T) -->
-      <section class="author-history">
+      <!-- BIO COMPLETA -->
+      <section class="author-section">
 
         <h2>Sobre {{ autor.nome }}</h2>
 
-        <div class="author-long-bio">
-          <div style="background:yellow;color:black;padding:20px;">
-          {{ autor.bio_longa }}
+        <div class="author-bio">
+          {{ autor.bio_longa | safe }}
         </div>
 
       </section>
 
       <!-- ESPECIALIDADES -->
-      <section class="author-specialties">
+      <section class="author-section">
+
         <h3>Especialidades</h3>
 
-        <div class="specialty-tags">
+        <div class="author-tags">
           <span>Mercado da Bola</span>
           <span>Análise Tática</span>
           <span>Futebol Internacional</span>
           <span>Bastidores</span>
           <span>Gestão Esportiva</span>
         </div>
+
       </section>
 
-      <!-- PUBLICAÇÕES (LISTAGEM COMPACTA) -->
-      <section class="author-articles">
+      <!-- PUBLICAÇÕES -->
+      <section class="author-section">
 
         <h3>Últimas publicações</h3>
 
-        <div class="article-list">
+        <div class="author-list">
 
           {% for n in noticias %}
-          <a href="/noticia/{{ n.slug }}" class="article-item">
+          <a href="/noticia/{{ n.slug }}" class="author-item">
 
-            <div class="article-thumb">
-              <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}">
-            </div>
+            <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}"
+                 alt="{{ n.titulo }}">
 
-            <div class="article-info">
-              <span class="author-article-category">{ n.categoria }}</span>
+            <div class="author-item-content">
+              <span class="author-article-category">
+                {{ n.categoria }}
+              </span>
+
               <h4>{{ n.titulo }}</h4>
+
               <span class="author-article-date">
                 {{ n.criada_em.strftime("%d/%m/%Y") }}
               </span>
