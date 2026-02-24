@@ -46,34 +46,24 @@
 
 <div class="article-container">
 
-    <header class="article-header">
+    <div class="article-meta">
 
-        {% if noticia.categoria %}
-        <span class="article-category">
-            {{ noticia.categoria }}
-        </span>
-        {% endif %}
-
-        <h1 class="article-title">
-            {{ noticia.titulo_editorial or noticia.titulo }}
-        </h1>
-
-        <div class="article-meta">
-
-  <div class="article-author">
-    <span>Por</span>
-
+  <span class="meta-author">
+    Por
     <a href="/autor/{{ noticia.autor_slug }}" class="author-link">
       {{ noticia.autor_nome }}
-
-      <span class="verified-badge" title="Perfil verificado">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
-          <path d="M22.5 12l-2.1 2.4.3 3.2-3.1.7-1.6 2.8-3-1.3-3 1.3-1.6-2.8-3.1-.7.3-3.2L1.5 12l2.1-2.4-.3-3.2 3.1-.7 1.6-2.8 3 1.3 3-1.3 1.6 2.8 3.1.7-.3 3.2L22.5 12z"/>
-        </svg>
-      </span>
-
     </a>
-  </div>
+
+    <span class="verified-badge" title="Perfil verificado"></span>
+  </span>
+
+  <span class="meta-separator">•</span>
+
+  <span class="article-date">
+    {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
+  </span>
+
+</div>
 
   <div class="article-date">
     {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
