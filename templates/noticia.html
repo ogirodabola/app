@@ -58,6 +58,11 @@
             {{ noticia.titulo_editorial or noticia.titulo }}
         </h1>
 
+        <p class="autor">
+          Por <strong>{{ noticia.autor or "Tiago Sampaio" }}</strong> • 
+          {{ noticia.criada_em.strftime("%d/%m/%Y") }}
+        </p>
+
         <div class="article-meta">
             {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
         </div>
