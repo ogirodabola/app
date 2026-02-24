@@ -3164,12 +3164,14 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   transform: translateY(-3px);
 }
 
-.author-avatar img {
+.author-avatar {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 15px 40px rgba(15,23,42,0.15);
+  flex-shrink: 0;
 }
 
 .author-content h3 {
