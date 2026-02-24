@@ -4,20 +4,24 @@
 {{ autor.nome }} | {{ autor.cargo }} | Giro Desportivo
 {% endblock %}
 
+{% block meta %}
+<meta name="description" content="{{ autor.bio_curta }}">
+{% endblock %}
+
 {% block content %}
 
-<section class="author-page container">
+<section class="author-wrapper container">
 
-  <div class="author-layout">
+  <div class="author-grid">
 
-    <!-- SIDEBAR -->
-    <aside class="author-sidebar">
+    <!-- SIDEBAR PERFIL -->
+    <aside class="author-left">
 
-      <div class="author-card">
+      <div class="author-profile-card">
 
-        <img class="author-avatar"
-             src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
-             alt="{{ autor.nome }}">
+        <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
+             alt="{{ autor.nome }}"
+             class="author-photo">
 
         <h1>
           {{ autor.nome }}
@@ -26,38 +30,52 @@
           {% endif %}
         </h1>
 
-        <p class="author-role">
+        <p class="author-position">
           {{ autor.cargo }}
         </p>
 
-        <div class="author-social">
+        <div class="author-follow">
+          <a href="https://instagram.com/otiagosampaio" target="_blank" class="btn-social">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
 
-          <a href="https://instagram.com/otiagosampaio" target="_blank">Instagram</a>
-          <a href="https://twitter.com/otiagosampaio" target="_blank">X</a>
-          <a href="https://linkedin.com/in/otiagosampaio" target="_blank">LinkedIn</a>
+          <a href="https://twitter.com/otiagosampaio" target="_blank" class="btn-social">
+            <i class="fab fa-x-twitter"></i> X
+          </a>
 
+          <a href="https://linkedin.com/in/otiagosampaio" target="_blank" class="btn-social">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
         </div>
 
-        <div class="author-metrics">
+        <div class="author-stats">
           <strong>{{ total_materias }}</strong>
-          <span>Matérias publicadas</span>
+          <span>Publicações</span>
         </div>
 
       </div>
 
     </aside>
 
-    <!-- CONTEÚDO -->
-    <main class="author-main">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="author-right">
 
-      <section class="author-bio">
-        {{ autor.bio_longa | safe }}
+      <!-- BIO COMPLETA (E-E-A-T) -->
+      <section class="author-history">
+
+        <h2>Sobre {{ autor.nome }}</h2>
+
+        <div class="author-long-bio">
+          {{ autor.bio_longa | safe }}
+        </div>
+
       </section>
 
+      <!-- ESPECIALIDADES -->
       <section class="author-specialties">
-        <h2>Especialidades</h2>
+        <h3>Especialidades</h3>
 
-        <div class="specialty-grid">
+        <div class="specialty-tags">
           <span>Mercado da Bola</span>
           <span>Análise Tática</span>
           <span>Futebol Internacional</span>
@@ -66,26 +84,31 @@
         </div>
       </section>
 
-      <section class="author-posts">
-        <h2>Últimas publicações</h2>
+      <!-- PUBLICAÇÕES (LISTAGEM COMPACTA) -->
+      <section class="author-articles">
 
-        <div class="posts-grid">
+        <h3>Últimas publicações</h3>
+
+        <div class="article-list">
+
           {% for n in noticias %}
-          <a href="/noticia/{{ n.slug }}" class="post-card">
+          <a href="/noticia/{{ n.slug }}" class="article-item">
 
-            <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}"
-                 alt="{{ n.titulo }}">
+            <div class="article-thumb">
+              <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}">
+            </div>
 
-            <div class="post-content">
-              <span class="post-category">{{ n.categoria }}</span>
-              <h3>{{ n.titulo }}</h3>
-              <span class="post-date">
+            <div class="article-info">
+              <span class="article-category">{{ n.categoria }}</span>
+              <h4>{{ n.titulo }}</h4>
+              <span class="article-date">
                 {{ n.criada_em.strftime("%d/%m/%Y") }}
               </span>
             </div>
 
           </a>
           {% endfor %}
+
         </div>
 
       </section>
