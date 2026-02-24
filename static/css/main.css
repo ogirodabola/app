@@ -3696,6 +3696,35 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   color: #94a3b8;
 }
 
+.page-author {
+  background: #f8fafc;
+  padding: 60px 0;
+}
+
+.page-author .author-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+}
+
+.page-author .author-profile-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 18px;
+}
+
+.page-author .author-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+}
+
+.page-author .article-item {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+}
+
 @media (max-width: 900px) {
   .author-container {
     grid-template-columns: 1fr;
