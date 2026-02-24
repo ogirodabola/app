@@ -223,3 +223,25 @@
 .x-author-card {
   margin: 0;
 }
+
+.x-author-rating {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.x-rating-stars {
+  color: #f5b301;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.x-rating-info {
+  font-size: 14px;
+  color: #555;
+}
+
+.x-rating-info strong {
+  font-size: 18px;
+  color: #000;
+}
