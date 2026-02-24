@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 
 {% block title %}
-Tiago Sampaio | Editor-chefe do Giro Desportivo
+{{ autor.nome }} | {{ autor.cargo }} | Giro Desportivo
 {% endblock %}
 
 {% block meta %}
-<meta name="description" content="Tiago Sampaio é editor-chefe do Giro Desportivo, especialista em Mercado da Bola e análise tática de futebol, com trajetória profissional no futsal e formação em Marketing.">
+<meta name="description" content="{{ autor.bio_curta }}">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Tiago Sampaio",
-  "jobTitle": "Editor-chefe",
+  "name": "{{ autor.nome }}",
+  "jobTitle": "{{ autor.cargo }}",
   "worksFor": {
     "@type": "Organization",
     "name": "Giro Desportivo"
   },
-  "alumniOf": "UniCarioca",
   "sameAs": [
-    "https://instagram.com/SEUUSER",
-    "https://twitter.com/SEUUSER",
-    "https://linkedin.com/in/SEUUSER"
+    {% if autor.instagram %}"{{ autor.instagram }}",{% endif %}
+    {% if autor.twitter %}"{{ autor.twitter }}",{% endif %}
+    {% if autor.linkedin %}"{{ autor.linkedin }}"{% endif %}
   ]
 }
 </script>
@@ -33,22 +32,23 @@ Tiago Sampaio | Editor-chefe do Giro Desportivo
   <div class="author-hero-inner">
 
     <div class="author-avatar-large">
-      <img src="/static/img/tiago-sampaio.jpg" alt="Tiago Sampaio">
+      <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}" alt="{{ autor.nome }}">
     </div>
 
     <div class="author-hero-content">
       <h1>
-        Tiago Sampaio
-        <span class="verified-badge"></span>
+        {{ autor.nome }}
+        {% if autor.verificado %}
+          <span class="verified-badge"></span>
+        {% endif %}
       </h1>
 
       <p class="author-role">
-        Editor-chefe do Giro Desportivo | Especialista em Mercado da Bola e Análise Tática
+        {{ autor.cargo }}
       </p>
 
       <p class="author-mini-bio">
-        Ex-jogador profissional de futsal com passagens por Madureira-RJ e Botafogo.
-        Atua há mais de 15 anos no ecossistema esportivo e digital.
+        {{ autor.bio_curta }}
       </p>
 
       <div class="author-stats">
@@ -63,27 +63,7 @@ Tiago Sampaio | Editor-chefe do Giro Desportivo
 </section>
 
 <section class="author-biografia container">
-
-  <h2>Trajetória no Esporte</h2>
-  <p>
-    Tiago Sampaio iniciou sua trajetória no futsal profissional integrando o elenco do Madureira Esporte Clube, no Rio de Janeiro, onde desenvolveu fundamentos técnicos e visão tática. Posteriormente, teve passagem pelo Botafogo, consolidando sua vivência no esporte de alto rendimento.
-  </p>
-
-  <h2>Formação Acadêmica e Transição</h2>
-  <p>
-    Formado em Marketing pela UniCarioca, direcionou sua carreira para o ambiente digital e estratégico, atuando em projetos ligados à comunicação esportiva, posicionamento e crescimento digital.
-  </p>
-
-  <h2>Comunicação e Presença Digital</h2>
-  <p>
-    Há mais de uma década produz análises sobre mercado de transferências, bastidores, desempenho e tendências do futebol nacional e internacional.
-  </p>
-
-  <h2>O Nascimento do Giro Desportivo</h2>
-  <p>
-    O Giro Desportivo nasceu como iniciativa independente e hoje evolui como plataforma editorial estruturada, com compromisso com informação verificada, análise aprofundada e responsabilidade editorial.
-  </p>
-
+  {{ autor.bio_longa | safe }}
 </section>
 
 <section class="author-especialidades container">
@@ -118,7 +98,7 @@ Tiago Sampaio | Editor-chefe do Giro Desportivo
 <section class="author-credibilidade container">
   <h2>Compromisso Editorial</h2>
   <p>
-    O conteúdo produzido por Tiago Sampaio segue os princípios editoriais do Giro Desportivo,
+    O conteúdo produzido por {{ autor.nome }} segue os princípios editoriais do Giro Desportivo,
     priorizando precisão, responsabilidade, verificação de fontes e independência editorial.
   </p>
 </section>
