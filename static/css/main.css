@@ -2506,15 +2506,6 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     z-index: 5;
 }
 
-.article-wrapper {
-    margin-top: -50px !important;
-}
-
-.article-content {
-    margin-top: 0 !important;
-    padding: 10px 55px !important;
-}
-
 /* ========================= */
 /* RECOMENDADAS */
 /* ========================= */
@@ -3243,7 +3234,7 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 /* ===== VERIFIED BADGE ===== */
 
-verified-badge {
+.verified-badge {
   width: 18px;
   height: 18px;
   background: #1d9bf0;
