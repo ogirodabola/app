@@ -1574,27 +1574,3 @@ def listar_noticias_por_autor(autor_id: int, limit=12):
                 LIMIT %s;
             """, (autor_id, limit))
             return cur.fetchall()
-
-from core.database import buscar_autor_por_slug, listar_noticias_por_autor
-
-@app.get("/autor/{slug}", response_class=HTMLResponse)
-def pagina_autor(slug: str, request: Request):
-
-    autor = buscar_autor_por_slug(slug)
-
-    if not autor:
-        raise HTTPException(status_code=404, detail="Autor não encontrado")
-
-    noticias = listar_noticias_por_autor(autor["id"], limit=12)
-
-    return templates.TemplateResponse(
-        "autor.html",
-        {
-            "request": request,
-            "autor": autor,
-            "noticias": noticias,
-            "total_materias": len(noticias),
-            "categorias": listar_categorias(),
-            "categoria_ativa": None
-        }
-    )
