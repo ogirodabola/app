@@ -116,7 +116,7 @@ def noticia_similar_existe(conn, titulo):
         cur.execute("""
             SELECT titulo
             FROM noticias
-            WHERE editorial_status = 'publicado'
+            WHERE editorial_status = 'pronto'
             ORDER BY criada_em DESC
             LIMIT 50;
         """)
