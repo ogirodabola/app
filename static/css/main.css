@@ -2341,14 +2341,12 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .article-meta {
-  margin-top: 15px;
-  margin-bottom: 25px;
-  font-size: 14px;
-  color: #64748b;
+  margin-top: 18px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #64748b;
 }
 
 .article-meta a {
@@ -3219,20 +3217,47 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   }
 }
 
+.meta-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.author-link {
+  font-weight: 600;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.author-link:hover {
+  color: #2563eb;
+}
+
+.meta-separator {
+  color: #cbd5e1;
+}
+
+.article-date {
+  color: #94a3b8;
+}
 /* ===== VERIFIED BADGE ===== */
 
-.verified-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 6px;
+verified-badge {
   width: 18px;
   height: 18px;
-  background: #1d9bf0; /* azul estilo X */
-  color: #fff;
-  font-size: 11px;
+  background: #1d9bf0;
   border-radius: 50%;
-  font-weight: bold;
+  display: inline-block;
   position: relative;
-  top: -1px;
+}
+
+.verified-badge::after {
+  content: "✓";
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
