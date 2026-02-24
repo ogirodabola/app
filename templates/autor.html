@@ -2,30 +2,6 @@
 
 {% block head_extra %}
 <link rel="stylesheet" href="/static/css/author.css">
-
-<!-- SEO Open Graph -->
-<meta property="og:title" content="{{ autor.nome }} | Giro Desportivo">
-<meta property="og:description" content="{{ autor.bio_curta }}">
-<meta property="og:type" content="profile">
-<meta property="og:image" content="{{ autor.foto }}">
-<meta property="og:url" content="{{ request.url }}">
-
-<!-- Schema.org Person -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "{{ autor.nome }}",
-  "jobTitle": "{{ autor.cargo }}",
-  "image": "{{ autor.foto }}",
-  "url": "{{ request.url }}",
-  "sameAs": [
-    {% if autor.instagram %}"{{ autor.instagram }}",{% endif %}
-    {% if autor.twitter %}"{{ autor.twitter }}",{% endif %}
-    {% if autor.linkedin %}"{{ autor.linkedin }}"{% endif %}
-  ]
-}
-</script>
 {% endblock %}
 
 {% block title %}
@@ -38,125 +14,65 @@
 
 {% block content %}
 
-<div class="x-author-page">
+<div class="x-author-wrapper">
 
-  <div class="x-author-shell">
+  <div class="x-author-container">
 
     <!-- SIDEBAR -->
     <aside class="x-author-sidebar">
-      <div class="x-author-profile">
 
-        <img
-          src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
-          alt="Foto de {{ autor.nome }}"
-          class="x-author-avatar"
-        >
+      <div class="x-author-card">
 
-        <h1 class="x-author-name">
-          {{ autor.nome }}
-          {% if autor.verificado %}
-            <span class="x-author-badge" title="Autor verificado"></span>
-          {% endif %}
-        </h1>
+        <img src="{{ autor.foto or '/static/img/default-avatar.jpg' }}"
+             class="x-author-avatar">
 
+        <h1>{{ autor.nome }}</h1>
         <p class="x-author-role">
           {{ autor.cargo or "Jornalista Esportivo" }}
         </p>
 
-        {% if autor.instagram or autor.twitter or autor.linkedin %}
-        <div class="x-author-socials">
-
-          {% if autor.instagram %}
-          <a href="{{ autor.instagram }}" target="_blank" rel="noopener">
-            Instagram
-          </a>
-          {% endif %}
-
-          {% if autor.twitter %}
-          <a href="{{ autor.twitter }}" target="_blank" rel="noopener">
-            X
-          </a>
-          {% endif %}
-
-          {% if autor.linkedin %}
-          <a href="{{ autor.linkedin }}" target="_blank" rel="noopener">
-            LinkedIn
-          </a>
-          {% endif %}
-
-        </div>
-        {% endif %}
-
-        <div class="x-author-metrics">
+        <div class="x-author-count">
           <strong>{{ total_materias }}</strong>
           <span>Publicações</span>
         </div>
 
       </div>
+
     </aside>
 
     <!-- MAIN -->
     <main class="x-author-main">
 
-      {% if autor.bio_longa %}
-      <section class="x-author-section">
+      <div class="x-author-card">
+
         <h2>Sobre</h2>
         <div class="x-author-bio">
           {{ autor.bio_longa | safe }}
         </div>
-      </section>
-      {% endif %}
 
-      <section class="x-author-section">
-        <h3>Especialidades</h3>
-        <div class="x-author-tags">
-          <span>Mercado da Bola</span>
-          <span>Análise Tática</span>
-          <span>Futebol Internacional</span>
-          <span>Bastidores</span>
-          <span>Gestão Esportiva</span>
-        </div>
-      </section>
+      </div>
 
-      {% if noticias %}
-      <section class="x-author-section">
+      <div class="x-author-card">
+
         <h3>Últimas publicações</h3>
 
-        <div class="x-author-posts">
+        {% for n in noticias %}
+        <a href="/noticia/{{ n.slug }}" class="x-author-post">
 
-          {% for n in noticias %}
-          <a href="/noticia/{{ n.slug }}" class="x-author-post">
+          <img src="{{ n.imagem or '/static/placeholder-news.jpg' }}">
 
-            <div class="x-author-post-image">
-              <img
-                src="{{ n.imagem or '/static/placeholder-news.jpg' }}"
-                alt="{{ n.titulo }}"
-                loading="lazy"
-              >
-            </div>
+          <div>
+            <span class="x-author-post-category">{{ n.categoria }}</span>
+            <h4>{{ n.titulo }}</h4>
+            <span class="x-author-post-date">
+              {{ n.criada_em.strftime("%d/%m/%Y") }}
+            </span>
+          </div>
 
-            <div class="x-author-post-content">
+        </a>
+        {% endfor %}
 
-              <span class="x-author-post-category">
-                {{ n.categoria }}
-              </span>
-
-              <h4 class="x-author-post-title">
-                {{ n.titulo }}
-              </h4>
-
-              <span class="x-author-post-date">
-                {{ n.criada_em.strftime("%d/%m/%Y") }}
-              </span>
-
-            </div>
-
-          </a>
-          {% endfor %}
-
-        </div>
-      </section>
-      {% endif %}
+      </div>
 
     </main>
 
