@@ -2380,8 +2380,8 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .article-date {
-  font-size: 13px;
-  color: #94a3b8;
+  color: #6b7280;
+  font-weight: 500;
 }
 .article-content {
     background: #ffffff;
@@ -3230,8 +3230,7 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .meta-separator {
-  margin: 0 8px;
-  color: rgba(255,255,255,0.5);
+  color: #9ca3af;
 }
 
 .article-date {
@@ -3274,19 +3273,23 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 /* ============================= */
-/* RESPONSIVO MOBILE NOTÍCIA */
+/* MOBILE AJUSTADO DEFINITIVO */
 /* ============================= */
 
 @media (max-width: 768px) {
 
+  .article-container {
+    padding: 0 16px;
+  }
+
   .article-header {
-    padding: 30px 20px;
+    padding: 28px 20px;
     margin-top: -60px;
-    border-radius: 20px;
+    border-radius: 18px;
   }
 
   .article-title {
-    font-size: 28px;
+    font-size: 26px;
     line-height: 1.2;
   }
 
@@ -3301,24 +3304,21 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     gap: 8px;
   }
 
-  .article-container {
-    padding: 0 15px;
-  }
-
   .article-content {
-    padding: 30px 20px;
+    padding: 28px 20px;
+    border-radius: 18px;
   }
 
   .author-card {
     flex-direction: column;
     text-align: center;
-    padding: 30px 20px;
+    padding: 28px 20px;
   }
 
   .author-avatar {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
+    width: 110px;
+    height: 110px;
+    margin-bottom: 18px;
   }
 
 }
