@@ -59,12 +59,12 @@
         </h1>
 
         <p class="meta">
-          Por 
-          <a href="/autor/{{ noticia.autor_slug }}">
-            <strong>{{ noticia.autor_nome }}</strong>
-          </a>
-          • {{ noticia.criada_em.strftime("%d/%m/%Y") }}
-        </p>
+              Por 
+              <a href="/autor/{{ noticia.autor_slug }}">
+                <strong>{{ noticia.autor_nome }}</strong>
+              </a>
+              • {{ noticia.criada_em.strftime("%d/%m/%Y") }}
+            </p>
 
         <div class="article-meta">
             {{ noticia.criada_em.strftime("%d/%m/%Y às %H:%M") }}
