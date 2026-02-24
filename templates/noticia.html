@@ -40,14 +40,19 @@
 <!-- HERO -->
 <section class="article-hero"
     style="background-image:url('{{ noticia.imagem or '/static/placeholder-news.jpg' }}');">
+</section>
 
-  <div class="hero-overlay">
+<div class="article-container">
 
-    <h1 class="hero-title">
+  <header class="article-header">
+
+    <span class="article-label">ÚLTIMA HORA</span>
+
+    <h1 class="article-title">
       {{ noticia.titulo_editorial or noticia.titulo }}
     </h1>
 
-    <div class="article-meta hero-meta">
+    <div class="article-meta">
 
       <span class="meta-author">
         Por
@@ -65,8 +70,7 @@
 
     </div>
 
-  </div>
-</section>
+  </header>
 
 <!-- CONTAINER -->
 <div class="article-container">
