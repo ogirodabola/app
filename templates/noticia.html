@@ -13,7 +13,6 @@
     {% set imagem = 'https://girodesportivo.com/static/placeholder-news.jpg' %}
 {% endif %}
 
-<!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta property="og:description" content="{{ noticia.resumo or '' }}">
@@ -22,7 +21,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
-<!-- X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
 <meta name="twitter:description"
@@ -30,16 +28,16 @@
 <meta name="twitter:image" content="{{ imagem | safe }}">
 <meta name="twitter:url" content="{{ request.url }}">
 
-<!-- HASHTAGS NÃO TEM TAG ESPECIAL, mas -->
-<!-- podemos colocar elas em description -->
-
 {% if noticia.criada_em %}
 <meta property="article:published_time"
       content="{{ noticia.criada_em.isoformat() }}">
 {% endif %}
 
 {% endblock %}
+
 {% block content %}
+
+<!-- HERO -->
 <section class="article-hero"
     style="background-image:url('{{ noticia.imagem or '/static/placeholder-news.jpg' }}');">
 
@@ -51,7 +49,7 @@
         <a href="/autor/{{ noticia.autor_slug }}" class="author-link">
           {{ noticia.autor_nome }}
         </a>
-        <span class="verified-badge"></span>
+        <span class="verified-badge">✓</span>
       </span>
 
       <span class="meta-separator">•</span>
@@ -65,219 +63,52 @@
 
 </section>
 
-    <div class="article-grid">
+<!-- CONTAINER -->
+<div class="article-container">
 
-        <main class="article-content">
+  <div class="article-grid">
 
-            {{ render_ad("noticia_topo", request) | safe }}
+    <!-- MAIN -->
+    <main class="article-content">
 
-            {{ noticia.conteudo_editorial | safe }}
+      {{ render_ad("noticia_topo", request) | safe }}
 
-            {{ render_ad("noticia_inline_1", request) | safe }}
+      {{ noticia.conteudo_editorial | safe }}
 
-    <div class="share-wrapper">
-    <span class="share-label">Compartilhar</span>
+      {{ render_ad("noticia_inline_1", request) | safe }}
 
-    <div class="share-buttons">
+      <!-- AUTHOR CARD -->
+      <div class="author-card">
 
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}"
-           target="_blank" rel="noopener"
-           class="share-btn facebook"
-           aria-label="Compartilhar no Facebook">
+        <div class="author-avatar"
+             style="background: url('{{ noticia.autor_foto }}') center/cover no-repeat;">
+        </div>
 
-            <svg viewBox="0 0 24 24">
-                <path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.5c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6v1.9H17l-.4 2.9h-2.2v7A10 10 0 0 0 22 12"/>
-            </svg>
-        </a>
+        <div class="author-content">
+          <h3>{{ noticia.autor_nome }}</h3>
 
-        <!-- X -->
-<a href="https://twitter.com/intent/tweet?text={{ (noticia.titulo_editorial or noticia.titulo)|urlencode }}%0A%0A{{ ('#' ~ noticia.tags|join(' #'))|urlencode if noticia.tags else '' }}%0A%0A{{ request.url|urlencode }}"
-   target="_blank"
-   rel="noopener"
-   class="share-btn twitter"
-   aria-label="Compartilhar no X">
-    <svg viewBox="0 0 24 24">
-        <path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l4 6 6-6z"/>
-    </svg>
-</a>
+          <p>
+            Ex-jogador profissional de futsal e editor-chefe do Giro Desportivo.
+            Atua com foco em análise tática, mercado da bola e bastidores do futebol.
+          </p>
 
-        <!-- WhatsApp -->
-        <a href="https://api.whatsapp.com/send?text={{ noticia.titulo|urlencode }}%20{{ request.url }}"
-           target="_blank" rel="noopener"
-           class="share-btn whatsapp"
-           aria-label="Compartilhar no WhatsApp">
+          <a href="/autor/{{ noticia.autor_slug }}" class="author-btn">
+            Ver perfil completo →
+          </a>
+        </div>
 
-            <svg viewBox="0 0 24 24">
-                <path d="M20 3.5A10 10 0 0 0 3.8 18.7L3 21l2.4-.8A10 10 0 1 0 20 3.5Zm-8 15a8 8 0 0 1-4-1.1l-.3-.2-2.4.8.8-2.3-.2-.3A8 8 0 1 1 12 18.5Zm4.4-5.8c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.8-.1.1-.3.2-.5.1s-.9-.3-1.7-1c-.6-.6-1-1.3-1.1-1.5-.1-.2 0-.3.1-.5l.4-.5c.1-.1.2-.3.3-.4.1-.2 0-.3 0-.5 0-.1-.6-1.4-.8-1.9-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3s-.9.9-.9 2.2 1 2.6 1.1 2.8c.1.2 2 3 4.8 4.1.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.3-.6 1.5-1.2.2-.6.2-1.1.2-1.2 0-.1-.2-.2-.4-.3Z"/>
-            </svg>
-        </a>
+      </div>
 
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}"
-           target="_blank" rel="noopener"
-           class="share-btn linkedin"
-           aria-label="Compartilhar no LinkedIn">
+      {{ render_ad("noticia_footer", request) | safe }}
 
-            <svg viewBox="0 0 24 24">
-                <path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.48s1.34 2.98 2.98 2.98S8 8.12 8 6.48 6.64 3.5 4.98 3.5zM2.4 21h5.2V9H2.4v12zM9.4 9v12h5.2v-6.4c0-3.6 4.8-3.9 4.8 0V21H24v-7.3c0-6.1-6.6-5.9-9.4-2.9V9H9.4z"/>
-            </svg>
-        </a>
+    </main>
 
-    </div>
-</div>
+    <!-- SIDEBAR -->
+    <aside class="article-sidebar">
+      {{ render_ad("noticia_sidebar", request) | safe }}
+    </aside>
 
-<div class="author-card">
-
-<div class="author-avatar"
-     style="background: url('{{ noticia.autor_foto }}') center/cover no-repeat;">
-</div>
-
-  <div class="author-content">
-    <h3>{{ noticia.autor_nome }}</h3>
-
-    <p>
-      Ex-jogador profissional de futsal e editor-chefe do Giro Desportivo.
-      Atua com foco em análise tática, mercado da bola e bastidores do futebol.
-    </p>
-
-    <a href="/autor/{{ noticia.autor_slug }}" class="author-btn">
-      Ver perfil completo →
-    </a>
   </div>
-
-</div>
-
-            <!-- ========================= -->
-            <!-- JOGADORES CITADOS -->
-            <!-- ========================= -->
-
-            {% if jogadores_relacionados %}
-    <section class="article-players">
-
-    <h3>Jogadores citados nesta matéria</h3>
-
-    <div class="players-grid">
-        {% for jogador in jogadores_relacionados %}
-        <a href="/jogador/{{ jogador.slug }}" class="player-card">
-
-            <div class="player-avatar">
-                <img 
-                    src="{{ jogador.foto if jogador.foto else '/static/placeholder-player.png' }}" 
-                    alt="{{ jogador.nome }}"
-                    loading="lazy"
-                >
-            </div>
-
-            <div class="player-details">
-                <div class="player-name">
-                    {{ jogador.nome }}
-                </div>
-
-                {% if jogador.time_atual %}
-                <div class="player-team">
-                    {% if jogador.escudo_time %}
-                        <img src="{{ jogador.escudo_time }}" alt="" loading="lazy">
-                    {% endif %}
-                    <span>{{ jogador.time_atual }}</span>
-                </div>
-                {% endif %}
-
-                {% if jogador.idade and jogador.idade > 0 %}
-                <div class="player-age">
-                    {{ jogador.idade }} anos
-                </div>
-                {% endif %}
-            </div>
-
-        </a>
-        {% endfor %}
-    </div>
-
-</section>
-{% endif %}
-
-            <!-- ========================= -->
-            <!-- TAGS -->
-            <!-- ========================= -->
-
-            {% if noticia.tags %}
-            <div class="article-tags">
-                {% for tag in noticia.tags %}
-                    <span>#{{ tag }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- ========================= -->
-            <!-- RECOMENDADAS -->
-            <!-- ========================= -->
-
-            {% if recomendadas %}
-<section class="article-recommended">
-    <h3>Você também pode gostar</h3>
-
-    <div class="recommended-grid">
-        {% for n in recomendadas %}
-        <a href="/noticia/{{ n.slug }}" class="recommended-card">
-
-            <div class="recommended-image">
-                <img 
-                    src="{{ n.imagem or '/static/placeholder-news.jpg' }}" 
-                    alt="{{ n.titulo_editorial or n.titulo }}"
-                    loading="lazy"
-                >
-            </div>
-
-            <div class="recommended-title">
-                {{ n.titulo_editorial or n.titulo }}
-            </div>
-
-        </a>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
-
-            <!-- ========================= -->
-            <!-- RELACIONADAS POR JOGADOR -->
-            <!-- (ativar quando backend enviar) -->
-            <!-- ========================= -->
-
-            {% if noticias_relacionadas %}
-<section class="related-player">
-
-    <h3>Mais sobre este jogador</h3>
-
-    <div class="related-grid">
-        {% for noticia in noticias_relacionadas %}
-        <a href="/noticia/{{ noticia.slug }}" class="related-card">
-
-            <div class="related-image">
-                <img src="{{ noticia.imagem }}" alt="{{ noticia.titulo }}">
-            </div>
-
-            <div class="related-title">
-                {{ noticia.titulo_editorial or noticia.titulo }}
-            </div>
-
-        </a>
-        {% endfor %}
-    </div>
-
-</section>
-{% endif %}
-
-
-            {{ render_ad("noticia_footer", request) | safe }}
-
-        </main>
-
-        <aside class="article-sidebar">
-            {{ render_ad("noticia_sidebar", request) | safe }}
-        </aside>
-
-    </div>
 
 </div>
 
