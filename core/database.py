@@ -1534,3 +1534,58 @@ def marcar_postado_x(noticia_id):
             conn.commit()
     finally:
         conn.close()
+
+# ======================================================
+# AUTORES — BUSCAR POR SLUG
+# ======================================================
+def buscar_autor_por_slug(slug: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT id, nome, slug, bio, foto
+                FROM autores
+                WHERE slug = %s
+                LIMIT 1;
+            """, (slug,))
+            return cur.fetchone()
+
+
+# ======================================================
+# AUTORES — LISTAR NOTÍCIAS DO AUTOR
+# ======================================================
+def listar_noticias_por_autor(slug: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT n.slug,
+                       COALESCE(n.titulo_editorial, n.titulo) AS titulo,
+                       n.criada_em,
+                       n.imagem
+                FROM noticias n
+                JOIN autores a ON a.id = n.autor_id
+                WHERE a.slug = %s
+                AND n.editorial_status = 'publicado'
+                ORDER BY n.criada_em DESC;
+            """, (slug,))
+            return cur.fetchall()
+
+from core.database import buscar_autor_por_slug, listar_noticias_por_autor
+@app.get("/autor/{slug}", response_class=HTMLResponse)
+def pagina_autor(slug: str, request: Request):
+
+    autor = buscar_autor_por_slug(slug)
+    if not autor:
+        raise HTTPException(status_code=404)
+
+    noticias = listar_noticias_por_autor(slug)
+
+    return templates.TemplateResponse(
+        "autor.html",
+        {
+            "request": request,
+            "autor": autor,
+            "noticias": noticias,
+            "categorias": listar_categorias(),
+            "categoria_ativa": None
+        }
+    )
