@@ -3210,16 +3210,19 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
 }
 
 .meta-author {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .author-link {
+  display: inline-flex;
+  align-items: center;
   font-weight: 600;
-  color: #0f172a;
+  color: #fff;
   text-decoration: none;
 }
+
 
 .author-link:hover {
   color: #2563eb;
@@ -3239,8 +3242,13 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   height: 18px;
   background: #1d9bf0;
   border-radius: 50%;
-  display: inline-block;
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
 }
 
 .verified-badge::after {
