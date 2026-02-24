@@ -1095,13 +1095,16 @@ def buscar_jogador_api(query: str):
     return buscar_jogadores_por_nome(query)
 
 
+from core.database import buscar_autor_por_slug, listar_noticias_por_autor
+
 @app.get("/autor/{slug}", response_class=HTMLResponse)
 def pagina_autor(slug: str, request: Request):
-    autor = buscar_autor_por_slug(slug)
-    noticias = listar_noticias_por_autor(slug)
 
+    autor = buscar_autor_por_slug(slug)
     if not autor:
         raise HTTPException(status_code=404)
+
+    noticias = listar_noticias_por_autor(slug)
 
     return templates.TemplateResponse(
         "autor.html",
@@ -1112,7 +1115,7 @@ def pagina_autor(slug: str, request: Request):
             "categorias": listar_categorias(),
             "categoria_ativa": None
         }
-    )
+    ))
 
 @app.get("/politica-de-correcao", response_class=HTMLResponse)
 def politica_correcao(request: Request):
