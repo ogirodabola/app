@@ -201,3 +201,35 @@
 .x-author-instagram:hover {
   opacity: 0.9;
 }
+
+/* RESET DE COR DENTRO DA PAGE */
+.page .x-author-wrapper {
+  color: #111 !important;
+}
+
+.page .x-author-wrapper p,
+.page .x-author-wrapper span,
+.page .x-author-wrapper div {
+  color: #333 !important;
+}
+
+.page .x-author-wrapper h2,
+.page .x-author-wrapper h3 {
+  color: #111 !important;
+}
+
+.x-author-container {
+  align-items: start !important;
+}
+
+.x-author-main {
+  margin-top: 0 !important;
+}
+
+.x-author-sidebar {
+  margin-top: 0 !important;
+}
+
+.x-author-card {
+  margin: 0;
+}
