@@ -90,30 +90,34 @@ def classificar_editorial(
         return "Última Hora", ["futebol"]
 
     prompt = f"""
-Você é o editor-chefe de um portal esportivo brasileiro - Giro Desportivo.
+Você é o editor-chefe do portal Giro Desportivo.
 
-Escolha EXATAMENTE UMA categoria da lista:
+Sua tarefa é classificar o TEMA abaixo.
+
+IMPORTANTE:
+- Não reescreva a notícia.
+- Use o título apenas como referência de assunto.
+- Escolha EXATAMENTE UMA categoria da lista abaixo.
+
+Categorias permitidas:
 Última Hora, Brasileirão, Mercado da Bola, Onde Assistir, Análises, Bastidores, Agenda
 
-Regras:
+Regras obrigatórias:
 - Mercado ou transferência → Mercado da Bola
 - Jogo do Brasileirão → Brasileirão
 - Análise técnica → Análises
 - Bastidor/polêmica → Bastidores
 - Dúvida real → Última Hora
 
-Retorne apenas JSON:
+Retorne apenas JSON no formato:
 
 {{
   "categoria": "Categoria",
   "tags": ["tag1", "tag2", "tag3"]
 }}
 
-TÍTULO:
+TEMA:
 {titulo}
-
-RESUMO:
-{resumo}
 """
 
     resp = _client.responses.create(
