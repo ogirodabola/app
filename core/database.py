@@ -225,20 +225,23 @@ def buscar_noticia_por_slug(slug: str):
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
                 SELECT
-                    id,
-                    COALESCE(titulo_editorial, titulo) AS titulo,
-                    titulo AS titulo_original,
-                    resumo,
-                    conteudo_editorial,
-                    imagem,
-                    imagem_credito,
-                    fonte,
-                    categoria,
-                    tags,
-                    criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em
-                FROM noticias
-                WHERE slug = %s
-                AND conteudo_editorial IS NOT NULL
+                    n.id,
+                    COALESCE(n.titulo_editorial, n.titulo) AS titulo,
+                    n.titulo AS titulo_original,
+                    n.resumo,
+                    n.conteudo_editorial,
+                    n.imagem,
+                    n.imagem_credito,
+                    n.fonte,
+                    n.categoria,
+                    n.tags,
+                    criada_em AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' AS criada_em,
+                    a.nome AS autor_nome,
+                    a.slug AS autor_slug
+                FROM noticias n
+                LEFT JOIN autores a ON a.id = n.autor_id
+                WHERE n.slug = %s
+                AND n.editorial_status = 'publicado'
                 LIMIT 1;
             """, (slug,))
             return cur.fetchone()
