@@ -1573,22 +1573,3 @@ def listar_noticias_por_autor(slug: str):
             return cur.fetchall()
 
 from core.database import buscar_autor_por_slug, listar_noticias_por_autor
-@app.get("/autor/{slug}", response_class=HTMLResponse)
-def pagina_autor(slug: str, request: Request):
-
-    autor = buscar_autor_por_slug(slug)
-    if not autor:
-        raise HTTPException(status_code=404)
-
-    noticias = listar_noticias_por_autor(slug)
-
-    return templates.TemplateResponse(
-        "autor.html",
-        {
-            "request": request,
-            "autor": autor,
-            "noticias": noticias,
-            "categorias": listar_categorias(),
-            "categoria_ativa": None
-        }
-    )
