@@ -143,3 +143,60 @@
     top: 0;
   }
 }
+
+/* ================= SOCIAL CARD ================= */
+
+.x-author-social-card {
+  margin-top: 16px;
+}
+
+.x-author-social-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #000;
+}
+
+.x-author-social-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+.x-author-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+  margin-bottom: 10px;
+
+  transition: 0.2s ease;
+}
+
+/* X */
+.x-author-x {
+  background: #000;
+  color: #fff;
+}
+
+.x-author-x:hover {
+  background: #222;
+}
+
+/* Instagram */
+.x-author-instagram {
+  background: linear-gradient(45deg,#405de6,#c13584,#fd1d1d);
+  color: #fff;
+}
+
+.x-author-instagram:hover {
+  opacity: 0.9;
+}
