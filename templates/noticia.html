@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ noticia.titulo_editorial or noticia.titulo }} | Giro Desportivo
+{{ noticia.meta_title or (noticia.titulo_editorial or noticia.titulo) }} | Giro Desportivo
 {% endblock %}
 
 {% block meta %}
@@ -13,18 +13,31 @@
     {% set imagem = 'https://girodesportivo.com/static/placeholder-news.jpg' %}
 {% endif %}
 
+{% set descricao = noticia.meta_description or noticia.resumo or '' %}
+
+<!-- SEO -->
+<meta name="description" content="{{ descricao }}">
+<link rel="canonical" href="{{ noticia.canonical_url or request.url }}">
+
+{% if noticia.indexar is not defined or noticia.indexar %}
+<meta name="robots" content="index, follow">
+{% else %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+
+<!-- Open Graph -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta property="og:description" content="{{ noticia.resumo or '' }}">
+<meta property="og:title" content="{{ noticia.meta_title or noticia.titulo }}">
+<meta property="og:description" content="{{ descricao }}">
 <meta property="og:image" content="{{ imagem | safe }}">
 <meta property="og:url" content="{{ request.url }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ noticia.titulo_editorial or noticia.titulo }}">
-<meta name="twitter:description"
-      content="{{ ('#' ~ noticia.tags|join(' #')) if noticia.tags else (noticia.resumo or '') }}">
+<meta name="twitter:title" content="{{ noticia.meta_title or noticia.titulo }}">
+<meta name="twitter:description" content="{{ descricao }}">
 <meta name="twitter:image" content="{{ imagem | safe }}">
 <meta name="twitter:url" content="{{ request.url }}">
 
@@ -32,6 +45,31 @@
 <meta property="article:published_time"
       content="{{ noticia.criada_em.isoformat() }}">
 {% endif %}
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ noticia.schema_type or 'NewsArticle' }}",
+  "headline": "{{ noticia.meta_title or noticia.titulo }}",
+  "description": "{{ descricao }}",
+  "image": "{{ imagem }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ noticia.autor_nome }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Giro Desportivo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://girodesportivo.com/static/logo.png"
+    }
+  },
+  "datePublished": "{{ noticia.criada_em.isoformat() }}",
+  "dateModified": "{{ noticia.atualizada_em.isoformat() if noticia.atualizada_em else noticia.criada_em.isoformat() }}"
+}
+</script>
 
 {% endblock %}
 
