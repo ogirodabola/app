@@ -665,8 +665,9 @@ def criar_noticia(dados: dict):
                  tags,
                  editorial_status,
                  slug,
-                 url)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 url,
+                 autor_id)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """, (
                 dados.get("titulo_editorial") or dados.get("titulo"),
                 dados.get("titulo_editorial"),
@@ -677,7 +678,8 @@ def criar_noticia(dados: dict):
                 dados.get("tags"),
                 dados.get("editorial_status", "pendente"),
                 slug,
-                url_interna  # 🔥 AQUI
+                url_interna,
+                dados.get("autor_id")  # 🔥 AQUI
             ))
 
         conn.commit()
