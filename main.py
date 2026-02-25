@@ -168,6 +168,7 @@ async def admin_noticia_criar(request: Request):
     # SALVAR NO BANCO
     # =========================
     criar_noticia({
+        "titulo": titulo_editorial,
         "titulo_editorial": titulo_editorial,
         "resumo": resumo,
         "conteudo_editorial": conteudo_editorial,
