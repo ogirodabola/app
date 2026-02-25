@@ -115,16 +115,23 @@ async def salvar_noticia_admin(id: int, request: Request):
     titulo = form.get("titulo_editorial")
     slug_form = form.get("slug")
 
-    if not slug_form or slug_form.strip() == "":
-        slug = slugify(titulo)
-    else:
-        slug = slugify(slug_form)
+    slug = slugify(slug_form if slug_form else titulo)
+
+    # =============================
+    # 🔥 CAMPOS SEO
+    # =============================
+
+    meta_title = form.get("meta_title")
+    meta_description = form.get("meta_description")
+    canonical_url = form.get("canonical_url")
+    palavra_chave_principal = form.get("palavra_chave_principal")
+    indexar = True if form.get("indexar") == "true" else False
 
     # =============================
     # 1️⃣ TRATAR IMAGEM
     # =============================
 
-    imagem_atual = form.get("imagem_atual")  # hidden field opcional
+    imagem_atual = form.get("imagem_atual")
     file: UploadFile = form.get("imagem_file")
 
     imagem_url = imagem_atual
@@ -156,9 +163,18 @@ async def salvar_noticia_admin(id: int, request: Request):
         "tags": [t.strip() for t in form.get("tags", "").split(",") if t.strip()],
         "editorial_status": form.get("editorial_status", "pendente"),
         "slug": slug,
+
+        # 🔥 SEO
+        "meta_title": meta_title,
+        "meta_description": meta_description,
+        "canonical_url": canonical_url,
+        "palavra_chave_principal": palavra_chave_principal,
+        "indexar": indexar
     }
 
     atualizar_noticia(id, dados)
+
+    return RedirectResponse("/admin/noticias", status_code=303)
 
     # =============================
     # 3️⃣ PROCESSAR JOGADORES
@@ -615,25 +631,41 @@ def admin_noticia_nova(request: Request):
     )
 
 @app.post("/admin/noticias/nova")
-async def admin_noticia_criar(
-    request: Request,
-    titulo_editorial: str = Form(...),
-    slug: str = Form(""),
-    resumo: str = Form(""),
-    conteudo_editorial: str = Form(""),
-    categoria: str = Form(""),
-    tags: str = Form(""),
-    editorial_status: str = Form("pendente"),
-    imagem_file: UploadFile = File(None),
-    imagem_existente: str = Form(None)
-):
+async def admin_noticia_criar(request: Request):
+
     auth = login_required(request)
     if auth:
         return auth
 
-    slug_final = slugify(slug if slug else titulo_editorial)
+    form = await request.form()
 
-    imagem_url = imagem_existente  # 🔥 mantém se existir
+    titulo_editorial = form.get("titulo_editorial")
+    slug_input = form.get("slug")
+    resumo = form.get("resumo")
+    conteudo_editorial = form.get("conteudo_editorial")
+    categoria = form.get("categoria")
+    tags = form.get("tags", "")
+    editorial_status = form.get("editorial_status", "pendente")
+
+    # =========================
+    # 🔥 CAMPOS SEO
+    # =========================
+    meta_title = form.get("meta_title")
+    meta_description = form.get("meta_description")
+    canonical_url = form.get("canonical_url")
+    palavra_chave_principal = form.get("palavra_chave_principal")
+    indexar = True if form.get("indexar") == "true" else False
+
+    # =========================
+    # SLUG
+    # =========================
+    slug_final = slugify(slug_input if slug_input else titulo_editorial)
+
+    # =========================
+    # IMAGEM
+    # =========================
+    imagem_file = form.get("imagem_file")
+    imagem_url = None
 
     if imagem_file and imagem_file.filename:
         filename = f"{slug_final}-{imagem_file.filename}"
@@ -644,6 +676,9 @@ async def admin_noticia_criar(
 
         imagem_url = f"/static/uploads/{filename}"
 
+    # =========================
+    # SALVAR NO BANCO
+    # =========================
     criar_noticia({
         "titulo_editorial": titulo_editorial,
         "resumo": resumo,
@@ -652,7 +687,14 @@ async def admin_noticia_criar(
         "categoria": categoria,
         "tags": [t.strip() for t in tags.split(",") if t.strip()],
         "editorial_status": editorial_status,
-        "slug": slug_final
+        "slug": slug_final,
+
+        # 🔥 SEO
+        "meta_title": meta_title,
+        "meta_description": meta_description,
+        "canonical_url": canonical_url,
+        "palavra_chave_principal": palavra_chave_principal,
+        "indexar": indexar
     })
 
     return RedirectResponse("/admin/noticias", status_code=302)
@@ -703,6 +745,16 @@ async def admin_noticia_atualizar(
     editorial_status: str = Form("pendente"),
     imagem_file: UploadFile = File(None),
     jogador_nome: str = Form("")   # 👈 ADICIONE AQUI
+
+    # =========================
+    # 🔥 CAMPOS SEO
+    # =========================
+    
+    meta_title = form.get("meta_title")
+    meta_description = form.get("meta_description")
+    canonical_url = form.get("canonical_url")
+    palavra_chave_principal = form.get("palavra_chave_principal")
+    indexar = True if form.get("indexar") == "true" else False
 ):
 
     auth = login_required(request)
@@ -734,6 +786,13 @@ async def admin_noticia_atualizar(
         "tags": [t.strip() for t in tags.split(",") if t.strip()],
         "editorial_status": editorial_status,
         "slug": slug_final
+
+    # 🔥 SEO
+        "meta_title": meta_title,
+        "meta_description": meta_description,
+        "canonical_url": canonical_url,
+        "palavra_chave_principal": palavra_chave_principal,
+        "indexar": indexar
     })
 
     # ============================
