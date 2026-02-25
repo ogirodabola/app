@@ -791,7 +791,7 @@ async def admin_noticia_atualizar(
         "categoria": categoria,
         "tags": [t.strip() for t in tags.split(",") if t.strip()],
         "editorial_status": editorial_status,
-        "slug": slug_final
+        "slug": slug_final,
 
     # 🔥 SEO
         "meta_title": meta_title,
