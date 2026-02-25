@@ -147,7 +147,6 @@
     {{ noticia.imagem }}
   </small>
 
-  <!-- 🔥 ESSA LINHA VOCÊ PRECISA ADICIONAR -->
   <input type="hidden" name="imagem_atual" value="{{ noticia.imagem }}">
 </div>
 {% endif %}
@@ -282,6 +281,57 @@ tinymce.init({
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    document.getElementById("gerar-seo").addEventListener("click", async function(e) {
+
+        e.preventDefault();
+
+        const titulo = document.querySelector('[name="titulo_editorial"]').value;
+        const resumo = document.querySelector('[name="resumo"]')?.value || "";
+
+        if (!titulo) {
+            alert("Preencha o título primeiro.");
+            return;
+        }
+
+        try {
+
+            const response = await fetch("/admin/seo-generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    titulo: titulo,
+                    resumo: resumo
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro na resposta do servidor");
+            }
+
+            const data = await response.json();
+
+            console.log("SEO retornado:", data);
+
+            document.querySelector('[name="meta_title"]').value = data.meta_title || "";
+            document.querySelector('[name="meta_description"]').value = data.meta_description || "";
+            document.querySelector('[name="slug"]').value = data.slug_otimizado || "";
+
+            alert("SEO gerado com sucesso 🚀");
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao gerar SEO");
+        }
+
+    });
+
+});
+</script>
 
 <script>
 const input = document.getElementById("jogador-search");
@@ -323,45 +373,5 @@ input.addEventListener("input", async function() {
 });
 </script>
 
-<script>
-document.getElementById("gerar-seo").addEventListener("click", async function() {
-
-    const titulo = document.querySelector('[name="titulo_editorial"]').value;
-    const resumo = document.querySelector('[name="resumo"]').value;
-
-    if (!titulo) {
-        alert("Preencha o título primeiro.");
-        return;
-    }
-
-    const response = await fetch("/admin/seo-generate", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            titulo: titulo,
-            resumo: resumo
-        })
-    });
-
-    const data = await response.json();
-
-    try {
-        const parsed = JSON.parse(data);
-
-        document.querySelector('[name="meta_title"]').value = parsed.meta_title;
-        document.querySelector('[name="meta_description"]').value = parsed.meta_description;
-        document.querySelector('[name="slug"]').value = parsed.slug;
-
-        alert("SEO gerado com sucesso 🚀");
-
-    } catch(e) {
-        alert("Erro ao gerar SEO");
-        console.log(data);
-    }
-
-});
-</script>
 
 {% endblock %}
