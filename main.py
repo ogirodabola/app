@@ -1246,11 +1246,31 @@ Responda exclusivamente em JSON válido neste formato:
             temperature=0.4,
         )
 
-        content = response.choices[0].message.content.strip()
+        content = response.choices[0].message.content
 
-        # 🔥 Garantir JSON válido
-        seo_data = json.loads(content)
-
+        if not content:
+            raise HTTPException(status_code=500, detail="IA retornou vazio")
+        
+        content = content.strip()
+        
+        # 🔥 Remove markdown code block se existir
+        if content.startswith("```"):
+            content = content.replace("```json", "")
+            content = content.replace("```", "")
+            content = content.strip()
+        
+        # 🔥 Tenta encontrar JSON dentro do texto
+        import re
+        
+        json_match = re.search(r"\{.*\}", content, re.DOTALL)
+        
+        if not json_match:
+            raise HTTPException(status_code=500, detail="IA não retornou JSON válido")
+        
+        json_str = json_match.group(0)
+        
+        seo_data = json.loads(json_str)
+        
         return seo_data
         
     except json.JSONDecodeError:
