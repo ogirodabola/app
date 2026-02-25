@@ -235,7 +235,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <script>
 tinymce.init({
-  selector: '#conteudo_editorial',
+  selector: 'textarea[name="conteudo_editorial"]',
+  language: 'pt_BR',
+  browser_spellcheck: true,
+  contextmenu: false
   height: 550,
   menubar: false,
   branding: false,
