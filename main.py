@@ -1176,3 +1176,44 @@ def pagina_autor(slug: str, request: Request):
             "total_materias": len(noticias),
         }
     )
+
+from fastapi.responses import JSONResponse
+from openai import OpenAI
+import os
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+@app.post("/admin/seo-generate")
+async def gerar_seo(request: Request):
+
+    data = await request.json()
+
+    titulo = data.get("titulo")
+    resumo = data.get("resumo")
+
+    prompt = f"""
+    Você é um especialista em SEO para portal esportivo.
+
+    Gere:
+
+    1) Meta title altamente clicável (até 60 caracteres)
+    2) Meta description otimizada (até 155 caracteres)
+    3) Slug SEO
+    4) 5 subtítulos H2 estratégicos
+
+    Base:
+    Título: {titulo}
+    Resumo: {resumo}
+
+    Responda em JSON puro.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.4,
+    )
+
+    content = response.choices[0].message.content
+
+    return JSONResponse(content=content)
