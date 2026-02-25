@@ -101,6 +101,92 @@ def admin_login(request: Request):
         {"request": request, "erro": None}
     )
 
+@app.get("/admin/noticias/nova", response_class=HTMLResponse)
+def admin_noticia_nova(request: Request):
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    categorias = listar_categorias()
+
+    return templates.TemplateResponse(
+        "admin/noticias_edit.html",
+        {
+            "request": request,
+            "noticia": None,
+            "categorias": categorias
+        }
+    )
+
+@app.post("/admin/noticias/nova")
+async def admin_noticia_criar(request: Request):
+
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    form = await request.form()
+
+    titulo_editorial = form.get("titulo_editorial")
+    slug_input = form.get("slug")
+    resumo = form.get("resumo")
+    conteudo_editorial = form.get("conteudo_editorial")
+    categoria = form.get("categoria")
+    tags = form.get("tags", "")
+    editorial_status = form.get("editorial_status", "pendente")
+
+    # =========================
+    # 🔥 CAMPOS SEO
+    # =========================
+    meta_title = form.get("meta_title")
+    meta_description = form.get("meta_description")
+    canonical_url = form.get("canonical_url")
+    palavra_chave_principal = form.get("palavra_chave_principal")
+    indexar = True if form.get("indexar") == "true" else False
+
+    # =========================
+    # SLUG
+    # =========================
+    slug_final = slugify(slug_input if slug_input else titulo_editorial)
+
+    # =========================
+    # IMAGEM
+    # =========================
+    imagem_file = form.get("imagem_file")
+    imagem_url = None
+
+    if imagem_file and imagem_file.filename:
+        filename = f"{slug_final}-{imagem_file.filename}"
+        filepath = UPLOAD_DIR / filename
+
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(imagem_file.file, buffer)
+
+        imagem_url = f"/static/uploads/{filename}"
+
+    # =========================
+    # SALVAR NO BANCO
+    # =========================
+    criar_noticia({
+        "titulo_editorial": titulo_editorial,
+        "resumo": resumo,
+        "conteudo_editorial": conteudo_editorial,
+        "imagem": imagem_url,
+        "categoria": categoria,
+        "tags": [t.strip() for t in tags.split(",") if t.strip()],
+        "editorial_status": editorial_status,
+        "slug": slug_final,
+
+        # 🔥 SEO
+        "meta_title": meta_title,
+        "meta_description": meta_description,
+        "canonical_url": canonical_url,
+        "palavra_chave_principal": palavra_chave_principal,
+        "indexar": indexar
+    })
+
+    return RedirectResponse("/admin/noticias", status_code=302)
+
 from slugify import slugify
 from fastapi.responses import RedirectResponse
 from core.database import buscar_ou_criar_jogador
@@ -613,93 +699,6 @@ def admin_ads_preview(slot_id: int, request: Request):
             "slot": slot
         }
     )
-
-
-@app.get("/admin/noticias/nova", response_class=HTMLResponse)
-def admin_noticia_nova(request: Request):
-    auth = login_required(request)
-    if auth:
-        return auth
-
-    categorias = listar_categorias()
-
-    return templates.TemplateResponse(
-        "admin/noticias_edit.html",
-        {
-            "request": request,
-            "noticia": None,
-            "categorias": categorias
-        }
-    )
-
-@app.post("/admin/noticias/nova")
-async def admin_noticia_criar(request: Request):
-
-    auth = login_required(request)
-    if auth:
-        return auth
-
-    form = await request.form()
-
-    titulo_editorial = form.get("titulo_editorial")
-    slug_input = form.get("slug")
-    resumo = form.get("resumo")
-    conteudo_editorial = form.get("conteudo_editorial")
-    categoria = form.get("categoria")
-    tags = form.get("tags", "")
-    editorial_status = form.get("editorial_status", "pendente")
-
-    # =========================
-    # 🔥 CAMPOS SEO
-    # =========================
-    meta_title = form.get("meta_title")
-    meta_description = form.get("meta_description")
-    canonical_url = form.get("canonical_url")
-    palavra_chave_principal = form.get("palavra_chave_principal")
-    indexar = True if form.get("indexar") == "true" else False
-
-    # =========================
-    # SLUG
-    # =========================
-    slug_final = slugify(slug_input if slug_input else titulo_editorial)
-
-    # =========================
-    # IMAGEM
-    # =========================
-    imagem_file = form.get("imagem_file")
-    imagem_url = None
-
-    if imagem_file and imagem_file.filename:
-        filename = f"{slug_final}-{imagem_file.filename}"
-        filepath = UPLOAD_DIR / filename
-
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(imagem_file.file, buffer)
-
-        imagem_url = f"/static/uploads/{filename}"
-
-    # =========================
-    # SALVAR NO BANCO
-    # =========================
-    criar_noticia({
-        "titulo_editorial": titulo_editorial,
-        "resumo": resumo,
-        "conteudo_editorial": conteudo_editorial,
-        "imagem": imagem_url,
-        "categoria": categoria,
-        "tags": [t.strip() for t in tags.split(",") if t.strip()],
-        "editorial_status": editorial_status,
-        "slug": slug_final,
-
-        # 🔥 SEO
-        "meta_title": meta_title,
-        "meta_description": meta_description,
-        "canonical_url": canonical_url,
-        "palavra_chave_principal": palavra_chave_principal,
-        "indexar": indexar
-    })
-
-    return RedirectResponse("/admin/noticias", status_code=302)
 
 @app.get("/admin/noticias/{noticia_id}")
 def admin_noticia_editar(noticia_id: int, request: Request):
