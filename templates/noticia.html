@@ -71,6 +71,8 @@
 }
 </script>
 
+<script src="/static/js/match-card.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -111,7 +113,6 @@
   </header>
 
 <!-- CONTAINER -->
-<div class="article-container">
 
   <div class="article-grid">
 
@@ -138,37 +139,6 @@ document.addEventListener("DOMContentLoaded", async function() {
       liga: card.dataset.liga,
       horario: card.dataset.horario
     };
-
-    const responseA = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_a)}`);
-    const responseB = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_b)}`);
-
-    const timeA = await responseA.json();
-    const timeB = await responseB.json();
-
-    card.innerHTML = `
-      <div class="gd-card">
-        <div class="gd-team">
-          <img src="${timeA.escudo_url}" />
-          <span>${data.time_a}</span>
-        </div>
-
-        <div class="gd-vs">X</div>
-
-        <div class="gd-team">
-          <img src="${timeB.escudo_url}" />
-          <span>${data.time_b}</span>
-        </div>
-
-        <div class="gd-info">
-          ${data.data} • ${data.liga} • ${data.horario}
-        </div>
-      </div>
-    `;
-
-  }
-
-});
-</script>
 
       <!-- AUTHOR CARD -->
       <div class="author-card">
@@ -239,5 +209,5 @@ document.addEventListener("DOMContentLoaded", async function() {
   </div>
 
 </div>
-<script src="/static/js/match-card.js"></script>
+
 {% endblock %}
