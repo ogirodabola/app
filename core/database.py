@@ -685,7 +685,12 @@ def atualizar_noticia(noticia_id: int, dados: dict):
                   categoria = %s,
                   tags = %s,
                   editorial_status = %s,
-                  slug = %s
+                  slug = %s,
+                  meta_title = %s,
+                  meta_description = %s,
+                  canonical_url = %s,
+                  palavra_chave_principal = %s,
+                  indexar = %s
                 WHERE id = %s;
             """, (
                 dados.get("titulo_editorial"),
@@ -694,8 +699,13 @@ def atualizar_noticia(noticia_id: int, dados: dict):
                 dados.get("imagem"),
                 dados.get("categoria"),
                 dados.get("tags"),
-                dados.get("editorial_status", "pendente"),
+                dados.get("editorial_status"),
                 dados.get("slug"),
+                dados.get("meta_title"),
+                dados.get("meta_description"),
+                dados.get("canonical_url"),
+                dados.get("palavra_chave_principal"),
+                dados.get("indexar"),
                 noticia_id
             ))
         conn.commit()
