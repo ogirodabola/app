@@ -1584,3 +1584,36 @@ def listar_noticias_por_autor(autor_id: int, limit=12):
                 LIMIT %s;
             """, (autor_id, limit))
             return cur.fetchall()
+
+
+def buscar_time_por_slug(slug: str):
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, nome, escudo_url FROM times WHERE slug = %s", (slug,))
+            row = cur.fetchone()
+            if row:
+                return {
+                    "id": row[0],
+                    "nome": row[1],
+                    "escudo_url": row[2]
+                }
+    finally:
+        conn.close()
+
+    return None
+
+
+def inserir_time(nome: str, slug: str, escudo_url: str, api_id: int | None):
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO times (nome, slug, escudo_url, api_football_id)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id
+            """, (nome, slug, escudo_url, api_id))
+            conn.commit()
+            return cur.fetchone()[0]
+    finally:
+        conn.close()
