@@ -652,10 +652,19 @@ def criar_noticia(dados: dict):
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO noticias
-                (titulo_editorial, resumo, conteudo_editorial, imagem,
-                 categoria, tags, editorial_status, slug)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                (titulo,
+                 titulo_editorial,
+                 resumo,
+                 conteudo_editorial,
+                 imagem,
+                 categoria,
+                 tags,
+                 editorial_status,
+                 slug)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """, (
+                # 🔥 GARANTE QUE titulo NUNCA SERÁ NULL
+                dados.get("titulo_editorial") or dados.get("titulo"),
                 dados.get("titulo_editorial"),
                 dados.get("resumo"),
                 dados.get("conteudo_editorial"),
@@ -666,9 +675,7 @@ def criar_noticia(dados: dict):
                 dados.get("slug"),
             ))
         conn.commit()
-
-
-
+        
 # ======================================================
 # NOTÍCIAS — ATUALIZAR
 # ======================================================
