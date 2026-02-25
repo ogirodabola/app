@@ -38,8 +38,6 @@ from core.database import (
     criar_jogador_basico,
     vincular_jogador_noticia,
     listar_noticias_por_jogador,
-    get_conn,
-    buscar_noticia,
     buscar_time_por_slug,
     inserir_time
 )
