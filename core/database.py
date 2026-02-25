@@ -650,6 +650,10 @@ def listar_noticias_admin(
 def criar_noticia(dados: dict):
     with get_conn() as conn:
         with conn.cursor() as cur:
+
+            slug = dados.get("slug")
+            url_interna = f"/noticia/{slug}"
+
             cur.execute("""
                 INSERT INTO noticias
                 (titulo,
@@ -660,10 +664,10 @@ def criar_noticia(dados: dict):
                  categoria,
                  tags,
                  editorial_status,
-                 slug)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 slug,
+                 url)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """, (
-                # 🔥 GARANTE QUE titulo NUNCA SERÁ NULL
                 dados.get("titulo_editorial") or dados.get("titulo"),
                 dados.get("titulo_editorial"),
                 dados.get("resumo"),
@@ -672,8 +676,10 @@ def criar_noticia(dados: dict):
                 dados.get("categoria"),
                 dados.get("tags"),
                 dados.get("editorial_status", "pendente"),
-                dados.get("slug"),
+                slug,
+                url_interna  # 🔥 AQUI
             ))
+
         conn.commit()
         
 # ======================================================
