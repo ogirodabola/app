@@ -1284,3 +1284,67 @@ Responda exclusivamente em JSON válido neste formato:
             status_code=500,
             detail=f"Erro ao gerar SEO: {str(e)}"
         )
+
+import requests
+from slugify import slugify
+
+API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY")
+
+
+def buscar_time_api_football(nome: str):
+
+    url = "https://v3.football.api-sports.io/teams"
+    headers = {
+        "x-apisports-key": API_FOOTBALL_KEY
+    }
+
+    response = requests.get(url, headers=headers, params={"search": nome})
+
+    if response.status_code != 200:
+        return None
+
+    data = response.json()
+
+    if not data.get("response"):
+        return None
+
+    team_data = data["response"][0]["team"]
+
+    return {
+        "nome": team_data["name"],
+        "slug": slugify(team_data["name"]),
+        "escudo_url": team_data["logo"],
+        "api_id": team_data["id"]
+    }
+
+from fastapi import Query
+
+@app.get("/api/time-info")
+def api_time_info(nome: str = Query(...)):
+
+    slug = slugify(nome)
+
+    # 1️⃣ Busca no banco
+    time = buscar_time_por_slug(slug)
+
+    if time:
+        return time
+
+    # 2️⃣ Busca na API
+    api_data = buscar_time_api_football(nome)
+
+    if not api_data:
+        return {"nome": nome, "escudo_url": "/static/img/default-team.png"}
+
+    # 3️⃣ Salva no banco
+    inserir_time(
+        api_data["nome"],
+        api_data["slug"],
+        api_data["escudo_url"],
+        api_data["api_id"]
+    )
+
+    return {
+        "nome": api_data["nome"],
+        "escudo_url": api_data["escudo_url"]
+    }
