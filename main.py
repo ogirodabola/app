@@ -744,18 +744,24 @@ async def admin_noticia_atualizar(
     tags: str = Form(""),
     editorial_status: str = Form("pendente"),
     imagem_file: UploadFile = File(None),
-    jogador_nome: str = Form("")   # 👈 ADICIONE AQUI
+    jogador_nome: str = Form("")
+):
+
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    # 🔥 Aqui sim você pode usar form
+    form = await request.form()
 
     # =========================
     # 🔥 CAMPOS SEO
     # =========================
-    
     meta_title = form.get("meta_title")
     meta_description = form.get("meta_description")
     canonical_url = form.get("canonical_url")
     palavra_chave_principal = form.get("palavra_chave_principal")
     indexar = True if form.get("indexar") == "true" else False
-):
 
     auth = login_required(request)
     if auth:
