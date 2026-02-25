@@ -1,0 +1,28 @@
+.gd-match-card-rendered {
+  background: linear-gradient(145deg, #ffffff, #f5f7fa);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 24px 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gd-match-teams {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.gd-match-teams img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.gd-match-vs {
+  font-weight: 700;
+  font-size: 18px;
+  color: #111;
+}
