@@ -136,6 +136,17 @@ async def admin_noticia_criar(request: Request):
     editorial_status = form.get("editorial_status", "pendente")
 
     # =========================
+    # 🔥 CAPTURAR AUTOR DA SESSÃO
+    # =========================
+    usuario = request.session.get("user")
+
+    if not usuario:
+        # fallback de segurança
+        autor_id = 1
+    else:
+        autor_id = usuario.get("autor_id") or 1
+
+    # =========================
     # 🔥 CAMPOS SEO
     # =========================
     meta_title = form.get("meta_title")
@@ -177,6 +188,7 @@ async def admin_noticia_criar(request: Request):
         "tags": [t.strip() for t in tags.split(",") if t.strip()],
         "editorial_status": editorial_status,
         "slug": slug_final,
+        "autor_id": autor_id,  # 🔥 AGORA VAI SALVAR CORRETAMENTE
 
         # 🔥 SEO
         "meta_title": meta_title,
