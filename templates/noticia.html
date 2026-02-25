@@ -124,7 +124,45 @@
 
       {{ render_ad("noticia_inline_1", request) | safe }}
 
-    <script src="/static/js/match-card.js"></script>
+        <script>
+document.addEventListener("DOMContentLoaded", async function() {
+
+  const cards = document.querySelectorAll(".gd-match-card");
+
+  for (const card of cards) {
+
+    const data = JSON.parse(card.dataset.json);
+
+    const responseA = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_a)}`);
+    const responseB = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_b)}`);
+
+    const timeA = await responseA.json();
+    const timeB = await responseB.json();
+
+    card.innerHTML = `
+      <div class="gd-card">
+        <div class="gd-team">
+          <img src="${timeA.escudo_url}" />
+          <span>${data.time_a}</span>
+        </div>
+
+        <div class="gd-vs">X</div>
+
+        <div class="gd-team">
+          <img src="${timeB.escudo_url}" />
+          <span>${data.time_b}</span>
+        </div>
+
+        <div class="gd-info">
+          ${data.data} • ${data.liga} • ${data.horario}
+        </div>
+      </div>
+    `;
+
+  }
+
+});
+</script>
 
       <!-- AUTHOR CARD -->
       <div class="author-card">
@@ -195,5 +233,5 @@
   </div>
 
 </div>
-
+<script src="/static/js/match-card.js"></script>
 {% endblock %}
