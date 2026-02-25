@@ -131,7 +131,13 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   for (const card of cards) {
 
-    const data = JSON.parse(card.dataset.json);
+    const data = {
+      time_a: card.dataset.timeA,
+      time_b: card.dataset.timeB,
+      data: card.dataset.data,
+      liga: card.dataset.liga,
+      horario: card.dataset.horario
+    };
 
     const responseA = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_a)}`);
     const responseB = await fetch(`/api/time-info?nome=${encodeURIComponent(data.time_b)}`);
