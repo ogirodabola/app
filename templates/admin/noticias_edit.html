@@ -31,6 +31,13 @@
     </div>
 
     <hr>
+<h3>SEO Inteligente</h3>
+
+<button type="button" id="gerar-seo" class="btn btn-secondary">
+  🚀 Gerar SEO com IA
+</button>
+
+    <hr>
 <h3>SEO</h3>
 
 <div class="admin-form-group">
@@ -313,6 +320,47 @@ input.addEventListener("input", async function() {
 
         resultsBox.appendChild(div);
     });
+});
+</script>
+
+<script>
+document.getElementById("gerar-seo").addEventListener("click", async function() {
+
+    const titulo = document.querySelector('[name="titulo_editorial"]').value;
+    const resumo = document.querySelector('[name="resumo"]').value;
+
+    if (!titulo) {
+        alert("Preencha o título primeiro.");
+        return;
+    }
+
+    const response = await fetch("/admin/seo-generate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            titulo: titulo,
+            resumo: resumo
+        })
+    });
+
+    const data = await response.json();
+
+    try {
+        const parsed = JSON.parse(data);
+
+        document.querySelector('[name="meta_title"]').value = parsed.meta_title;
+        document.querySelector('[name="meta_description"]').value = parsed.meta_description;
+        document.querySelector('[name="slug"]').value = parsed.slug;
+
+        alert("SEO gerado com sucesso 🚀");
+
+    } catch(e) {
+        alert("Erro ao gerar SEO");
+        console.log(data);
+    }
+
 });
 </script>
 
