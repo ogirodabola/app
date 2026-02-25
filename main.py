@@ -1183,43 +1183,84 @@ def pagina_autor(slug: str, request: Request):
         }
     )
 
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from openai import OpenAI
 import os
+import json
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
+# ===============================
+# 🔥 MODELO DE ENTRADA
+# ===============================
+
+class SEORequest(BaseModel):
+    titulo: str
+    resumo: str | None = None
+
+
+# ===============================
+# 🚀 ENDPOINT SEO
+# ===============================
+
 @app.post("/admin/seo-generate")
-async def gerar_seo(request: Request):
+async def gerar_seo(payload: SEORequest):
 
-    data = await request.json()
+    if not payload.titulo:
+        raise HTTPException(status_code=400, detail="Título é obrigatório")
 
-    titulo = data.get("titulo")
-    resumo = data.get("resumo")
+    titulo = payload.titulo
+    resumo = payload.resumo or ""
 
     prompt = f"""
-    Você é um especialista em SEO para portal esportivo.
+Você é um especialista em SEO para portais esportivos brasileiros.
 
-    Gere:
+Gere:
 
-    1) Meta title altamente clicável (até 60 caracteres)
-    2) Meta description otimizada (até 155 caracteres)
-    3) Slug SEO
-    4) 5 subtítulos H2 estratégicos
+1) meta_title (até 60 caracteres, altamente clicável)
+2) meta_description (até 155 caracteres, persuasiva)
+3) slug_otimizado (minúsculo, com hífens, sem acentos)
+4) h2_sugeridos (lista com 5 subtítulos estratégicos)
 
-    Base:
-    Título: {titulo}
-    Resumo: {resumo}
+Base:
+Título: {titulo}
+Resumo: {resumo}
 
-    Responda em JSON puro.
-    """
+Responda exclusivamente em JSON válido neste formato:
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
-    )
+{{
+  "meta_title": "...",
+  "meta_description": "...",
+  "slug_otimizado": "...",
+  "h2_sugeridos": ["...", "...", "...", "...", "..."]
+}}
+"""
 
-    content = response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.4,
+        )
 
-    return JSONResponse(content=content)
+        content = response.choices[0].message.content.strip()
+
+        # 🔥 Garantir JSON válido
+        seo_data = json.loads(content)
+
+        return seo_data
+        
+    except json.JSONDecodeError:
+        raise HTTPException(
+            status_code=500,
+            detail="Erro ao interpretar resposta da IA"
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao gerar SEO: {str(e)}"
+        )
