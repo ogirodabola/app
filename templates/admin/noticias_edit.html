@@ -30,6 +30,52 @@
              placeholder="ex: harry-kane-brilha-na-semi">
     </div>
 
+    <hr>
+<h3>SEO</h3>
+
+<div class="admin-form-group">
+  <label>Palavra-chave principal</label>
+  <input type="text"
+         name="palavra_chave_principal"
+         value="{{ noticia.palavra_chave_principal if noticia else '' }}">
+</div>
+
+<div class="admin-form-group">
+  <label>Meta Title (até 60 caracteres)</label>
+  <input type="text"
+         name="meta_title"
+         maxlength="70"
+         value="{{ noticia.meta_title if noticia else '' }}">
+</div>
+
+<div class="admin-form-group">
+  <label>Meta Description (até 155 caracteres)</label>
+  <textarea name="meta_description"
+            maxlength="160"
+            rows="3">{{ noticia.meta_description if noticia else '' }}</textarea>
+</div>
+
+<div class="admin-form-group">
+  <label>Canonical URL (opcional)</label>
+  <input type="text"
+         name="canonical_url"
+         value="{{ noticia.canonical_url if noticia else '' }}">
+</div>
+
+<div class="admin-form-group">
+  <label>Indexar no Google?</label>
+  <select name="indexar">
+    <option value="true"
+      {% if not noticia or noticia.indexar %}selected{% endif %}>
+      Sim
+    </option>
+    <option value="false"
+      {% if noticia and not noticia.indexar %}selected{% endif %}>
+      Não
+    </option>
+  </select>
+</div>
+    
     <!-- RESUMO -->
     <div class="admin-form-group">
       <label>Resumo</label>
