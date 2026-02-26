@@ -65,8 +65,15 @@ async def upload_midia(
 
     caminho_arquivo = destino / arquivo.filename
 
-    with open(caminho_arquivo, "wb") as buffer:
-        shutil.copyfileobj(arquivo.file, buffer)
+    from core.services.r2 import upload_to_r2
+
+    url = upload_to_r2(file, folder=pasta_atual or "uploads")
+    
+    inserir_midia({
+        "nome": file.filename,
+        "url": url,
+        "pasta": pasta_atual
+    })
 
     return RedirectResponse(
         url=f"/admin/midias?pasta={pasta_atual}",
