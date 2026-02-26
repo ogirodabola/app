@@ -39,7 +39,9 @@ from core.database import (
     vincular_jogador_noticia,
     listar_noticias_por_jogador,
     buscar_time_por_slug,
-    inserir_time
+    inserir_time,
+    listar_midias,
+    inserir_midia
 )
 
 
