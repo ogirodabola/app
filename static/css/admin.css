@@ -352,3 +352,30 @@ body {
     width: 100%;
     padding: 8px;
 }
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.media-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+.media-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.media-card input {
+  width: 100%;
+  margin-top: 8px;
+  font-size: 12px;
+}
