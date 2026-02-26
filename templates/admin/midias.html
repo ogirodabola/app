@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<h1>Biblioteca de Mídia</h1>
+
+<form method="post" action="/admin/midias/upload" enctype="multipart/form-data">
+  <input type="text" name="pasta" placeholder="Nome da pasta">
+  <input type="file" name="arquivo" required>
+  <button type="submit">Enviar</button>
+</form>
+
+<div class="media-grid">
+  {% for m in midias %}
+    <div class="media-card">
+      <img src="{{ m.url }}" loading="lazy">
+      <input type="text" value="{{ m.url }}" readonly>
+      <button onclick="copiar('{{ m.url }}')">Copiar URL</button>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+function copiar(url) {
+  navigator.clipboard.writeText(window.location.origin + url);
+  alert("URL copiada!");
+}
+</script>
+
+{% endblock %}
