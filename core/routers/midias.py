@@ -8,7 +8,13 @@ router = APIRouter()
 UPLOAD_ROOT = Path("static/uploads")
 
 
-@router.get("/admin/midias")
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
+from core.database import listar_midias, listar_pastas
+
+router = APIRouter()
+
+@router.get("/admin/midias", response_class=HTMLResponse)
 def admin_midias(request: Request, pasta: str = ""):
     from main import login_required, templates
 
@@ -16,29 +22,15 @@ def admin_midias(request: Request, pasta: str = ""):
     if auth:
         return auth
 
-    base_path = UPLOAD_ROOT.resolve()
-    current_path = (UPLOAD_ROOT / pasta).resolve()
-
-    if not str(current_path).startswith(str(base_path)):
-        current_path = base_path
-        pasta = ""
-
-    pastas = []
-    arquivos = []
-
-    if current_path.exists():
-        for item in current_path.iterdir():
-            if item.is_dir():
-                pastas.append(item.name)
-            elif item.is_file():
-                arquivos.append(item.name)
+    midias = listar_midias(pasta)
+    pastas = listar_pastas()
 
     return templates.TemplateResponse(
         "admin/midias_v2.html",
         {
             "request": request,
-            "pastas": sorted(pastas),
-            "arquivos": sorted(arquivos),
+            "midias": midias,
+            "pastas": pastas,
             "pasta_atual": pasta
         }
     )
