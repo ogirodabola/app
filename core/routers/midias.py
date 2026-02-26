@@ -100,12 +100,17 @@ async def criar_pasta(
     if auth:
         return auth
 
-    nova_pasta = nome_pasta.strip()
+    nome_pasta = nome_pasta.strip().replace(" ", "-").lower()
 
-    # Apenas registra no banco como pasta vazia
+    if pasta_atual:
+        nova_pasta = f"{pasta_atual}/{nome_pasta}"
+    else:
+        nova_pasta = nome_pasta
+
+    # salva registro apenas como marcador de pasta
     inserir_midia({
-        "nome": "__pasta__",
-        "url": "",
+        "nome": nome_pasta,
+        "url": None,
         "pasta": nova_pasta,
         "tipo": "pasta",
         "tamanho": 0
