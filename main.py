@@ -1365,27 +1365,6 @@ def api_time_info(nome: str = Query(...)):
         "escudo_url": api_data["escudo_url"]
     }
 
-@app.get("/admin/midias")
-def admin_midias(request: Request, pasta: str = ""):
+from core.router import midias
 
-    base_path = Path("static/uploads")
-    current_path = base_path / pasta if pasta else base_path
-
-    pastas = []
-    arquivos = []
-
-    for item in current_path.iterdir():
-        if item.is_dir():
-            pastas.append(item.name)
-        else:
-            arquivos.append(item.name)
-
-    return templates.TemplateResponse(
-        "admin/midias.html",
-        {
-            "request": request,
-            "pastas": pastas,
-            "arquivos": arquivos,
-            "pasta_atual": pasta
-        }
-    )
+app.include_router(midias.router)
