@@ -1632,3 +1632,27 @@ def inserir_time(nome: str, slug: str, escudo_url: str, api_id: int | None):
             return cur.fetchone()[0]
     finally:
         conn.close()
+
+def inserir_midia(data):
+    conn = get_conn()
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO midias (nome, url, pasta, tipo, tamanho)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (
+                data["nome"],
+                data["url"],
+                data["pasta"],
+                data["tipo"],
+                data["tamanho"]
+            ))
+
+def listar_midias():
+    conn = get_conn()
+    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        cur.execute("""
+            SELECT * FROM midias
+            ORDER BY criado_em DESC
+        """)
+        return cur.fetchall()
