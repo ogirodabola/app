@@ -38,47 +38,61 @@
   <div class="media-grid">
 
     {% for midia in midias %}
-    <div class="media-card">
 
-      <div class="media-thumb">
-        {% if midia.tipo == "imagem" %}
-          <img src="{{ midia.url }}" loading="lazy">
-        {% elif midia.tipo == "video" %}
-          <video src="{{ midia.url }}"></video>
-        {% else %}
-          📄
-        {% endif %}
-      </div>
+      {% if midia.tipo == "pasta" %}
 
-      <div class="media-info">
-        <div class="media-name">{{ midia.nome }}</div>
-        <div>
-          {% if midia.tamanho %}
-            {{ (midia.tamanho / 1024) | round(1) }} KB
-          {% endif %}
+        <a href="/admin/midias?pasta={{ midia.pasta }}" style="text-decoration:none;">
+          <div class="media-card">
+            <div class="media-thumb" style="font-size:40px;">
+              📁
+            </div>
+            <div class="media-info">
+              <div class="media-name">{{ midia.nome }}</div>
+            </div>
+          </div>
+        </a>
+
+      {% else %}
+
+        <div class="media-card">
+
+          <div class="media-thumb">
+            {% if midia.tipo == "imagem" %}
+              <img src="{{ midia.url }}" loading="lazy">
+            {% elif midia.tipo == "video" %}
+              <video src="{{ midia.url }}"></video>
+            {% else %}
+              📄
+            {% endif %}
+          </div>
+
+          <div class="media-info">
+            <div class="media-name">{{ midia.nome }}</div>
+          </div>
+
+          <div class="media-actions">
+
+            <button 
+              type="button"
+              class="btn-copy"
+              onclick="copiarURL('{{ midia.url }}')">
+              Copiar URL
+            </button>
+
+            <form method="post"
+                  action="/admin/midias/delete/{{ midia.id }}"
+                  onsubmit="return confirm('Tem certeza que deseja deletar esta mídia?');">
+              <button type="submit" class="btn-delete">
+                Deletar
+              </button>
+            </form>
+
+          </div>
+
         </div>
-      </div>
 
-      <!-- Hover Actions -->
-      <div class="media-actions">
+      {% endif %}
 
-        <button 
-          class="btn-copy"
-          onclick="copiarURL('{{ midia.url }}')">
-          Copiar URL
-        </button>
-
-        <form method="post"
-              action="/admin/midias/delete/{{ midia.id }}"
-              onsubmit="return confirm('Tem certeza que deseja deletar esta mídia?');">
-          <button type="submit" class="btn-delete">
-            Deletar
-          </button>
-        </form>
-
-      </div>
-
-    </div>
     {% endfor %}
 
   </div>
