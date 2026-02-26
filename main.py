@@ -1365,6 +1365,6 @@ def api_time_info(nome: str = Query(...)):
         "escudo_url": api_data["escudo_url"]
     }
 
-from core.router import midias
+from core.routers import midias
 
 app.include_router(midias.router)
