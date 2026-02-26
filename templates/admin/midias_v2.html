@@ -64,11 +64,16 @@
 
         <div class="gd-file-name">{{ midia.nome }}</div>
 
-        <button onclick="copiarURL('{{ midia.url }}')">
-          Copiar URL
+      <button onclick="copiarURL('{{ midia.url }}')">
+        Copiar URL
+      </button>
+      
+      <form method="post" action="/admin/midias/delete/{{ midia.id }}" 
+            onsubmit="return confirm('Tem certeza que deseja deletar esta mídia?');">
+        <button type="submit" style="background:#dc2626;color:white;">
+          Deletar
         </button>
-
-      </div>
+      </form>
     {% endfor %}
 
   </div>
