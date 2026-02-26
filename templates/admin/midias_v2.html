@@ -4,76 +4,81 @@
 
 <div class="admin-container">
 
-  <h1>Gerenciador de Mídias</h1>
+  <h1>Media Manager</h1>
 
-  <!-- Breadcrumb -->
-  <div class="gd-breadcrumb">
-    <a href="/admin/midias">📁 Raiz</a>
-    {% if pasta_atual %}
-      {% set partes = pasta_atual.split('/') %}
-      {% set caminho = "" %}
-      {% for parte in partes %}
-        {% set caminho = caminho + ('/' if caminho else '') + parte %}
-        / <a href="/admin/midias?pasta={{ caminho }}">{{ parte }}</a>
-      {% endfor %}
-    {% endif %}
-  </div>
-
-  <!-- Criar Pasta -->
-  <div class="gd-actions">
-    <form method="post" action="/admin/midias/criar-pasta">
-      <input type="hidden" name="pasta_atual" value="{{ pasta_atual }}">
-      <input type="text" name="nome_pasta" placeholder="Nova pasta" required>
-      <button type="submit">Criar Pasta</button>
-    </form>
-  </div>
-
-  <!-- Upload -->
-  <div class="gd-actions">
+  <!-- Toolbar -->
+  <div class="media-toolbar">
+    
+    <!-- Upload -->
     <form method="post" action="/admin/midias/upload" enctype="multipart/form-data">
       <input type="hidden" name="pasta_atual" value="{{ pasta_atual }}">
       <input type="file" name="arquivo" required>
-      <button type="submit">Enviar Arquivo</button>
+      <button type="submit" class="btn-copy">Upload</button>
     </form>
+
+    <!-- Criar pasta -->
+    <form method="post" action="/admin/midias/criar-pasta">
+      <input type="hidden" name="pasta_atual" value="{{ pasta_atual }}">
+      <input type="text" name="nome_pasta" placeholder="Nova pasta" required>
+      <button type="submit" class="btn-copy">Criar pasta</button>
+    </form>
+
   </div>
 
-  <hr>
+  <!-- Breadcrumb -->
+  <div style="margin-bottom:20px; color:#94a3b8;">
+    <a href="/admin/midias" style="color:#3b82f6;">📁 Raiz</a>
+    {% if pasta_atual %}
+      /
+      <span>{{ pasta_atual }}</span>
+    {% endif %}
+  </div>
 
-  <div class="gd-grid">
+  <!-- GRID -->
+  <div class="media-grid">
 
-    <!-- Pastas -->
-    {% for pasta in pastas %}
-      <div class="gd-folder">
-        <a href="/admin/midias?pasta={{ pasta }}">
-          📁 {{ pasta }}
-        </a>
-      </div>
-    {% endfor %}
-
-    <!-- Mídias -->
     {% for midia in midias %}
-      <div class="gd-file">
+    <div class="media-card">
 
+      <div class="media-thumb">
         {% if midia.tipo == "imagem" %}
           <img src="{{ midia.url }}" loading="lazy">
         {% elif midia.tipo == "video" %}
-          <video src="{{ midia.url }}" controls></video>
+          <video src="{{ midia.url }}"></video>
         {% else %}
-          <div class="gd-file-generic">📄</div>
+          📄
         {% endif %}
+      </div>
 
-        <div class="gd-file-name">{{ midia.nome }}</div>
+      <div class="media-info">
+        <div class="media-name">{{ midia.nome }}</div>
+        <div>
+          {% if midia.tamanho %}
+            {{ (midia.tamanho / 1024) | round(1) }} KB
+          {% endif %}
+        </div>
+      </div>
 
-      <button onclick="copiarURL('{{ midia.url }}')">
-        Copiar URL
-      </button>
-      
-      <form method="post" action="/admin/midias/delete/{{ midia.id }}" 
-            onsubmit="return confirm('Tem certeza que deseja deletar esta mídia?');">
-        <button type="submit" style="background:#dc2626;color:white;">
-          Deletar
+      <!-- Hover Actions -->
+      <div class="media-actions">
+
+        <button 
+          class="btn-copy"
+          onclick="copiarURL('{{ midia.url }}')">
+          Copiar URL
         </button>
-      </form>
+
+        <form method="post"
+              action="/admin/midias/delete/{{ midia.id }}"
+              onsubmit="return confirm('Tem certeza que deseja deletar esta mídia?');">
+          <button type="submit" class="btn-delete">
+            Deletar
+          </button>
+        </form>
+
+      </div>
+
+    </div>
     {% endfor %}
 
   </div>
@@ -83,7 +88,7 @@
 <script>
 function copiarURL(url) {
   navigator.clipboard.writeText(url);
-  alert("URL copiada: " + url);
+  alert("URL copiada com sucesso!");
 }
 </script>
 
