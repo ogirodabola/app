@@ -86,6 +86,8 @@ async def upload_midia(
         status_code=302
     )
 
+from core.database import inserir_midia
+
 @router.post("/admin/midias/criar-pasta")
 async def criar_pasta(
     request: Request,
@@ -93,15 +95,20 @@ async def criar_pasta(
     pasta_atual: str = Form("")
 ):
     from main import login_required
-
     auth = login_required(request)
     if auth:
         return auth
 
-    destino = (UPLOAD_ROOT / pasta_atual / nome_pasta).resolve()
+    nova_pasta = nome_pasta.strip()
 
-    if str(destino).startswith(str(UPLOAD_ROOT.resolve())):
-        destino.mkdir(parents=True, exist_ok=True)
+    # Apenas registra no banco como pasta vazia
+    inserir_midia({
+        "nome": "__pasta__",
+        "url": "",
+        "pasta": nova_pasta,
+        "tipo": "pasta",
+        "tamanho": 0
+    })
 
     return RedirectResponse(
         url=f"/admin/midias?pasta={pasta_atual}",
