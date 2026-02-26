@@ -1703,3 +1703,12 @@ def deletar_midia(midia_id: int):
         with conn.cursor() as cur:
             cur.execute("DELETE FROM midias WHERE id = %s", (midia_id,))
         conn.commit()
+
+def buscar_midia_por_id(midia_id: int):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                "SELECT * FROM midias WHERE id = %s LIMIT 1",
+                (midia_id,)
+            )
+            return cur.fetchone()
