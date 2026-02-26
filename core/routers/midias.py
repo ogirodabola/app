@@ -44,6 +44,11 @@ def admin_midias(request: Request, pasta: str = ""):
     )
 
 
+from fastapi import UploadFile, Form, Request
+from fastapi.responses import RedirectResponse
+from core.services.r2 import upload_to_r2
+from core.database import inserir_midia
+
 @router.post("/admin/midias/upload")
 async def upload_midia(
     request: Request,
@@ -56,21 +61,12 @@ async def upload_midia(
     if auth:
         return auth
 
-    destino = (UPLOAD_ROOT / pasta_atual).resolve()
+    # 🚀 Upload direto para R2
+    url = upload_to_r2(arquivo, folder=pasta_atual or "uploads")
 
-    if not str(destino).startswith(str(UPLOAD_ROOT.resolve())):
-        destino = UPLOAD_ROOT
-
-    destino.mkdir(parents=True, exist_ok=True)
-
-    caminho_arquivo = destino / arquivo.filename
-
-    from core.services.r2 import upload_to_r2
-
-    url = upload_to_r2(file, folder=pasta_atual or "uploads")
-    
+    # 💾 Salva no banco
     inserir_midia({
-        "nome": file.filename,
+        "nome": arquivo.filename,
         "url": url,
         "pasta": pasta_atual
     })
