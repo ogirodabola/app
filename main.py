@@ -48,6 +48,9 @@ from core.database import (
 # ✅ CRIA O APP UMA ÚNICA VEZ
 app = FastAPI()
 
+# ✅ MONTA ARQUIVOS ESTÁTICOS
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 from starlette.middleware.sessions import SessionMiddleware
 
 app.add_middleware(
