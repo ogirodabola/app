@@ -39,26 +39,32 @@
 
   <hr>
 
-  <!-- Pastas -->
   <div class="gd-grid">
 
+    <!-- Pastas -->
     {% for pasta in pastas %}
       <div class="gd-folder">
-        <a href="/admin/midias?pasta={{ pasta_atual ~ '/' ~ pasta if pasta_atual else pasta }}">
+        <a href="/admin/midias?pasta={{ pasta }}">
           📁 {{ pasta }}
         </a>
       </div>
     {% endfor %}
 
-    <!-- Arquivos -->
-    {% for arquivo in arquivos %}
+    <!-- Mídias -->
+    {% for midia in midias %}
       <div class="gd-file">
 
-        <img src="/static/uploads/{{ pasta_atual ~ '/' if pasta_atual else '' }}{{ arquivo }}" />
+        {% if midia.tipo == "imagem" %}
+          <img src="{{ midia.url }}" loading="lazy">
+        {% elif midia.tipo == "video" %}
+          <video src="{{ midia.url }}" controls></video>
+        {% else %}
+          <div class="gd-file-generic">📄</div>
+        {% endif %}
 
-        <div class="gd-file-name">{{ arquivo }}</div>
+        <div class="gd-file-name">{{ midia.nome }}</div>
 
-        <button onclick="copiarURL('/static/uploads/{{ pasta_atual ~ '/' if pasta_atual else '' }}{{ arquivo }}')">
+        <button onclick="copiarURL('{{ midia.url }}')">
           Copiar URL
         </button>
 
