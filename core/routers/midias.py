@@ -62,25 +62,31 @@ async def upload_midia(
     if auth:
         return auth
 
+    # 🔥 pegar tamanho do arquivo
+    conteudo = await arquivo.read()
+    tamanho = len(conteudo)
+
+    # resetar ponteiro do arquivo (IMPORTANTE)
+    arquivo.file.seek(0)
+
     # 🚀 Upload para R2
     url = upload_to_r2(arquivo, folder=pasta_atual or "uploads")
 
-    # 🎯 Detectar tipo automaticamente
-    tipo = "imagem"
-    if arquivo.content_type:
-        if "video" in arquivo.content_type:
-            tipo = "video"
-        elif "image" in arquivo.content_type:
-            tipo = "imagem"
-        else:
-            tipo = "arquivo"
+    # 🎯 Detectar tipo
+    if arquivo.content_type and "video" in arquivo.content_type:
+        tipo = "video"
+    elif arquivo.content_type and "image" in arquivo.content_type:
+        tipo = "imagem"
+    else:
+        tipo = "arquivo"
 
     # 💾 Salvar no banco
     inserir_midia({
         "nome": arquivo.filename,
         "url": url,
         "pasta": pasta_atual,
-        "tipo": tipo
+        "tipo": tipo,
+        "tamanho": tamanho
     })
 
     return RedirectResponse(
