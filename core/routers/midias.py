@@ -48,6 +48,7 @@ from fastapi import UploadFile, Form, Request
 from fastapi.responses import RedirectResponse
 from core.services.r2 import upload_to_r2
 from core.database import inserir_midia
+import mimetypes
 
 @router.post("/admin/midias/upload")
 async def upload_midia(
@@ -61,21 +62,31 @@ async def upload_midia(
     if auth:
         return auth
 
-    # 🚀 Upload direto para R2
+    # 🚀 Upload para R2
     url = upload_to_r2(arquivo, folder=pasta_atual or "uploads")
 
-    # 💾 Salva no banco
+    # 🎯 Detectar tipo automaticamente
+    tipo = "imagem"
+    if arquivo.content_type:
+        if "video" in arquivo.content_type:
+            tipo = "video"
+        elif "image" in arquivo.content_type:
+            tipo = "imagem"
+        else:
+            tipo = "arquivo"
+
+    # 💾 Salvar no banco
     inserir_midia({
         "nome": arquivo.filename,
         "url": url,
-        "pasta": pasta_atual
+        "pasta": pasta_atual,
+        "tipo": tipo
     })
 
     return RedirectResponse(
         url=f"/admin/midias?pasta={pasta_atual}",
         status_code=302
     )
-
 
 @router.post("/admin/midias/criar-pasta")
 async def criar_pasta(
