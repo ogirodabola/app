@@ -33,3 +33,15 @@ def upload_to_r2(file, folder="uploads"):
     )
 
     return f"{R2_PUBLIC_BASE}/{key}"
+
+def delete_from_r2(file_url: str):
+    if not file_url:
+        return
+
+    # extrai key
+    key = file_url.replace(R2_PUBLIC_BASE + "/", "")
+
+    s3.delete_object(
+        Bucket=R2_BUCKET,
+        Key=key
+    )
