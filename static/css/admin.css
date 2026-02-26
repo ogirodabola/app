@@ -435,3 +435,97 @@ body {
   padding: 5px 10px;
   cursor: pointer;
 }
+
+/* ============================= */
+/* MEDIA MANAGER PREMIUM */
+/* ============================= */
+
+.media-toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.media-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:20px;
+}
+
+.media-card {
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  transition: all .2s ease;
+}
+
+.media-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
+}
+
+.media-thumb {
+  height:160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0b1220;
+}
+
+.media-thumb img,
+.media-thumb video {
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+}
+
+.media-info {
+  padding:12px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+.media-name {
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-bottom:6px;
+}
+
+.media-actions {
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  opacity:0;
+  transition:.2s ease;
+}
+
+.media-card:hover .media-actions {
+  opacity:1;
+}
+
+.btn-copy {
+  background:#2563eb;
+  color:white;
+  padding:6px 12px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+}
+
+.btn-delete {
+  background:#dc2626;
+  color:white;
+  padding:6px 12px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+}
