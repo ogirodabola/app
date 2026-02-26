@@ -114,3 +114,22 @@ async def criar_pasta(
         url=f"/admin/midias?pasta={pasta_atual}",
         status_code=302
     )
+
+from core.services.r2 import delete_from_r2
+from core.database import deletar_midia
+
+@router.post("/admin/midias/delete/{midia_id}")
+async def deletar_midia_admin(midia_id: int, request: Request):
+    from main import login_required
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    midia = buscar_midia_por_id(midia_id)
+
+    if midia and midia["url"]:
+        delete_from_r2(midia["url"])
+
+    deletar_midia(midia_id)
+
+    return RedirectResponse("/admin/midias", status_code=302)
