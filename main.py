@@ -1362,3 +1362,20 @@ def api_time_info(nome: str = Query(...)):
         "nome": api_data["nome"],
         "escudo_url": api_data["escudo_url"]
     }
+
+@app.get("/admin/midias")
+def admin_midias(request: Request):
+
+    auth = login_required(request)
+    if auth:
+        return auth
+
+    midias = listar_midias()
+
+    return templates.TemplateResponse(
+        "admin/midias.html",
+        {
+            "request": request,
+            "midias": midias
+        }
+    )
