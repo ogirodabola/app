@@ -1656,3 +1656,44 @@ def listar_midias():
             ORDER BY criado_em DESC
         """)
         return cur.fetchall()
+
+from psycopg2.extras import RealDictCursor
+
+def listar_midias(pasta: str = ""):
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+
+            if pasta:
+                cur.execute("""
+                    SELECT id, nome, url, pasta, tipo, tamanho, criado_em
+                    FROM midias
+                    WHERE pasta = %s
+                    ORDER BY id DESC
+                """, (pasta,))
+            else:
+                cur.execute("""
+                    SELECT id, nome, url, pasta, tipo, tamanho, criado_em
+                    FROM midias
+                    ORDER BY id DESC
+                """)
+
+            return cur.fetchall()
+
+    finally:
+        conn.close()
+
+def listar_pastas():
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT DISTINCT pasta
+                FROM midias
+                WHERE pasta IS NOT NULL
+                  AND pasta <> ''
+                ORDER BY pasta
+            """)
+            return [row[0] for row in cur.fetchall()]
+    finally:
+        conn.close()
