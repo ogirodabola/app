@@ -1366,18 +1366,26 @@ def api_time_info(nome: str = Query(...)):
     }
 
 @app.get("/admin/midias")
-def admin_midias(request: Request):
+def admin_midias(request: Request, pasta: str = ""):
 
-    auth = login_required(request)
-    if auth:
-        return auth
+    base_path = Path("static/uploads")
+    current_path = base_path / pasta if pasta else base_path
 
-    midias = listar_midias()
+    pastas = []
+    arquivos = []
+
+    for item in current_path.iterdir():
+        if item.is_dir():
+            pastas.append(item.name)
+        else:
+            arquivos.append(item.name)
 
     return templates.TemplateResponse(
         "admin/midias.html",
         {
             "request": request,
-            "midias": midias
+            "pastas": pastas,
+            "arquivos": arquivos,
+            "pasta_atual": pasta
         }
     )
