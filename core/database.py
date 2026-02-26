@@ -1697,3 +1697,9 @@ def listar_pastas():
             return [row[0] for row in cur.fetchall()]
     finally:
         conn.close()
+
+def deletar_midia(midia_id: int):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM midias WHERE id = %s", (midia_id,))
+        conn.commit()
