@@ -19,7 +19,7 @@ import os
 import uuid
 import boto3
 
-R2_PUBLIC_BASE = "https://pub-c2e238e8642845be8b48b996807f4fbd.r2.dev"
+R2_PUBLIC_BASE = os.getenv("R2_PUBLIC_BASE")
 
 def upload_to_r2(file, folder="uploads"):
 
