@@ -15,17 +15,32 @@ s3 = boto3.client(
     region_name="auto",
 )
 
+import os
+import uuid
+import boto3
+
+R2_PUBLIC_BASE = "https://pub-c2e238e8642845be8b48b996807f4fbd.r2.dev"
+
 def upload_to_r2(file, folder="uploads"):
-    extension = file.filename.split(".")[-1]
-    filename = f"{uuid4()}.{extension}"
+
+    s3 = boto3.client(
+        service_name="s3",
+        endpoint_url=f"https://{os.getenv('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com",
+        aws_access_key_id=os.getenv("R2_ACCESS_KEY"),
+        aws_secret_access_key=os.getenv("R2_SECRET_KEY"),
+        region_name="auto"
+    )
+
+    ext = file.filename.split(".")[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
     key = f"{folder}/{filename}"
 
     s3.upload_fileobj(
         file.file,
-        R2_BUCKET,
+        os.getenv("R2_BUCKET_NAME"),
         key,
         ExtraArgs={"ContentType": file.content_type}
     )
 
-    public_url = f"https://{R2_BUCKET}.{R2_ACCOUNT_ID}.r2.cloudflarestorage.com/{key}"
-    return public_url
+    # 👇 AQUI ESTÁ A MUDANÇA IMPORTANTE
+    return f"{R2_PUBLIC_BASE}/{key}"
