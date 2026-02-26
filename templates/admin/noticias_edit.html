@@ -236,29 +236,46 @@ document.addEventListener("DOMContentLoaded", function() {
 <script>
 tinymce.init({
   selector: '#conteudo_editorial',
+  height: 550,
   language: 'pt_BR',
   browser_spellcheck: true,
   contextmenu: false,
-  height: 550,
   menubar: false,
   branding: false,
 
   plugins: [
-    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
-    'link', 'lists', 'media', 'searchreplace', 'table',
-    'visualblocks', 'wordcount'
+    'image',
+    'media',
+    'link',
+    'lists',
+    'table',
+    'searchreplace',
+    'visualblocks',
+    'wordcount',
+    'code',
+    'fullscreen',
+    'charmap'
   ],
 
   toolbar:
-    'undo redo | bold italic underline | ' +
-    'bullist numlist | link table | inserirConfronto | removeformat',
+    'undo redo | ' +
+    'bold italic underline | ' +
+    'image media link table | ' +
+    'bullist numlist | ' +
+    'visualblocks code fullscreen | ' +
+    'inserirConfronto | removeformat',
 
   setup: function(editor) {
 
     editor.ui.registry.addButton('inserirConfronto', {
       text: 'Confronto',
+      tooltip: 'Inserir card de confronto',
       onAction: function () {
-        abrirModalConfronto();
+        if (typeof abrirModalConfronto === "function") {
+          abrirModalConfronto();
+        } else {
+          alert("Função abrirModalConfronto não encontrada.");
+        }
       }
     });
 
@@ -268,12 +285,19 @@ tinymce.init({
     body {
       font-family: Arial, sans-serif;
       font-size: 16px;
+      line-height: 1.6;
     }
     h2 {
       margin-top: 24px;
     }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   `
 });
+</script>
+
 </script>
 
 <script>
