@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, UploadFile, Form
 from fastapi.responses import RedirectResponse
 from pathlib import Path
 import shutil
+from core.database import buscar_midia_por_id
 
 router = APIRouter()
 
