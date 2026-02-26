@@ -1,0 +1,79 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+
+<div class="admin-container">
+
+  <h1>Gerenciador de Mídias</h1>
+
+  <!-- Breadcrumb -->
+  <div class="gd-breadcrumb">
+    <a href="/admin/midias">📁 Raiz</a>
+    {% if pasta_atual %}
+      {% set partes = pasta_atual.split('/') %}
+      {% set caminho = "" %}
+      {% for parte in partes %}
+        {% set caminho = caminho + ('/' if caminho else '') + parte %}
+        / <a href="/admin/midias?pasta={{ caminho }}">{{ parte }}</a>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Criar Pasta -->
+  <div class="gd-actions">
+    <form method="post" action="/admin/midias/criar-pasta">
+      <input type="hidden" name="pasta_atual" value="{{ pasta_atual }}">
+      <input type="text" name="nome_pasta" placeholder="Nova pasta" required>
+      <button type="submit">Criar Pasta</button>
+    </form>
+  </div>
+
+  <!-- Upload -->
+  <div class="gd-actions">
+    <form method="post" action="/admin/midias/upload" enctype="multipart/form-data">
+      <input type="hidden" name="pasta_atual" value="{{ pasta_atual }}">
+      <input type="file" name="arquivo" required>
+      <button type="submit">Enviar Arquivo</button>
+    </form>
+  </div>
+
+  <hr>
+
+  <!-- Pastas -->
+  <div class="gd-grid">
+
+    {% for pasta in pastas %}
+      <div class="gd-folder">
+        <a href="/admin/midias?pasta={{ pasta_atual ~ '/' ~ pasta if pasta_atual else pasta }}">
+          📁 {{ pasta }}
+        </a>
+      </div>
+    {% endfor %}
+
+    <!-- Arquivos -->
+    {% for arquivo in arquivos %}
+      <div class="gd-file">
+
+        <img src="/static/uploads/{{ pasta_atual ~ '/' if pasta_atual else '' }}{{ arquivo }}" />
+
+        <div class="gd-file-name">{{ arquivo }}</div>
+
+        <button onclick="copiarURL('/static/uploads/{{ pasta_atual ~ '/' if pasta_atual else '' }}{{ arquivo }}')">
+          Copiar URL
+        </button>
+
+      </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<script>
+function copiarURL(url) {
+  navigator.clipboard.writeText(url);
+  alert("URL copiada: " + url);
+}
+</script>
+
+{% endblock %}
