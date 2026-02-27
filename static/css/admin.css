@@ -529,3 +529,29 @@ body {
   border:none;
   cursor:pointer;
 }
+
+.media-link {
+  display:block;
+  color:inherit;
+  text-decoration:none;
+  height:100%;
+}
+
+.media-card {
+  position:relative;
+}
+
+.media-actions {
+  position:absolute;
+  inset:0;
+  pointer-events:auto;
+}
+
+.media-card > a {
+  position:relative;
+  z-index:1;
+}
+
+.media-actions {
+  z-index:2;
+}
