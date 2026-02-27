@@ -114,8 +114,13 @@ async def criar_pasta(
         status_code=302
     )
 
+from core.database import (
+    buscar_midia_por_id,
+    deletar_midia,
+    listar_midias_por_pasta,
+    deletar_pasta_e_conteudo
+)
 from core.services.r2 import delete_from_r2
-from core.database import deletar_midia
 
 @router.post("/admin/midias/delete/{midia_id}")
 async def deletar_midia_admin(midia_id: int, request: Request):
@@ -126,9 +131,27 @@ async def deletar_midia_admin(midia_id: int, request: Request):
 
     midia = buscar_midia_por_id(midia_id)
 
-    if midia and midia["url"]:
-        delete_from_r2(midia["url"])
+    if not midia:
+        return RedirectResponse("/admin/midias", status_code=302)
 
-    deletar_midia(midia_id)
+    # 🔥 Se for pasta
+    if midia["tipo"] == "pasta":
+
+        arquivos = listar_midias_por_pasta(midia["nome"])
+
+        # apagar arquivos do R2
+        for arquivo in arquivos:
+            if arquivo["url"]:
+                delete_from_r2(arquivo["url"])
+
+        # apagar tudo do banco
+        deletar_pasta_e_conteudo(midia["nome"])
+
+    else:
+        # arquivo normal
+        if midia["url"]:
+            delete_from_r2(midia["url"])
+
+        deletar_midia(midia_id)
 
     return RedirectResponse("/admin/midias", status_code=302)
