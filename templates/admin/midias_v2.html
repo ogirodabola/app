@@ -41,15 +41,19 @@
 
       {% if midia.tipo == "pasta" %}
 
-      <div class="media-card">
+  <div class="media-card">
 
-  <a href="/admin/midias?pasta={{ midia.nome }}" style="text-decoration:none;">
+  <a href="/admin/midias?pasta={{ midia.nome }}" 
+     class="media-link">
+     
     <div class="media-thumb" style="font-size:40px;">
       📁
     </div>
+
     <div class="media-info">
       <div class="media-name">{{ midia.nome }}</div>
     </div>
+
   </a>
 
   <div class="media-actions">
@@ -65,6 +69,7 @@
   </div>
 
 </div>
+    
       {% else %}
 
         <div class="media-card">
