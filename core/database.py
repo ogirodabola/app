@@ -1701,3 +1701,30 @@ def buscar_midia_por_id(midia_id: int):
                 (midia_id,)
             )
             return cur.fetchone()
+
+def listar_midias_por_pasta(pasta: str):
+    with get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT * FROM midias
+                WHERE pasta = %s
+            """, (pasta,))
+            return cur.fetchall()
+
+
+def deletar_pasta_e_conteudo(nome_pasta: str):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            # apaga arquivos dentro
+            cur.execute("""
+                DELETE FROM midias
+                WHERE pasta = %s
+            """, (nome_pasta,))
+
+            # apaga a própria pasta
+            cur.execute("""
+                DELETE FROM midias
+                WHERE nome = %s AND tipo = 'pasta'
+            """, (nome_pasta,))
+
+        conn.commit()
