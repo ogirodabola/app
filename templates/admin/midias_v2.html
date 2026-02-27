@@ -41,17 +41,30 @@
 
       {% if midia.tipo == "pasta" %}
 
-        <a href="/admin/midias?pasta={{ midia.nome }}" style="text-decoration:none;">
-          <div class="media-card">
-            <div class="media-thumb" style="font-size:40px;">
-              📁
-            </div>
-            <div class="media-info">
-              <div class="media-name">{{ midia.nome }}</div>
-            </div>
-          </div>
-        </a>
+      <div class="media-card">
 
+  <a href="/admin/midias?pasta={{ midia.nome }}" style="text-decoration:none;">
+    <div class="media-thumb" style="font-size:40px;">
+      📁
+    </div>
+    <div class="media-info">
+      <div class="media-name">{{ midia.nome }}</div>
+    </div>
+  </a>
+
+  <div class="media-actions">
+
+    <form method="post"
+          action="/admin/midias/delete/{{ midia.id }}"
+          onsubmit="return confirm('Deletar esta pasta e todo conteúdo dentro?');">
+      <button type="submit" class="btn-delete">
+        Deletar Pasta
+      </button>
+    </form>
+
+  </div>
+
+</div>
       {% else %}
 
         <div class="media-card">
