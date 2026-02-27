@@ -141,26 +141,25 @@ document.addEventListener("DOMContentLoaded", async function() {
     };
 
 </script>
-<div class="article-share">
+<div class="share-wrapper">
 
-  <a href="https://twitter.com/intent/tweet?text={{ noticia.titulo }}&url={{ request.url }}"
-     target="_blank"
-     class="share-btn twitter">
-     Twitter
-  </a>
+  <span class="share-label">Compartilhar</span>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}"
-     target="_blank"
-     class="share-btn facebook">
-     Facebook
-  </a>
+  <div class="share-buttons">
 
-  <a href="https://api.whatsapp.com/send?text={{ noticia.titulo }} {{ request.url }}"
-     target="_blank"
-     class="share-btn whatsapp">
-     WhatsApp
-  </a>
+    <a href="URL_FACEBOOK" class="share-btn facebook" target="_blank">
+      <!-- svg -->
+    </a>
 
+    <a href="URL_TWITTER" class="share-btn twitter" target="_blank">
+      <!-- svg -->
+    </a>
+
+    <a href="URL_WHATSAPP" class="share-btn whatsapp" target="_blank">
+      <!-- svg -->
+    </a>
+
+  </div>
 </div>
       <!-- AUTHOR CARD -->
       <div class="author-card">
