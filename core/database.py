@@ -1646,7 +1646,7 @@ def inserir_midia(dados: dict):
                 dados.get("tipo"),
                 dados.get("tamanho") or 0,
             ))
-        conn.commit()))
+        conn.commit()
 
 
 from psycopg2.extras import RealDictCursor
