@@ -87,8 +87,6 @@ async def upload_midia(
         status_code=302
     )
 
-from core.database import inserir_midia
-
 @router.post("/admin/midias/criar-pasta")
 async def criar_pasta(
     request: Request,
@@ -102,16 +100,10 @@ async def criar_pasta(
 
     nome_pasta = nome_pasta.strip().replace(" ", "-").lower()
 
-    if pasta_atual:
-        nova_pasta = f"{pasta_atual}/{nome_pasta}"
-    else:
-        nova_pasta = nome_pasta
-
-    # salva registro apenas como marcador de pasta
     inserir_midia({
-        "nome": nome_pasta,
-        "url": None,
-        "pasta": nova_pasta,
+        "nome": nome_pasta,           # nome da pasta
+        "url": "",                    # nunca null
+        "pasta": pasta_atual or "",   # pasta pai
         "tipo": "pasta",
         "tamanho": 0
     })
