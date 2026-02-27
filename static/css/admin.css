@@ -555,3 +555,19 @@ body {
 .media-actions {
   z-index:2;
 }
+
+.media-folder {
+  cursor: pointer;
+  height: 100%;
+}
+
+.media-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 3;
+}
+
+.media-card {
+  position: relative;
+}
