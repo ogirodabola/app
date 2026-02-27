@@ -1633,20 +1633,20 @@ def inserir_time(nome: str, slug: str, escudo_url: str, api_id: int | None):
     finally:
         conn.close()
 
-def inserir_midia(data):
-    conn = get_conn()
-    with conn:
+def inserir_midia(dados: dict):
+    with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO midias (nome, url, pasta, tipo, tamanho)
                 VALUES (%s, %s, %s, %s, %s)
             """, (
-                data["nome"],
-                data["url"],
-                data["pasta"],
-                data["tipo"],
-                data["tamanho"]
+                dados.get("nome"),
+                dados.get("url") or "",   # 👈 AQUI ESTÁ A CORREÇÃO
+                dados.get("pasta") or "",
+                dados.get("tipo"),
+                dados.get("tamanho") or 0,
             ))
+        conn.commit()))
 
 
 from psycopg2.extras import RealDictCursor
