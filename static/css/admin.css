@@ -571,3 +571,16 @@ body {
 .media-card {
   position: relative;
 }
+
+.media-folder {
+  cursor: pointer;
+}
+
+.media-actions-below {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.media-actions-below .btn-delete {
+  width: 100%;
+}
