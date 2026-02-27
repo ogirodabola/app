@@ -41,11 +41,11 @@
 
       {% if midia.tipo == "pasta" %}
 
-  <div class="media-card">
+ <div class="media-card">
 
-  <a href="/admin/midias?pasta={{ midia.nome }}" 
-     class="media-link">
-     
+  <div class="media-folder" 
+       onclick="window.location.href='/admin/midias?pasta={{ midia.nome }}'">
+
     <div class="media-thumb" style="font-size:40px;">
       📁
     </div>
@@ -54,18 +54,16 @@
       <div class="media-name">{{ midia.nome }}</div>
     </div>
 
-  </a>
+  </div>
 
   <div class="media-actions">
-
     <form method="post"
           action="/admin/midias/delete/{{ midia.id }}"
           onsubmit="return confirm('Deletar esta pasta e todo conteúdo dentro?');">
       <button type="submit" class="btn-delete">
-        Deletar Pasta
+        Deletar
       </button>
     </form>
-
   </div>
 
 </div>
