@@ -75,10 +75,10 @@ async def upload_midia(
 
     # 💾 Salvar no banco
     inserir_midia({
-        "nome": nome_pasta,
-        "url": "",  # 👈 IMPORTANTE
-        "pasta": nova_pasta,
-        "tipo": "pasta",
+        "nome": arquivo.filename,  # 👈 AQUI É O CERTO
+        "url": url,
+        "pasta": pasta_atual or "",
+        "tipo": "imagem",  # ou detectar tipo depois
         "tamanho": 0
     })
 
