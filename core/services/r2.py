@@ -46,3 +46,26 @@ def delete_from_r2(file_url: str):
         Bucket=R2_BUCKET,
         Key=key
     )
+
+from datetime import datetime
+from slugify import slugify
+import uuid
+
+def upload_noticia_image(arquivo, bucket, s3_client, public_url):
+
+    data_pasta = datetime.now().strftime("%d%m%y")
+
+    extensao = arquivo.filename.split(".")[-1]
+    nome_limpo = slugify(arquivo.filename.rsplit(".", 1)[0])
+    nome_final = f"{nome_limpo}-{uuid.uuid4().hex[:6]}.{extensao}"
+
+    caminho_r2 = f"noticia/{data_pasta}/{nome_final}"
+
+    s3_client.upload_fileobj(
+        arquivo.file,
+        bucket,
+        caminho_r2,
+        ExtraArgs={"ContentType": arquivo.content_type}
+    )
+
+    return f"{public_url}/{caminho_r2}"
