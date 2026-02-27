@@ -19,11 +19,12 @@ s3 = boto3.client(
     region_name="auto",
 )
 
-def upload_to_r2(file, folder="uploads"):
+def upload_to_r2(file, folder=""):
 
     ext = file.filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{ext}"
-    key = f"{folder}/{filename}"
+
+    key = f"{folder}/{filename}" if folder else filename
 
     s3.upload_fileobj(
         file.file,
