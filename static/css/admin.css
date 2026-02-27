@@ -584,3 +584,16 @@ body {
 .media-actions-below .btn-delete {
   width: 100%;
 }
+
+.media-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-below {
+  margin-top: 8px;
+}
+
+.delete-below .btn-delete {
+  width: 100%;
+}
