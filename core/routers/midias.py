@@ -75,11 +75,11 @@ async def upload_midia(
 
     # 💾 Salvar no banco
     inserir_midia({
-        "nome": arquivo.filename,
-        "url": url,
-        "pasta": pasta_atual,
-        "tipo": tipo,
-        "tamanho": tamanho
+        "nome": nome_pasta,
+        "url": "",  # 👈 IMPORTANTE
+        "pasta": nova_pasta,
+        "tipo": "pasta",
+        "tamanho": 0
     })
 
     return RedirectResponse(
