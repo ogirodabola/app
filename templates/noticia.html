@@ -147,16 +147,40 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   <div class="share-buttons">
 
-    <a href="URL_FACEBOOK" class="share-btn facebook" target="_blank">
-      <!-- svg -->
+    <!-- FACEBOOK -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}"
+   class="share-btn facebook"
+   target="_blank"
+   rel="noopener">
+
+      <svg viewBox="0 0 24 24">
+        <path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H8.08v-2.9h2.36V9.41c0-2.33 1.39-3.62 3.52-3.62 1.02 0 2.09.18 2.09.18v2.3h-1.18c-1.17 0-1.54.73-1.54 1.48v1.77h2.63l-.42 2.9h-2.21V22c4.78-.75 8.44-4.91 8.44-9.93z"/>
+      </svg>
+
     </a>
 
-    <a href="URL_TWITTER" class="share-btn twitter" target="_blank">
-      <!-- svg -->
+    <!-- TWITTER / X -->
+    <a href="https://twitter.com/intent/tweet?text={{ noticia.titulo|urlencode }}&url={{ request.url|urlencode }}"
+   class="share-btn twitter"
+   target="_blank"
+   rel="noopener">
+
+      <svg viewBox="0 0 24 24">
+        <path d="M18.244 2H21l-6.52 7.45L22.5 22h-6.86l-5.37-7.02L4.5 22H2l6.98-7.98L1.5 2h6.94l4.84 6.38L18.244 2z"/>
+      </svg>
+
     </a>
 
-    <a href="URL_WHATSAPP" class="share-btn whatsapp" target="_blank">
-      <!-- svg -->
+    <!-- WHATSAPP -->
+    <a href="https://api.whatsapp.com/send?text={{ noticia.titulo|urlencode }}%20{{ request.url|urlencode }}"
+   class="share-btn whatsapp"
+   target="_blank"
+   rel="noopener">
+
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.2 2 11.36c0 2.03.62 3.92 1.7 5.5L2 22l5.3-1.63c1.53.78 3.27 1.23 5.05 1.23 5.52 0 10-4.2 10-9.36S17.52 2 12 2zm0 17.1c-1.53 0-3-.42-4.27-1.2l-.3-.18-3.14.96.97-3.05-.2-.31c-.9-1.39-1.37-2.99-1.37-4.65 0-4.6 3.88-8.34 8.64-8.34s8.64 3.74 8.64 8.34-3.88 8.43-8.64 8.43z"/>
+      </svg>
+
     </a>
 
   </div>
