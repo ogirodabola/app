@@ -63,7 +63,8 @@ async def upload_midia(
     arquivo.file.seek(0)
 
     # 🚀 Upload para R2
-    url = upload_to_r2(arquivo, folder=pasta_atual or "uploads")
+    folder = pasta_atual.strip("/") if pasta_atual else ""
+    url = upload_to_r2(arquivo, folder=folder)
 
     # 🎯 Detectar tipo
     if arquivo.content_type and "video" in arquivo.content_type:
