@@ -156,7 +156,7 @@ def salvar_editorial(
               categoria = %s,
               tags = %s,
               slug = %s,
-              editorial_status = 'publicado'
+              editorial_status = 'pendente'
             WHERE id = %s;
         """, (
             titulo_editorial,
