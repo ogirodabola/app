@@ -167,19 +167,16 @@ async def admin_noticia_criar(request: Request):
     slug_final = slugify(slug_input if slug_input else titulo_editorial)
 
     # =========================
-    # IMAGEM
+    # IMAGEM (R2)
     # =========================
     imagem_file = form.get("imagem_file")
     imagem_url = None
-
+    
     if imagem_file and imagem_file.filename:
-        filename = f"{slug_final}-{imagem_file.filename}"
-        filepath = UPLOAD_DIR / filename
-
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(imagem_file.file, buffer)
-
-        imagem_url = f"/static/uploads/{filename}"
+        imagem_url = upload_noticia_image(
+            file=imagem_file.file,
+            filename=imagem_file.filename
+        )
 
     # =========================
     # SALVAR NO BANCO
