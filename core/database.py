@@ -281,15 +281,17 @@ def salvar_noticia(
     slug,
     imagem=None,
     imagem_credito=None,
-    conteudo_original=None
+    conteudo_original=None,
+    autor_id=1  # 👈 DEFAULT AUTOR 1
 ):
     conn = get_conn()
     try:
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO noticias
-                (titulo, resumo, url, fonte, categoria, slug, imagem, imagem_credito, conteudo_original)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                (titulo, resumo, url, fonte, categoria, slug,
+                 imagem, imagem_credito, conteudo_original, autor_id)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (url) DO UPDATE
                 SET
                     imagem = COALESCE(noticias.imagem, EXCLUDED.imagem),
@@ -303,7 +305,8 @@ def salvar_noticia(
                 slug,
                 imagem,
                 imagem_credito,
-                conteudo_original   # 🔥 AQUI ESTAVA FALTANDO
+                conteudo_original,
+                autor_id   # 👈 AGORA SALVA
             ))
         conn.commit()
     finally:
