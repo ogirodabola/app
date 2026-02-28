@@ -125,7 +125,7 @@
 
       {{ render_ad("noticia_inline_1", request) | safe }}
 
-        <script>
+     <script>
 document.addEventListener("DOMContentLoaded", async function() {
 
   const cards = document.querySelectorAll(".gd-match-card");
@@ -140,6 +140,11 @@ document.addEventListener("DOMContentLoaded", async function() {
       horario: card.dataset.horario
     };
 
+    // lógica aqui
+
+  }
+
+});
 </script>
 <div class="share-wrapper">
 
