@@ -79,7 +79,7 @@
 
 <!-- HERO -->
 <section class="article-hero"
-    style="background-image:url('{{ noticia.imagem or '/static/placeholder-news.jpg' }}');">
+    style="background-image: url('{{ noticia.imagem if noticia.imagem else url_for("static", path="placeholder-news.jpg") }}');">
 </section>
 
 <div class="article-container">
