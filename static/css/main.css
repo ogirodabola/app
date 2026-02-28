@@ -4058,3 +4058,53 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
   inset: 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
 }
+
+/* ============================= */
+/* MOBILE FIX DEFINITIVO NOTÍCIA */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .article-container {
+    margin: -40px auto 0 !important;
+    padding: 0 16px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .article-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+
+  .article-content {
+    padding: 24px 18px !important;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .article-header {
+    padding: 24px 18px !important;
+    margin-top: -50px !important;
+    border-radius: 16px;
+  }
+
+}
+
+.article-content img,
+.article-content iframe,
+.article-content table {
+  max-width: 100%;
+  height: auto;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+.article-container,
+.article-content,
+.article-header {
+  max-width: 100%;
+}
