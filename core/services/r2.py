@@ -47,11 +47,25 @@ def delete_from_r2(file_url: str):
         Key=key
     )
 
+import os
+import uuid
 from datetime import datetime
 from slugify import slugify
-import uuid
+import boto3
 
-def upload_noticia_image(arquivo, bucket, s3_client, public_url):
+
+def upload_noticia_image(arquivo):
+
+    bucket = os.getenv("R2_BUCKET")
+    public_url = os.getenv("R2_PUBLIC_URL")
+
+    s3_client = boto3.client(
+        "s3",
+        endpoint_url=os.getenv("R2_ENDPOINT"),
+        aws_access_key_id=os.getenv("R2_ACCESS_KEY"),
+        aws_secret_access_key=os.getenv("R2_SECRET_KEY"),
+        region_name="auto"
+    )
 
     data_pasta = datetime.now().strftime("%d%m%y")
 
