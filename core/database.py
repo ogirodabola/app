@@ -355,7 +355,7 @@ def atualizar_editorial(
                     conteudo_editorial = %s,
                     tags = %s,
                     categoria = COALESCE(%s, categoria),
-                    editorial_status = 'publicado'  -- AUTO PUBLISH
+                    editorial_status = 'pendente'  -- 🔥 AGORA NÃO PUBLICA
                 WHERE id = %s;
             """, (
                 titulo_editorial,
