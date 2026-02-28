@@ -2414,6 +2414,14 @@ NOTÍCIA — ISOLAMENTO DO LABEL DE PUBLICIDADE
     font-weight: 600;
 }
 
+.article-content img {
+  max-width: 900px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 40px auto;
+  border-radius: 14px;
+}
 
 .article-sidebar {
   position: relative;
