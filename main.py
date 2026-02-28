@@ -173,11 +173,8 @@ async def admin_noticia_criar(request: Request):
     imagem_url = None
     
     if imagem_file and imagem_file.filename:
-        imagem_url = upload_noticia_image(
-            file=imagem_file.file,
-            filename=imagem_file.filename
-        )
-
+        imagem_url = upload_noticia_image(imagem_file)
+        
     # =========================
     # SALVAR NO BANCO
     # =========================
@@ -786,16 +783,13 @@ async def admin_noticia_atualizar(
 
     slug_final = slugify(slug if slug else titulo_editorial)
 
+    # =========================
+    # IMAGEM (R2)
+    # =========================
     imagem_url = None
-
+    
     if imagem_file and imagem_file.filename:
-        filename = f"{slug_final}-{imagem_file.filename}"
-        filepath = UPLOAD_DIR / filename
-
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(imagem_file.file, buffer)
-
-        imagem_url = f"/static/uploads/{filename}"
+        imagem_url = upload_noticia_image(imagem_file)
     else:
         noticia_existente = buscar_noticia_admin(noticia_id)
         imagem_url = noticia_existente["imagem"]
